@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "DEVICE_REQUEST")
+@Table(name = "DEVICE_REQUEST_ADD")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceRequestAddEntity {

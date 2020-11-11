@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "DEVICE_REQUEST")
+@Table(name = "DEVICE_TO_REQUEST")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceToRequestEntity {
