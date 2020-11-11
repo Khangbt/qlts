@@ -139,7 +139,7 @@ public class Constants {
     public static final String TITLE_BUG_STATUS_CHART = "Thống kê Bug theo trạng thái";
     public static final String TITLE_STATUS_OVERVIEW_PROJECT = "Trạng thái tổng quan";
     //server
-    public static final String FOLDER_SAVE_FILE = "/home/iist/services/qlda-service/fileUpload/";
+//    public static final String FOLDER_SAVE_FILE = "/home/iist/services/qlda-service/fileUpload/";
 
     //local
 //    public static final String FOLDER_SAVE_FILE = "D:/fileUpload/";
