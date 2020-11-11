@@ -3,8 +3,8 @@ package common;
 import java.lang.reflect.Field;
 
 public class ConvetSetData {
-    private static Object xetData(Object entityl, Object dto) {
-        Field[] fields = entityl.getClass().getDeclaredFields();
+    public static Object xetData(Object entity, Object dto) {
+        Field[] fields = entity.getClass().getDeclaredFields();
         Field[] fieldsDto = dto.getClass().getDeclaredFields();
         for (Field field : fieldsDto) {
             for (Field field1 : fields) {
@@ -12,7 +12,7 @@ public class ConvetSetData {
                     try {
                         field1.setAccessible(true);
                         field.setAccessible(true);
-                        field1.set(entityl, field.get(dto));
+                        field1.set(entity, field.get(dto));
 
                     } catch (IllegalAccessException e) {
                         return null;
@@ -21,6 +21,6 @@ public class ConvetSetData {
                 }
             }
         }
-        return entityl;
+        return entity;
     }
 }
