@@ -40,7 +40,10 @@ public class DeviceEntity {
     @Column(name = "PART_ID")
     private String partId;
 
-    @Column(name = "EQUIPMENT_GROUP_ID")
-    private Long equipmentGroupId;
+    @Column(name = "ID_EQUIPMENT_GROUP")
+    private Long idEquipmentGroup;
+
+    @Column(name = "DEVICE_TO_REQUEST_ADD_ID")
+    private Long requestAddId;
 
 }
