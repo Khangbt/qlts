@@ -79,23 +79,23 @@ public class WarehouseServiceMpl implements WarehouseService {
            // warehouseEntity.setWarehouseID(dto.getIdWare());
             warehouseEntity.setName(dto.getFullName());
             warehouseEntity.setCode(dto.getCode());
-            warehouseEntity.setAreaid(dto.getArea_id());
+//            warehouseEntity.setAreaid(dto.getArea_id());
             warehouseEntity.setAddress(dto.getAddress());
             warehouseEntity.setNote(dto.getNote());
             warehouseEntity.setParid(dto.getPartId());
-            warehouseEntity.setProvincecode(dto.getProvinceID());
+//            warehouseEntity.setProvincecode(dto.getProvinceID());
 
         } else if(dto.getIdWare() == null){
             //TODO: create nha cung cap
              warehouseEntity = new WarehouseEntity();
             warehouseEntity.setName(dto.getFullName());
             warehouseEntity.setCode(dto.getCode());
-            warehouseEntity.setAreaid(dto.getArea_id());
+//            warehouseEntity.setAreaid(dto.getArea_id());
             warehouseEntity.setAddress(dto.getAddress());
             warehouseEntity.setNote(dto.getNote());
             warehouseEntity.setParid(dto.getPartId());
             warehouseEntity.setStatus(1);
-            warehouseEntity.setProvincecode(dto.getProvinceID());
+//            warehouseEntity.setProvincecode(dto.getProvinceID());
 
         }
         warehouseRepository.save(warehouseEntity);
@@ -149,7 +149,7 @@ public class WarehouseServiceMpl implements WarehouseService {
         warehouseDTO.setFullName(warehouseEntity.getName());
         warehouseDTO.setNote(warehouseEntity.getNote());
       // warehouseDTO.setID(warehouseEntity.getWarehouseID());
-       warehouseDTO.setProvinceID(warehouseEntity.getProvincecode());
+//       warehouseDTO.setProvinceID(warehouseEntity.getProvincecode());
        warehouseDTO.setPartId(warehouseEntity.getParid());
         return warehouseDTO;
     }
