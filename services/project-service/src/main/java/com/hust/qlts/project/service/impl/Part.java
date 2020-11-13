@@ -39,7 +39,7 @@ public class Part implements PartService {
 
         DataPage<PartnerDTO> data = new DataPage<>();
         dto.setPage(null != dto.getPage() ? dto.getPage().intValue() : 1);
-        dto.setPageSize(null != dto.getPageSize() ? dto.getPageSize().intValue() : 10);
+        dto.setSize(null != dto.getSize() ? dto.getSize().intValue() : 10);
 
 
 
@@ -49,9 +49,9 @@ public class Part implements PartService {
             data.setData(listProject);
         }
         data.setPageIndex(dto.getPage());
-        data.setPageSize(dto.getPageSize());
+        data.setPageSize(dto.getSize());
         data.setDataCount(dto.getTotalRecord());
-        data.setPageCount(dto.getTotalRecord() / dto.getPageSize());
+        data.setPageCount(dto.getTotalRecord() / dto.getSize());
         if (data.getDataCount() % data.getPageSize() != 0) {
             data.setPageCount(data.getPageCount() + 1);
         }
@@ -64,8 +64,8 @@ public class Part implements PartService {
             PartEntity partEntity = new PartEntity();
             partEntity.setCode(partnerDTO.getCode());
             partEntity.setIsActive(partnerDTO.getStatus());
-            partEntity.setName(partnerDTO.getAmName());
-            partEntity.setProvinceCode(partnerDTO.getProvinceID());
+            partEntity.setName(partnerDTO.getPartName());
+//            partEntity.setProvinceCode(partnerDTO.getProvinceID());
             partEntity.setNote(partnerDTO.getNote());
             partRepository.save(partEntity);
             return convertEntitytoDTO(partEntity);
@@ -78,9 +78,9 @@ public class Part implements PartService {
                 PartEntity partEntity=partEntity1.get();
                 partEntity.setId(partnerDTO.getPartnerID());
                 partEntity.setCode(partnerDTO.getCode());
-                partEntity.setName(partnerDTO.getAmName());
+                partEntity.setName(partnerDTO.getPartName());
                 partEntity.setIsActive(partnerDTO.getStatus());
-                partEntity.setProvinceCode(partnerDTO.getProvinceID());
+//                partEntity.setProvinceCode(partnerDTO.getProvinceID());
                 partEntity.setNote(partnerDTO.getNote());
                 partRepository.save(partEntity);
                 return convertEntitytoDTO(partEntity);
@@ -124,11 +124,9 @@ public class Part implements PartService {
 
     public PartnerDTO convertEntitytoDTO(PartEntity partEntity) {
         PartnerDTO partnerDTO = new PartnerDTO();
-        partnerDTO.setPartnerID(partEntity.getId());
         partnerDTO.setCode(partEntity.getCode());
-        partnerDTO.setAmName(partEntity.getName());
+        partnerDTO.setPartName(partEntity.getName());
         partnerDTO.setStatus(partEntity.getIsActive());
-        partnerDTO.setProvinceID(partEntity.getProvinceCode());
         partnerDTO.setNote(partEntity.getNote());
         return partnerDTO;
     }

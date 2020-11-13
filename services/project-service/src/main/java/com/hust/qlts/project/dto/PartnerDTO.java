@@ -18,43 +18,17 @@ public class PartnerDTO {
 
     private String code;
 
-    private String customerPmName;
-
-    private String customerEmail;
-
-    private String amName;
-
-    private String amEmail;
-
-    private Date createDate;
-
-    private Long createBy;
-
-    private Date updateDate;
-
-    private Long updateBy;
-
     private String status;
 
     private BigInteger countHM;
 
-    private String partname;
+    private String partName;
 
     private String provinceID;
 
-
-    private String amPhone;
-
-    private String customerPmPhone;
     private String note;
-
-    private String prrovinceCode;
-
     private Integer page;
-    private String groupSupplier;
-    private String humanresources;
-
-    private Integer pageSize;
+    private Integer size;
     private Long totalRecord;
     private Long departmentId;
 }

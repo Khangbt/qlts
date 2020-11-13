@@ -26,26 +26,21 @@ public class PartCustomRepository {
         sql.append("  sp.ID,  ");
         sql.append("  sp.CODE,  ");
         sql.append("  sp.NAME,  ");
-        sql.append("  sp.PROVINCECODE,  ");
         sql.append("  sp.NOTE, ");
         sql.append("  sp.STATUS, ");
-        sql.append("(SELECT COUNT(*) AS NumberOfProducts FROM human_resources where PART_ID = sp.ID), ");
-        sql.append("(SELECT name FROM province where provinceid like sp.PROVINCECODE)   ");
+        sql.append("(SELECT COUNT(*) AS NumberOfProducts FROM human_resources where PART_ID = sp.ID)  ");
 
         sql.append(" from PART as sp              ");
 
 
         sql.append("  where sp.STATUS != '' ");
 
-        if("" != dto.getPartname()){
-            sql.append(" and( sp.NAME like :province )");
+        if("" != dto.getPartName()){
+            sql.append(" and(( sp.NAME like :codeorname ) or (sp.CODE like  :codeorname))");
         }
 
         if ("" != dto.getStatus()) {
             sql.append(" and( sp.STATUS = :status )");
-        }
-        if ("" != dto.getProvinceID()){
-            sql.append(" and( sp.PROVINCECODE = :provinceID )  ");
         }
 
 
@@ -54,9 +49,9 @@ public class PartCustomRepository {
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
 
-        if ("" != dto.getPartname()) {
-            query.setParameter("province", dto.getPartname());
-            queryCount.setParameter("province", dto.getPartname());
+        if ("" != dto.getPartName()) {
+            query.setParameter("codeorname","%"+ dto.getPartName()+"%");
+            queryCount.setParameter("codeorname","%"+ dto.getPartName()+"%");
         }
 
         if ("" != dto.getStatus()) {
@@ -64,16 +59,13 @@ public class PartCustomRepository {
             queryCount.setParameter("status", dto.getStatus());
         }
 
-        if ("" != dto.getProvinceID() ) {
-            query.setParameter("provinceID", dto.getProvinceID());
-            queryCount.setParameter("provinceID", dto.getProvinceID());
-        }
 
 
 
-        if (dto.getPage() != null && dto.getPageSize() != null) {
-            query.setFirstResult((dto.getPage().intValue() - 1) * dto.getPageSize().intValue());
-            query.setMaxResults(dto.getPageSize().intValue());
+
+        if (dto.getPage() != null && dto.getSize() != null) {
+            query.setFirstResult((dto.getPage().intValue() - 1) * dto.getSize().intValue());
+            query.setMaxResults(dto.getSize().intValue());
             dto.setTotalRecord((long) queryCount.getResultList().size());
         }
 
@@ -94,14 +86,10 @@ public class PartCustomRepository {
                 Integer year = c.get(Calendar.YEAR);
                 partnerDTO.setId((BigInteger) obj[0]);
                 partnerDTO.setCode((String) obj[1]);
-                partnerDTO.setAmName((String) obj[2]);
-                partnerDTO.setPrrovinceCode((String) obj[3]);
-                partnerDTO.setNote((String) obj[4]);
-                partnerDTO.setStatus((String) obj[5]);
-                partnerDTO.setCountHM((BigInteger) obj[6]);
-                partnerDTO.setPrrovinceCode((String) obj[7]);
-
-
+                partnerDTO.setPartName((String) obj[2]);
+                partnerDTO.setNote((String) obj[3]);
+                partnerDTO.setStatus((String) obj[4]);
+                partnerDTO.setCountHM((BigInteger) obj[5]);
                 listDto.add(partnerDTO);
             }
         }

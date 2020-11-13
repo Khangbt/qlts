@@ -28,8 +28,7 @@ public class WarehouseCustomRepository {
         sql.append("  sp.NAME,  ");
         sql.append("  sp.NOTE, ");
         sql.append("  sp.ADDRESS, ");
-        sql.append("(SELECT name FROM PART where ID  like sp.PAR_ID),   ");
-        sql.append("(SELECT name FROM province where provinceid like sp.PROVINCECODE)   ");
+        sql.append("(SELECT name FROM PART where ID  like sp.PAR_ID)  ");
 
         sql.append(" from WAREHOUSE as sp              ");
 
@@ -37,16 +36,13 @@ public class WarehouseCustomRepository {
         sql.append("  where sp.STATUS = 1 ");
 
         if("" != dto.getFullName()){
-            sql.append(" and( sp.NAME like :fullName )");
+            sql.append(" and (( sp.NAME like :fullName )  or ( sp.CODE like :fullName ))");
         }
 
         if ("" != dto.getAddress()) {
             sql.append(" and( sp.ADDRESS like :address )");
         }
-        if ("" != dto.getProvinceID()){
-            sql.append(" and( sp.PROVINCECODE = :provinceID )  ");
-        }
-        if (null != dto.getDepartmentId()){
+        if (null != dto.getPartId()){
             sql.append(" and( sp.PAR_ID = :parID )  ");
         }
 
@@ -57,28 +53,24 @@ public class WarehouseCustomRepository {
         Query queryCount = em.createNativeQuery(sql.toString());
 
         if ("" != dto.getFullName()) {
-            query.setParameter("fullName", dto.getFullName());
-            queryCount.setParameter("fullName", dto.getFullName());
+            query.setParameter("fullName", "%"+dto.getFullName()+"%");
+            queryCount.setParameter("fullName", "%"+dto.getFullName()+"%");
         }
 
         if ("" != dto.getAddress()) {
-            query.setParameter("address", dto.getAddress());
-            queryCount.setParameter("address", dto.getAddress());
+            query.setParameter("address", "%"+dto.getAddress()+"%");
+            queryCount.setParameter("address","%"+ dto.getAddress()+"%");
         }
 
-        if ("" != dto.getProvinceID() ) {
-            query.setParameter("provinceID", dto.getProvinceID());
-            queryCount.setParameter("provinceID", dto.getProvinceID());
-        }
-        if(null != dto.getDepartmentId()){
-            query.setParameter("parID",dto.getDepartmentId());
-            queryCount.setParameter("parID",dto.getDepartmentId());
+        if(null != dto.getPartId()){
+            query.setParameter("parID",dto.getPartId());
+            queryCount.setParameter("parID",dto.getPartId());
         }
 
 
-        if (dto.getPage() != null && dto.getPageSize() != null) {
-            query.setFirstResult((dto.getPage().intValue() - 1) * dto.getPageSize().intValue());
-            query.setMaxResults(dto.getPageSize().intValue());
+        if (dto.getPage() != null && dto.getSize() != null) {
+            query.setFirstResult((dto.getPage().intValue() - 1) * dto.getSize().intValue());
+            query.setMaxResults(dto.getSize().intValue());
             dto.setTotalRecord((long) queryCount.getResultList().size());
         }
         List<Object[]> lstObject = query.getResultList();
@@ -92,8 +84,6 @@ public class WarehouseCustomRepository {
         if (CollectionUtils.isNotEmpty(lstObject)) {
             for (Object[] obj : lstObject) {
                 WarehouseDTO dto = new WarehouseDTO();
-                Calendar c = Calendar.getInstance();
-                Integer year = c.get(Calendar.YEAR);
 
                 dto.setWearhouseID((BigInteger) obj[0]);
                 dto.setCode((String) obj[1]);
@@ -101,8 +91,6 @@ public class WarehouseCustomRepository {
                 dto.setNote((String) obj[3]);
                 dto.setAddress((String) obj[4]);
                 dto.setParname((String) obj[5]);
-                dto.setProvincecode((String) obj[6]);
-
 
 
                 listDto.add(dto);

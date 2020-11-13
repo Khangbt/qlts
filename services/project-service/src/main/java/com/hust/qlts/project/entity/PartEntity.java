@@ -43,6 +43,6 @@ public class PartEntity {
     @Column(name = "NOTE")
     private String note;
 
-    @Column(name = "PROVINCECODE")
-    private String provinceCode;
+//    @Column(name = "PROVINCECODE")
+//    private String provinceCode;
 }

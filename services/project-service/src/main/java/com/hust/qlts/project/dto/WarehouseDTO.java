@@ -18,14 +18,9 @@ public class WarehouseDTO {
     private String note;
     private String address;
     private Long partId;
-    private Long area_id;
-    private String provinceID;
-    private String groupSupplier;
     private Integer page;
-    private String provincecode;
-    private String humanresources;
     private String parname;
-    private Integer pageSize;
+    private Integer size;
     private Long totalRecord;
     private Long departmentId;
 }

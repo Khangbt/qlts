@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +50,6 @@ public class SupplierServicelImpl implements SupplierService {
 //                dto.setActive(null);
 //        }
 
-        LocalDate today = LocalDate.now();
-        int currentDate1 = today.getDayOfMonth();
-        int currentMonth = today.getMonthValue();
-        int currentYear = today.getYear();
-        int a = 0;
 
         List<SupplierDTO> listProject = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(customRepository.getSupplierSearch(dto))) {
@@ -73,22 +69,22 @@ public class SupplierServicelImpl implements SupplierService {
     @Override
     public SupplierDTO create(SupplierDTO supplierDTO) {
         SupplierEntity supplierEntity = supplierRepository.findByCode(supplierDTO.getCode());
-        if (null != supplierEntity && supplierDTO.getHumanResourceId() == null) {
+        if (null != supplierEntity && supplierDTO.getSupplierId() == null) {
             throw new CustomExceptionHandler(ErrorCode.CREATED_HR_FALSE.getCode(), HttpStatus.BAD_REQUEST);
         } else if (null != supplierEntity) {
             //TODO: Update  nha cung cấp
 //            supplierEntity.setGroupSupplierid(supplierDTO.getId());
             supplierEntity.setCode(supplierDTO.getCode());
             supplierEntity.setName(supplierDTO.getFullName());
-//            supplierEntity.setHuman_id(supplierDTO.getHumanResourceId());
+            supplierEntity.setFax(supplierDTO.getFax());
             supplierEntity.setAddress(supplierDTO.getAddress());
             supplierEntity.setEmail(supplierDTO.getEmail());
-//            supplierEntity.setPosition(supplierDTO.getPositionId());
             supplierEntity.setWebsite(supplierDTO.getWebsite());
             supplierEntity.setNote(supplierDTO.getNote());
             supplierEntity.setPhoneNumber(supplierDTO.getPhone());
+            supplierEntity.setHumanContact(supplierDTO.getNameHummer());
             supplierEntity.setStatus(1);
-        } else if (supplierDTO.getSupplierid() == null) {
+        } else if (supplierDTO.getSupplierId() == null) {
             //TODO: create nha cung cap
             supplierEntity = convertDTOtoEntity(supplierDTO);
         }
@@ -159,16 +155,17 @@ public class SupplierServicelImpl implements SupplierService {
 
     public SupplierDTO convertEntitytoDTO(SupplierEntity supplierEntity) {
         SupplierDTO supplierDTO = new SupplierDTO();
+        supplierDTO.setFax(supplierEntity.getFax());
+        supplierDTO.setNameHummer(supplierEntity.getHumanContact());
+
         supplierDTO.setFullName(supplierEntity.getName());
-//        supplierDTO.setHumanResourceId(supplierEntity.getHuman_id());
         supplierDTO.setCode(supplierEntity.getCode());
-//        supplierDTO.setId(supplierEntity.getGroupSupplierid());
         supplierDTO.setAddress(supplierEntity.getAddress());
         supplierDTO.setEmail(supplierEntity.getEmail());
-//        supplierDTO.setPositionId(supplierEntity.getPosition());
         supplierDTO.setWebsite(supplierEntity.getWebsite());
         supplierDTO.setNote(supplierEntity.getNote());
         supplierDTO.setPhone(supplierEntity.getPhoneNumber());
+        supplierDTO.setSupplierId(BigInteger.valueOf(supplierEntity.getSupplierId()));
         return supplierDTO;
     }
 

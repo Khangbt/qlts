@@ -41,18 +41,9 @@ public class WarehouseServiceMpl implements WarehouseService {
 
         DataPage<WarehouseDTO> data = new DataPage<>();
         dto.setPage(null != dto.getPage() ? dto.getPage().intValue() : 1);
-        dto.setPageSize(null != dto.getPageSize() ? dto.getPageSize().intValue() : 10);
-        //    String s = String.valueOf(dto.getActive());
-//        if (!s.equals("null")) {
-//            if (dto.getActive() == 0)
-//                dto.setActive(null);
-//        }
+        dto.setSize(null != dto.getSize() ? dto.getSize().intValue() : 10);
 
-        LocalDate today = LocalDate.now();
-        int currentDate1 = today.getDayOfMonth();
-        int currentMonth = today.getMonthValue();
-        int currentYear = today.getYear();
-        int a = 0;
+
 
         List<WarehouseDTO> listProject = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(warehouseCustomRepository.getWarehouseSearch(dto))) {
@@ -60,9 +51,9 @@ public class WarehouseServiceMpl implements WarehouseService {
             data.setData(listProject);
         }
         data.setPageIndex(dto.getPage());
-        data.setPageSize(dto.getPageSize());
+        data.setPageSize(dto.getSize());
         data.setDataCount(dto.getTotalRecord());
-        data.setPageCount(dto.getTotalRecord() / dto.getPageSize());
+        data.setPageCount(dto.getTotalRecord() / dto.getSize());
         if (data.getDataCount() % data.getPageSize() != 0) {
             data.setPageCount(data.getPageCount() + 1);
         }
@@ -76,26 +67,22 @@ public class WarehouseServiceMpl implements WarehouseService {
             throw new CustomExceptionHandler(ErrorCode.CREATED_HR_FALSE.getCode(), HttpStatus.BAD_REQUEST);
         } else if (null != warehouseEntity) {
             //TODO: Update  nha cung cấp
-           // warehouseEntity.setWarehouseID(dto.getIdWare());
+            warehouseEntity.setWarehouseID(Long.valueOf(dto.getIdWare()));
             warehouseEntity.setName(dto.getFullName());
             warehouseEntity.setCode(dto.getCode());
-//            warehouseEntity.setAreaid(dto.getArea_id());
             warehouseEntity.setAddress(dto.getAddress());
             warehouseEntity.setNote(dto.getNote());
             warehouseEntity.setParid(dto.getPartId());
-//            warehouseEntity.setProvincecode(dto.getProvinceID());
 
         } else if(dto.getIdWare() == null){
             //TODO: create nha cung cap
              warehouseEntity = new WarehouseEntity();
             warehouseEntity.setName(dto.getFullName());
             warehouseEntity.setCode(dto.getCode());
-//            warehouseEntity.setAreaid(dto.getArea_id());
             warehouseEntity.setAddress(dto.getAddress());
             warehouseEntity.setNote(dto.getNote());
             warehouseEntity.setParid(dto.getPartId());
             warehouseEntity.setStatus(1);
-//            warehouseEntity.setProvincecode(dto.getProvinceID());
 
         }
         warehouseRepository.save(warehouseEntity);
