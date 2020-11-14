@@ -32,8 +32,8 @@ public class SupplierCustomRepository {
         sql.append("  sp.EMAIL,  ");
         sql.append("  sp.ADDRESS,  ");
         sql.append("  sp.NOTE,  ");
-        sql.append("  sp.WEBSITE  ");
-
+        sql.append("  sp.WEBSITE,  ");
+        sql.append("sp.FAX ");
         sql.append(" from SUPPLIER as sp              ");
 
         sql.append("  where sp.STATUS != 0 ");
@@ -109,6 +109,7 @@ public class SupplierCustomRepository {
                 supplierDTO.setAddress((String) obj[6]);
                 supplierDTO.setNote((String) obj[7]);
                 supplierDTO.setWebsite((String) obj[8]);
+                supplierDTO.setFax((String) obj[9]);
 
                 listDto.add(supplierDTO);
             }
@@ -116,71 +117,5 @@ public class SupplierCustomRepository {
 
         return listDto;
     }
-//    public SupplierDTO findById(Long id) {
-//        StringBuilder sql = new StringBuilder();
-//        sql.append(" select   ");
-//        sql.append("  sp.SUPPLIER_ID,  ");
-//        sql.append("  sp.CODE,  ");
-//        sql.append("  sp.NAME,  ");
-//        sql.append("  ap.PAR_NAME,  ");
-//        sql.append("  hr.FULLNAME,  ");
-//        sql.append("  sp.PHONENUMBER,  ");
-//        sql.append("  sp.EMAIL,  ");
-//        sql.append("  sp.ADDRESS,  ");
-//        sql.append(" ps.NAME position,            ");
-//        sql.append("  sp.NOTE,  ");
-//        sql.append("  sp.WEBSITE  ");
-//
-//        sql.append(" from SUPPLIER as sp              ");
-//        sql.append(" LEFT JOIN POSITION as ps on sp.POSITION_ID = ps.ID                ");
-//        sql.append("  left join APP_PARAMS as ap on sp.GROUP_SUPPLIER_ID = ap.APP_PARAMS_ID  ");
-//        sql.append("  left join HUMAN_RESOURCES as hr on sp.HUMAN_ID = hr.HUMAN_RESOURCES_ID ");
-//
-//        sql.append("  where sp.STATUS != 0 ");
-//
-//        if (null != id) {
-//            sql.append(" and( sp.SUPPLIER_ID = :supplierId )  ");
-//        }
-//
-//
-//        sql.append(" GROUP BY SUPPLIER_ID ");
-//        sql.append(" ORDER BY sp.SUPPLIER_ID DESC");
-//        Query query = em.createNativeQuery(sql.toString());
-//        Query queryCount = em.createNativeQuery(sql.toString());
-//
-//
-//        if (null != id) {
-//            query.setParameter("supplierId", id);
-//            queryCount.setParameter("supplierId", id);
-//        }
-//        List<Object[]> lstObject = query.getResultList();
-//
-//        return convertObjectToDtoShow1(lstObject);
-//    }
 
-    //TanNV convert object to dto
-    public SupplierDTO convertObjectToDtoShow1(List<Object[]> lstObject) {
-        log.info("-------------------------convert dto----------------------------");
-        List<SupplierDTO> listDto = new ArrayList<>();
-        SupplierDTO supplierDTO = new SupplierDTO();
-        if (CollectionUtils.isNotEmpty(lstObject)) {
-            for (Object[] obj : lstObject) {
-                supplierDTO.setSupplierId((BigInteger) obj[0]);
-                supplierDTO.setCode((String) obj[1]);
-                supplierDTO.setFullName((String) obj[2]);
-                supplierDTO.setGroupSupplier((String) obj[3]);
-
-                supplierDTO.setHumanresources((String) obj[4]);
-
-                supplierDTO.setPhone((String) obj[5]);
-                supplierDTO.setEmail((String) obj[6]);
-                supplierDTO.setAddress((String) obj[7]);
-                supplierDTO.setPosition((String) obj[8]);
-                supplierDTO.setNote((String) obj[9]);
-                supplierDTO.setWebsite((String) obj[10]);
-            }
-        }
-
-        return supplierDTO;
-    }
 }

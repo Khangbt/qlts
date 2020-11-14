@@ -69,7 +69,7 @@ public class SupplierServicelImpl implements SupplierService {
     @Override
     public SupplierDTO create(SupplierDTO supplierDTO) {
         SupplierEntity supplierEntity = supplierRepository.findByCode(supplierDTO.getCode());
-        if (null != supplierEntity && supplierDTO.getSupplierId() == null) {
+        if (null == supplierEntity && supplierDTO.getSupplierId() != null) {
             throw new CustomExceptionHandler(ErrorCode.CREATED_HR_FALSE.getCode(), HttpStatus.BAD_REQUEST);
         } else if (null != supplierEntity) {
             //TODO: Update  nha cung cấp
@@ -87,8 +87,13 @@ public class SupplierServicelImpl implements SupplierService {
         } else if (supplierDTO.getSupplierId() == null) {
             //TODO: create nha cung cap
             supplierEntity = convertDTOtoEntity(supplierDTO);
+            supplierEntity.setFax(supplierDTO.getFax());
+            supplierEntity.setHumanContact(supplierDTO.getNameHummer());
+            supplierEntity.setStatus(1);
+
+
         }
-        supplierRepository.save(supplierEntity);
+            supplierRepository.save(supplierEntity);
 
         return convertEntitytoDTO(supplierEntity);
     }
