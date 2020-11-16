@@ -46,4 +46,7 @@ public class DeviceRequestEntity {
     @Column(name = "HANDLER_HUMMER_ID")
     private Long handlerHummerId;
 
+    @Version
+    private Long version;
+
 }

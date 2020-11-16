@@ -32,10 +32,10 @@ public class SupplierDTO {
     private String nameOrCode;
     private String nameHummer;
 
-    private Integer page;
+
     private String groupSupplier;
     private String humanresources;
-
+    private Integer page;
     private Integer pageSize;
 
     private Long totalRecord;

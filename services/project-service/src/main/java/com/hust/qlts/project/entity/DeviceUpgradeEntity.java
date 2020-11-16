@@ -26,4 +26,6 @@ public class DeviceUpgradeEntity {
 
     @Column(name = "NOTE")
     private String note;
+    @Version
+    private Long version;
 }

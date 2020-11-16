@@ -25,4 +25,6 @@ public class DeviceToRequestEntity {
 
     @Column(name = "STATUS")
     private Long status;
+    @Version
+    private Long version;
 }

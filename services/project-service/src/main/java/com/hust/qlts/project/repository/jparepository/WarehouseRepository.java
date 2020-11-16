@@ -1,5 +1,6 @@
 package com.hust.qlts.project.repository.jparepository;
 
+import com.hust.qlts.project.dto.IWarePart;
 import com.hust.qlts.project.entity.WarehouseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,11 @@ public interface WarehouseRepository  extends JpaRepository<WarehouseEntity,Long
 
     @Query(value = "select * from WAREHOUSE where WAREHOUSE_ID=?1 and STATUS=1", nativeQuery = true)
     WarehouseEntity findByID(Long id);
+
+    String sql2="SELECT wh.WAREHOUSE_ID as id,wh.NAME as name,wh.CODE as code from  warehouse  as  wh where  wh.PAR_ID=:id";
+    @Query(value = sql2,nativeQuery = true)
+    List<IWarePart> findListPart(Long id);
+    String sql3="SELECT wh.WAREHOUSE_ID as id,wh.NAME as name,wh.CODE as code from  warehouse  as  wh ";
+    @Query(value = sql3,nativeQuery = true)
+    List<IWarePart> findListPartAll();
 }

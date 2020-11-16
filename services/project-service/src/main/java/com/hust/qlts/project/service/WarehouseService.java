@@ -1,7 +1,10 @@
 package com.hust.qlts.project.service;
 
+import com.hust.qlts.project.dto.IWarePart;
 import com.hust.qlts.project.dto.WarehouseDTO;
 import com.hust.qlts.project.dto.DataPage;
+
+import java.util.List;
 
 public interface WarehouseService {
     DataPage<WarehouseDTO> getPageWarehouseSeach(WarehouseDTO dto);
@@ -10,4 +13,5 @@ public interface WarehouseService {
     Boolean delete (Long id);
     WarehouseDTO findById(Long Id);
     WarehouseDTO findByCode(String code);
+    List<IWarePart> findByPart(Long idPart);
 }

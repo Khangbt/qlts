@@ -45,4 +45,6 @@ public class PartEntity {
 
 //    @Column(name = "PROVINCECODE")
 //    private String provinceCode;
+@Version
+private Long version;
 }

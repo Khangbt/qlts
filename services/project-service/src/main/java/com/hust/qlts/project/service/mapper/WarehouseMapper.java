@@ -5,5 +5,5 @@ import com.hust.qlts.project.entity.WarehouseEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface warehouseMapper extends EntityMapper<WarehouseDTO, WarehouseEntity> {
+public interface WarehouseMapper extends EntityMapper<WarehouseDTO, WarehouseEntity> {
 }

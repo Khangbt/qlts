@@ -25,7 +25,8 @@ import java.util.Map;
 public class WareHouseConrtroller {
     private final Logger log = LogManager.getLogger(HumanResourcesController.class);
 
-    @Autowired private WarehouseService warehouseService;
+    @Autowired
+    private WarehouseService warehouseService;
 
     @PostMapping("/searchWarehouse")
     public ResponseEntity<List<WarehouseDTO>> searchPart(@RequestBody WarehouseDTO dto) {
@@ -44,9 +45,9 @@ public class WareHouseConrtroller {
         log.info("<--- api createNewHr: start,", dto);
         //lấy ra username đang đăng nhập
         // String username = authenService.getEmailCurrentlyLogged(request);
-        ObjectMapper objectMapper=new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        WarehouseDTO warehouseDTO=objectMapper.convertValue(dto,WarehouseDTO.class);
+        WarehouseDTO warehouseDTO = objectMapper.convertValue(dto, WarehouseDTO.class);
         warehouseDTO.setIdWare((Integer) dto.get("iD"));
         try {
             return ResultResp.success(ErrorCode.CREATED_HR_OK, warehouseService.create(warehouseDTO));
@@ -84,6 +85,7 @@ public class WareHouseConrtroller {
             return ResultResp.badRequest(ErrorCode.CREATED_HR_EXIST);
         }
     }
+
     @DeleteMapping("/deletewarehouse/{id}")
     public ResultResp deleteProject(@PathVariable("id") Long id) {
 
@@ -102,4 +104,11 @@ public class WareHouseConrtroller {
             log.info("----------------api delete kho faile-----------------");
             return ResultResp.badRequest(ErrorCode.DELETE_HR_FAIL);
         }
-    }}
+    }
+
+    @GetMapping("/searhPart")
+    public ResponseEntity<?> getListWareByPart(@RequestParam Long id) {
+        return new ResponseEntity<>(warehouseService.findByPart(id), HttpStatus.OK);
+
+    }
+}

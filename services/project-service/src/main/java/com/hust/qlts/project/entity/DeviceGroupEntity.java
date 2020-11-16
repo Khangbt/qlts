@@ -31,4 +31,12 @@ public class DeviceGroupEntity {
     @Column(name = "SIZE_ID")
     private Integer sizeId;
 
+    @Column(name = "SPECIFICATIONS")//thông số ki thuât
+    private String specifications;
+
+    @Column(name = "NOTE")
+    private String note;
+    @Version
+    private Long version;
+
 }

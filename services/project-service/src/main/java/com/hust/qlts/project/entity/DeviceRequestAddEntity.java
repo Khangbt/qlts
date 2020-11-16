@@ -36,5 +36,7 @@ public class DeviceRequestAddEntity {
 
     @Column(name = "STATUS")
     private Integer status;
+    @Version
+    private Long version;
 
 }

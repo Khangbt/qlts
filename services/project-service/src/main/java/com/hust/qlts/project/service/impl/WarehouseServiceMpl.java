@@ -1,12 +1,14 @@
 package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.dto.DataPage;
+import com.hust.qlts.project.dto.IWarePart;
 import com.hust.qlts.project.dto.WarehouseDTO;
 import com.hust.qlts.project.entity.WarehouseEntity;
 import com.hust.qlts.project.repository.customreporsitory.HumanResourcesCustomRepository;
 import com.hust.qlts.project.repository.customreporsitory.WarehouseCustomRepository;
 import com.hust.qlts.project.repository.jparepository.WarehouseRepository;
 import com.hust.qlts.project.service.WarehouseService;
+import com.hust.qlts.project.service.mapper.WarehouseMapper;
 import common.ErrorCode;
 import exception.CustomExceptionHandler;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,9 +34,11 @@ public class WarehouseServiceMpl implements WarehouseService {
     private WarehouseRepository warehouseRepository;
 
     @Autowired
-    com.hust.qlts.project.service.mapper.warehouseMapper warehouseMapper;
+    private WarehouseMapper warehouseMapper;
 
-    @Autowired private WarehouseCustomRepository warehouseCustomRepository;
+    @Autowired
+    private WarehouseCustomRepository warehouseCustomRepository;
+
     @Override
     public DataPage<WarehouseDTO> getPageWarehouseSeach(WarehouseDTO dto) {
         log.info("-----------------Danh sach nhà cung cấp--------------");
@@ -42,7 +46,6 @@ public class WarehouseServiceMpl implements WarehouseService {
         DataPage<WarehouseDTO> data = new DataPage<>();
         dto.setPage(null != dto.getPage() ? dto.getPage().intValue() : 1);
         dto.setSize(null != dto.getSize() ? dto.getSize().intValue() : 10);
-
 
 
         List<WarehouseDTO> listProject = new ArrayList<>();
@@ -74,9 +77,9 @@ public class WarehouseServiceMpl implements WarehouseService {
             warehouseEntity.setNote(dto.getNote());
             warehouseEntity.setParid(dto.getPartId());
 
-        } else if(dto.getIdWare() == null){
+        } else if (dto.getIdWare() == null) {
             //TODO: create nha cung cap
-             warehouseEntity = new WarehouseEntity();
+            warehouseEntity = new WarehouseEntity();
             warehouseEntity.setName(dto.getFullName());
             warehouseEntity.setCode(dto.getCode());
             warehouseEntity.setAddress(dto.getAddress());
@@ -96,9 +99,9 @@ public class WarehouseServiceMpl implements WarehouseService {
 
     @Override
     public Boolean delete(Long id) {
-        if (null != id){
+        if (null != id) {
             WarehouseEntity supplierEntity = warehouseRepository.findByID(id);
-            if (supplierEntity !=null) {
+            if (supplierEntity != null) {
                 supplierEntity.setStatus(0);
                 warehouseRepository.save(supplierEntity);
                 log.info("<--- DELETE SUPPLIER COMPLETE");
@@ -114,7 +117,7 @@ public class WarehouseServiceMpl implements WarehouseService {
 
     @Override
     public WarehouseDTO findById(Long Id) {
-         if (!warehouseRepository.findById(Id).isPresent()) {
+        if (!warehouseRepository.findById(Id).isPresent()) {
             throw new CustomExceptionHandler(ErrorCode.USERNAME_NOT_FOUND.getCode(), HttpStatus.BAD_REQUEST);
         }
         return convertEntitytoDTO(warehouseRepository.findById(Id).get());
@@ -129,15 +132,27 @@ public class WarehouseServiceMpl implements WarehouseService {
         return warehouseMapper.toDto(warehouseRepository.findByCode(code));
     }
 
-    public WarehouseDTO convertEntitytoDTO(WarehouseEntity warehouseEntity){
+    @Override
+    public List<IWarePart> findByPart(Long idPart) {
+        List<IWarePart> list;
+        if (null == idPart || idPart == 0) {
+            list = warehouseRepository.findListPartAll();
+        } else {
+            list = warehouseRepository.findListPart(idPart);
+        }
+
+        return list;
+    }
+
+    public WarehouseDTO convertEntitytoDTO(WarehouseEntity warehouseEntity) {
         WarehouseDTO warehouseDTO = new WarehouseDTO();
         warehouseDTO.setAddress(warehouseEntity.getAddress());
         warehouseDTO.setCode(warehouseEntity.getCode());
         warehouseDTO.setFullName(warehouseEntity.getName());
         warehouseDTO.setNote(warehouseEntity.getNote());
-      // warehouseDTO.setID(warehouseEntity.getWarehouseID());
+        // warehouseDTO.setID(warehouseEntity.getWarehouseID());
 //       warehouseDTO.setProvinceID(warehouseEntity.getProvincecode());
-       warehouseDTO.setPartId(warehouseEntity.getParid());
+        warehouseDTO.setPartId(warehouseEntity.getParid());
         return warehouseDTO;
     }
 }

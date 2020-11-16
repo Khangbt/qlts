@@ -143,4 +143,9 @@ public class Constants {
 
     //local
 //    public static final String FOLDER_SAVE_FILE = "D:/fileUpload/";
+
+
+    public static final Integer TOT=1;
+    public static final Integer TRUNGBING=2;
+    public static final Integer XAU=3;
 }
