@@ -2,7 +2,8 @@ package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.dto.DataPage;
 import com.hust.qlts.project.dto.DeviceDto;
-import com.hust.qlts.project.dto.request.DeviceGroupReqDto;
+import com.hust.qlts.project.dto.DeviceFindDto;
+import com.hust.qlts.project.dto.DeviceGroupFindDto;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.repository.customreporsitory.DeviceCustomRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceRepository;
@@ -67,5 +68,10 @@ public class DeviceServiceImpl implements DeviceService {
     public boolean deleteDevice(Integer id) {
         ///check dieedeuf kiên xóa
         return false;
+    }
+
+    @Override
+    public DeviceFindDto getFindByCode(String code) {
+        return deviceCustomRepository.getFindByCode(code);
     }
 }

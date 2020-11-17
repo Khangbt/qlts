@@ -1,10 +1,10 @@
-package com.hust.qlts.project.dto.request;
+package com.hust.qlts.project.dto;
 
 
 import lombok.Data;
 
 @Data
-public class DeviceGroupReqDto{
+public class DeviceGroupDto {
 
     private Long id;
     private String code;

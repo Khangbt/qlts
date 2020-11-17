@@ -2,6 +2,8 @@ package com.hust.qlts.project.service;
 
 import com.hust.qlts.project.dto.DataPage;
 import com.hust.qlts.project.dto.DeviceDto;
+import com.hust.qlts.project.dto.DeviceFindDto;
+import com.hust.qlts.project.dto.DeviceGroupFindDto;
 import com.hust.qlts.project.entity.DeviceEntity;
 
 import java.util.List;
@@ -11,4 +13,5 @@ public interface DeviceService {
      DataPage<DeviceDto> searList(DeviceDto dto);
      DeviceDto update(DeviceDto dto,Long id);
      boolean deleteDevice(Integer id);
+     DeviceFindDto getFindByCode(String code);
 }

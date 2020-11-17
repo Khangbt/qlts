@@ -1,7 +1,7 @@
 package com.hust.qlts.project.controller;
 
 import com.hust.qlts.project.dto.DeviceDto;
-import com.hust.qlts.project.dto.request.DeviceGroupReqDto;
+import com.hust.qlts.project.dto.DeviceFindDto;
 import com.hust.qlts.project.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,5 +37,13 @@ public class DeviceController {
             return new ResponseEntity<>("OK", HttpStatus.OK);
         }
         return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
+    }
+    @GetMapping("/findbyid/{code}")
+    public ResponseEntity<?> getFindByCode(@PathVariable("code") String code) {
+        DeviceFindDto dto=deviceService.getFindByCode(code);
+        if(dto==null){
+            return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
+        }
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

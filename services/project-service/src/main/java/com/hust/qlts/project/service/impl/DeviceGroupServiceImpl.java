@@ -1,7 +1,8 @@
 package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.dto.DataPage;
-import com.hust.qlts.project.dto.request.DeviceGroupReqDto;
+import com.hust.qlts.project.dto.DeviceGroupDto;
+import com.hust.qlts.project.dto.DeviceGroupFindDto;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.entity.DeviceGroupEntity;
 import com.hust.qlts.project.repository.customreporsitory.DeviceGroupCustomRepository;
@@ -32,7 +33,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Object creatDeviceGoup(DeviceGroupReqDto dto) {
+    public Object creatDeviceGoup(DeviceGroupDto dto) {
         DeviceGroupEntity entity = (DeviceGroupEntity) ConvetSetData.xetData(new DeviceGroupEntity(), dto);
         assert entity != null;
         DeviceGroupEntity entity1 = deviceGroupRepository.save(entity);
@@ -56,7 +57,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Object updateDeviceGroup(DeviceGroupReqDto dto, Integer id) {
+    public Object updateDeviceGroup(DeviceGroupDto dto, Integer id) {
         if (!deviceGroupRepository.findById(Long.valueOf(id)).isPresent()) {
             return null;
         }
@@ -98,11 +99,11 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     }
 
     @Override
-    public DataPage<DeviceGroupReqDto> searchAsser(DeviceGroupReqDto dto) {
-        DataPage<DeviceGroupReqDto> dtoDataPage = new DataPage<>();
+    public DataPage<DeviceGroupDto> searchAsser(DeviceGroupDto dto) {
+        DataPage<DeviceGroupDto> dtoDataPage = new DataPage<>();
         dto.setPage(null != dto.getPage() ? dto.getPage().intValue() : 1);
         dto.setPageSize(null != dto.getPageSize() ? dto.getPageSize().intValue() : 10);
-        List<DeviceGroupReqDto> list = new ArrayList<>();
+        List<DeviceGroupDto> list = new ArrayList<>();
         try {
             list = deviceGroupCustomRepository.search(dto);
             dtoDataPage.setData(list);
@@ -119,6 +120,11 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
         }
         return dtoDataPage;
 
+    }
+
+    @Override
+    public DeviceGroupFindDto getFindByCode(String code) {
+        return deviceGroupCustomRepository.findByCode(code);
     }
 
     private String creatCode(int id, String code) {
