@@ -18,6 +18,9 @@ public class DeviceDto {
     private String hummer;
     private Integer status;
     private String partName;
+    private Integer sizeUnit;
+    private String unit;
+    private Integer lostDevice;
 
 
     private Integer page;

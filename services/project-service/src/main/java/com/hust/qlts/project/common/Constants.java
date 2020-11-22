@@ -1,8 +1,5 @@
 package com.hust.qlts.project.common;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class Constants {
     public static final int IS_NEW_DEFAULT = 0;
     public static final int IS_ACTIVE = 1;
@@ -15,7 +12,6 @@ public class Constants {
         public static final String NumberAsString = "NumberAsString";
     }
 
-    public static void main(String[] args) {
-    }
+
 
 }

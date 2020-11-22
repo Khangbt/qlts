@@ -22,9 +22,7 @@ public class WarehouseEntity {
 
     @Column(name="NAME")
     private String name;
-// KHU VUC
-//    @Column(name="AREA_ID")
-//    private Long areaid;
+
 
     @Column(name="PAR_ID")
     private Long parid;
@@ -38,6 +36,4 @@ public class WarehouseEntity {
     @Column(name="STATUS")
     private Integer status;
 
-//    @Column(name="PROVINCECODE")
-//    private String provincecode;
 }

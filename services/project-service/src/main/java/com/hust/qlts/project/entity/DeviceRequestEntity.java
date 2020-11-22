@@ -19,6 +19,9 @@ public class DeviceRequestEntity {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "CODE")
+    private String code;
+
     @Column(name = "CREAT_HUMMER_ID")
     private Long creatHummerId;
 
@@ -35,7 +38,7 @@ public class DeviceRequestEntity {
     private String note;
 
     @Column(name = "CREAT_DATE")
-    private String creatDate;
+    private Date creatDate;
 
     @Column(name = "REASON")
     private String reason;

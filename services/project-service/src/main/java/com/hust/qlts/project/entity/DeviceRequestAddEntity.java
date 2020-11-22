@@ -19,6 +19,8 @@ public class DeviceRequestAddEntity {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "CODE")
+    private String code;
     @Column(name = "CREAT_DATE")
     private Date creatDate;
 

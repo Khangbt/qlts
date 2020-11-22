@@ -1,8 +1,6 @@
 package com.hust.qlts.project.service.impl;
 
-import com.hust.qlts.project.dto.DataPage;
-import com.hust.qlts.project.dto.DeviceGroupDto;
-import com.hust.qlts.project.dto.DeviceGroupFindDto;
+import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.entity.DeviceGroupEntity;
 import com.hust.qlts.project.repository.customreporsitory.DeviceGroupCustomRepository;
@@ -46,7 +44,10 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setSupplierId(dto.getSupplierId());
             deviceEntity.setIdEquipmentGroup(entity1.getId());
             deviceEntity.setWarehouseID(dto.getWarehouseID());
-            deviceEntity.setStatus(Constants.TOT);
+            deviceEntity.setStatus(Constants.TRONGKHO);
+            deviceEntity.setUnit(dto.getUnit());
+            deviceEntity.setSizeUnit(dto.getSizeUnit());
+            deviceEntity.setLostDevice(100);
             list.add(deviceEntity);
 
         }
@@ -69,9 +70,12 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setDateAdd(new Date());
             deviceEntity.setPartId(dto.getPartId());
             deviceEntity.setSupplierId(dto.getSupplierId());
-            deviceEntity.setIdEquipmentGroup(entity.getId());
+            deviceEntity.setIdEquipmentGroup(Long.valueOf(id));
             deviceEntity.setWarehouseID(dto.getWarehouseID());
-            deviceEntity.setStatus(Constants.TOT);
+            deviceEntity.setStatus(Constants.TRONGKHO);
+            deviceEntity.setUnit(dto.getUnit());
+            deviceEntity.setSizeUnit(dto.getSizeUnit());
+            deviceEntity.setLostDevice(100);
             list.add(deviceEntity);
 
         }
@@ -127,6 +131,16 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
         return deviceGroupCustomRepository.findByCode(code);
     }
 
+    @Override
+    public List<DeviceGroupMaxCodeDto> getMaxCode(String code) {
+        if (null == code || code.equals("")) {
+            code = "%%";
+            return convent(deviceGroupRepository.findByMaxCode(code));
+        }
+        code = "%" + code + "%";
+        return convent(deviceGroupRepository.findByMaxCode(code));
+    }
+
     private String creatCode(int id, String code) {
         StringBuilder codeData = new StringBuilder();
         codeData.append(code);
@@ -136,5 +150,22 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
         codeData.append(id);
 
         return codeData.toString();
+    }
+
+    private List<DeviceGroupMaxCodeDto> convent(List<IDeviceGroupMaxCodeDto> dtos) {
+        List<DeviceGroupMaxCodeDto> list = new ArrayList<>();
+        for (IDeviceGroupMaxCodeDto dto : dtos) {
+            DeviceGroupMaxCodeDto codeDto = new DeviceGroupMaxCodeDto();
+            codeDto.setCode(dto.getCode());
+            codeDto.setId(dto.getId());
+            codeDto.setMaxCode(dto.getMaxCode());
+            codeDto.setSize(dto.size());
+            if (dto.getMaxCode() != null) {
+                String data = dto.getMaxCode();
+                codeDto.setNextMaxCode(creatCode(Integer.parseInt(String.copyValueOf(data.toCharArray(), data.length() - 4, 4)+1), dto.getCode()));
+            }
+            list.add(codeDto);
+        }
+        return list;
     }
 }

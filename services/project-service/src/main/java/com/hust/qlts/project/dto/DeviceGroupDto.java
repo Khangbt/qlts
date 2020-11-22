@@ -13,13 +13,18 @@ public class DeviceGroupDto {
     private Integer sizeId;
     private String specifications;
     private String note;
-
+    private Integer size;
     private Long supplierId;
-    private String partId;
+    private Long partId;
     private String location;
     private Long warehouseID;
-
-
+    private String partName;
+    private Integer sizeUnit;
+    private String unit;
+    private Integer lostDevice;
+    private String supperName;
+    private String warehouseName;
+    private Integer sizeWareHouse;
     private Integer page;
     private Integer pageSize;
 

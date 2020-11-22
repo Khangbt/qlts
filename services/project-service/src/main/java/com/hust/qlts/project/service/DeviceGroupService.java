@@ -1,8 +1,8 @@
 package com.hust.qlts.project.service;
 
-import com.hust.qlts.project.dto.DataPage;
-import com.hust.qlts.project.dto.DeviceGroupDto;
-import com.hust.qlts.project.dto.DeviceGroupFindDto;
+import com.hust.qlts.project.dto.*;
+
+import java.util.List;
 
 public interface DeviceGroupService {
    public Object creatDeviceGoup(DeviceGroupDto dto);
@@ -11,4 +11,5 @@ public interface DeviceGroupService {
    public boolean checkCode(String code);
    public DataPage<DeviceGroupDto> searchAsser(DeviceGroupDto dto);
    DeviceGroupFindDto getFindByCode(String code);
+   List<DeviceGroupMaxCodeDto> getMaxCode(String code);
 }

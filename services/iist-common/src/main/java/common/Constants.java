@@ -145,7 +145,14 @@ public class Constants {
 //    public static final String FOLDER_SAVE_FILE = "D:/fileUpload/";
 
 
-    public static final Integer TOT=1;
-    public static final Integer TRUNGBING=2;
-    public static final Integer XAU=3;
+    public static final Integer TRONGKHO = 1;
+    public static final Integer SUACHUA = 2;
+    public static final Integer DANGSUDUNG = 3;
+
+    public static final Integer CHUAXACNHAN = 1;
+    public static final Integer XACNHAN = 2;
+    public static final Integer HUY = 3;
+
+    public static final Integer CHUAMUON = 1;
+    public static final Integer DANGMUON = 2;
 }

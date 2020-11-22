@@ -19,11 +19,21 @@ public class DeviceCustomRepository {
     public List<DeviceDto> search(DeviceDto dto) {
         StringBuffer sql = new StringBuffer();
         sql.append(" select d.DEVICE_ID, dg.NAME, d.CODE, d.PART_ID, dg.SPECIFICATIONS, d.LOCATION, ");
-        sql.append("    d.NOTE,p.NAME as name1,d.STATUS  ");
+        sql.append("    d.NOTE,p.NAME as name1,d.STATUS , ");
+        sql.append("    hr.FULLNAME        as creatName,    ");
+        sql.append("       dr.HANDLER_HUMMER_ID,    ");
+        sql.append("(select hr2.FULLNAME  " +
+                "        from human_resources hr2  " +
+                "        where hr2.HUMAN_RESOURCES_ID = dr.HANDLER_HUMMER_ID) as handlerName, ");
+        sql.append("dr.CODE          as reDeCodeq,  " +
+                "       d.WAREHOUSE_ID  ");
+
         sql.append("    from device as d    ");
         sql.append("         left join device_group as dg on d.EQUIPMENT_GROUP_ID = dg.ID   ");
         sql.append("        left join part as p on d.PART_ID=p.ID  ");
-
+        sql.append("    left join device_to_request as dtr on dtr.DEVICE_ID = d.DEVICE_ID  " +
+                "         left join device_request as dr on dtr.DEVICE_REQUEST_ID = dr.ID  " +
+                "         left join human_resources as hr on hr.HUMAN_RESOURCES_ID = dr.CREAT_HUMMER_ID ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (dto.getPage() != null && dto.getPageSize() != null) {
@@ -42,7 +52,9 @@ public class DeviceCustomRepository {
             dto.setId(Long.valueOf(String.valueOf((o[0]))));
             dto.setName((String) o[1]);
             dto.setCode((String) o[2]);
-            dto.setPartId(Long.valueOf(String.valueOf((o[3]))));
+            if (o[3] != null) {
+                dto.setPartId(Long.valueOf(String.valueOf((o[3]))));
+            }
             dto.setSpecifications((String) o[4]);
             dto.setLocation((String) o[5]);
             dto.setNote((String) o[6]);
@@ -54,8 +66,9 @@ public class DeviceCustomRepository {
 
         return list;
     }
-    public DeviceFindDto getFindByCode(String code){
-        StringBuffer sql=new StringBuffer();
+
+    public DeviceFindDto getFindByCode(String code) {
+        StringBuffer sql = new StringBuffer();
         sql.append(" select d.DEVICE_ID, dg.NAME, d.CODE, d.PART_ID, dg.SPECIFICATIONS, d.LOCATION, ");
         sql.append("    d.NOTE,p.NAME as name1,d.STATUS  ");
         sql.append("    from device as d    ");
@@ -67,14 +80,15 @@ public class DeviceCustomRepository {
         query.setParameter("code", code);
 
         List<Object[]> objectList = query.getResultList();
-        if(objectList==null){
+        if (objectList == null) {
             return null;
         }
-        return conventDtoFind(objectList.get(0)) ;
+        return conventDtoFind(objectList.get(0));
 
     }
-    private DeviceFindDto conventDtoFind(Object[] o){
-        DeviceFindDto dto=new DeviceFindDto();
+
+    private DeviceFindDto conventDtoFind(Object[] o) {
+        DeviceFindDto dto = new DeviceFindDto();
         dto.setId(Long.valueOf(String.valueOf((o[0]))));
         dto.setName((String) o[1]);
         dto.setCode((String) o[2]);
@@ -85,5 +99,9 @@ public class DeviceCustomRepository {
         dto.setPartName((String) o[7]);
         dto.setStatus((Integer) o[8]);
         return dto;
+    }
+
+    public void setListDeviceStasus(List<String> list) {
+
     }
 }

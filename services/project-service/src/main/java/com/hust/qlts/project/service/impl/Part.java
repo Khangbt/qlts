@@ -80,8 +80,8 @@ public class Part implements PartService {
                 partEntity.setCode(partnerDTO.getCode());
                 partEntity.setName(partnerDTO.getPartName());
                 partEntity.setIsActive(partnerDTO.getStatus());
-//                partEntity.setProvinceCode(partnerDTO.getProvinceID());
                 partEntity.setNote(partnerDTO.getNote());
+
                 partRepository.save(partEntity);
                 return convertEntitytoDTO(partEntity);
 
@@ -110,7 +110,9 @@ public class Part implements PartService {
         if (!partRepository.findById(Id).isPresent()) {
             throw new CustomExceptionHandler(ErrorCode.USERNAME_NOT_FOUND.getCode(), HttpStatus.BAD_REQUEST);
         }
-        return convertEntitytoDTO(partRepository.findById(Id).get());
+        PartnerDTO partnerDTO=convertEntitytoDTO(partRepository.findById(Id).get());
+        partnerDTO.setPartnerID(partRepository.findById(Id).get().getId());
+        return partnerDTO;
     }
 
     @Override

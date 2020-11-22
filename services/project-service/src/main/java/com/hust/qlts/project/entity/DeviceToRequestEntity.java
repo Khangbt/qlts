@@ -25,6 +25,10 @@ public class DeviceToRequestEntity {
 
     @Column(name = "STATUS")
     private Long status;
+
+    @Column(name = "DEVICE_GROUP_ID")
+    private Long deviceGroupId;
+
     @Version
     private Long version;
 }

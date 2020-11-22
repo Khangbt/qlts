@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +20,68 @@ public class DeviceGroupCustomRepository {
         StringBuffer sql = new StringBuffer();
         sql.append(" SELECT dg.ID,  ");
         sql.append(" dg.CODE, dg.NAME, dg.SIZE_ID, dg.NOTE, dg.SPECIFICATIONS,  ");
-        sql.append(" dg.TYLE ");
-        sql.append(" from device_group as dg ");
+        sql.append(" dg.TYLE , ");
+        sql.append(" (select count(*)  " +
+                "        from device_group as dg1  " +
+                "                 join device as d1 on d1.EQUIPMENT_GROUP_ID = dg1.ID  " +
+                "        where dg1.ID = dg.ID ");
+        if (null != dto.getPartId()) {
+            sql.append("  and d1.PART_ID=:partId ");
+        }
+        sql.append("    ) as size, ");
 
+        sql.append(" ( select group_concat(DISTINCT  p.NAME)  " +
+                "        from device_group as dg2  " +
+                "                 join device as d2 on d2.EQUIPMENT_GROUP_ID = dg2.ID  " +
+                "                 left join part as p on d2.PART_ID = p.ID  " +
+                "        where dg2.ID = dg.ID  ");
+        if (null != dto.getPartId()) {
+            sql.append("  and d2.PART_ID=:partId ");
+        }
+        sql.append("   group by dg2.ID  ) as pard , ");
+        sql.append(" (select count(*)  " +
+                "        from device as d3  " +
+                "        where d3.STATUS = 1  " +
+                "          and d3.EQUIPMENT_GROUP_ID = dg.ID    ");
+
+        if (null != dto.getPartId()) {
+            sql.append("  and d3.PART_ID=:partId ");
+        }
+        sql.append("group by d3.EQUIPMENT_GROUP_ID) as p,   ");
+        sql.append("(   select group_concat(distinct s4.NAME)  " +
+                "           from device as d4  " +
+                "                    left join warehouse as s4 on d4.WAREHOUSE_ID = s4.WAREHOUSE_ID  " +
+                "           where d4.STATUS = 1  " +
+                "             and d4.EQUIPMENT_GROUP_ID = dg.ID");
+
+        if (null != dto.getPartId()) {
+            sql.append("   and d4.PART_ID = :partId    ");
+        }
+        sql.append(")     as p1 ,");
+
+        sql.append(" (select group_concat(distinct s5.NAME)  " +
+                "        from device as d5  " +
+                "                 left join supplier as s5 on d5.SUPPLIER_ID = s5.SUPPLIER_ID  " +
+                "        where d5.EQUIPMENT_GROUP_ID = dg.ID ");
+        if (null != dto.getPartId()) {
+            sql.append("   and d5.PART_ID = :partId    ");
+        }
+        sql.append("  )     as p2 ");
+        sql.append(" from device_group as dg ");
+        sql.append(" join device as d on d.EQUIPMENT_GROUP_ID = dg.ID ");
+        sql.append("    where 1=1 ");
+        if (null != dto.getPartId()) {
+            sql.append("  and d.PART_ID=:partId ");
+        }
+        sql.append("    group by dg.ID ");
 
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
+        if (null != dto.getPartId()) {
+            query.setParameter("partId", dto.getPartId());
+            queryCount.setParameter("partId", dto.getPartId());
+
+        }
         if (dto.getPage() != null && dto.getPageSize() != null) {
             query.setFirstResult((dto.getPage().intValue() - 1) * dto.getPageSize().intValue());
             query.setMaxResults(dto.getPageSize().intValue());
@@ -45,6 +102,11 @@ public class DeviceGroupCustomRepository {
             dto.setNote((String) o[4]);
             dto.setSpecifications((String) o[5]);
             dto.setTyle((String) o[6]);
+            dto.setSize(Integer.valueOf(String.valueOf(o[7])));
+            dto.setPartName((String) o[8]);
+            dto.setSizeWareHouse(Integer.valueOf(String.valueOf(o[9])));
+            dto.setWarehouseName((String) o[10]);
+            dto.setSupperName((String) o[11]);
             list.add(dto);
         }
 
@@ -61,7 +123,7 @@ public class DeviceGroupCustomRepository {
         Query query = em.createNativeQuery(sql.toString());
         query.setParameter("code", code);
         List<Object[]> objectList = query.getResultList();
-        if(objectList==null){
+        if (objectList == null) {
             return null;
         }
 

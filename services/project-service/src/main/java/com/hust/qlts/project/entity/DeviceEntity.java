@@ -36,7 +36,7 @@ public class DeviceEntity implements Serializable {
     private String note;
 
     @Column(name = "PART_ID")
-    private String partId;
+    private Long partId;
 
     @Column(name = "EQUIPMENT_GROUP_ID")//nhom thiết bi
     private Long idEquipmentGroup;
@@ -49,6 +49,15 @@ public class DeviceEntity implements Serializable {
 
     @Column(name = "WAREHOUSE_ID")
     private Long warehouseID;
+
+    @Column(name = "UNIT")
+    private String unit;
+
+    @Column(name = "SIZE_UNIT")
+    private Integer sizeUnit;
+
+    @Column(name = "LOST_DEVICE")
+    private Integer lostDevice;
 
     @Version
     private Long version;

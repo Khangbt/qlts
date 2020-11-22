@@ -74,4 +74,21 @@ public class DeviceServiceImpl implements DeviceService {
     public DeviceFindDto getFindByCode(String code) {
         return deviceCustomRepository.getFindByCode(code);
     }
+
+    @Override
+    public DeviceDto craet(DeviceDto dto) {
+        DeviceEntity deviceEntity= (DeviceEntity) ConvetSetData.xetData(new DeviceEntity(),dto);
+
+        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),deviceRepository.save(deviceEntity));
+    }
+
+    @Override
+    public String getMaxCode(Long id) {
+        return deviceRepository.getMaxCode(id);
+    }
+
+    @Override
+    public boolean updateListStatus(List<String> code) {
+        return false;
+    }
 }
