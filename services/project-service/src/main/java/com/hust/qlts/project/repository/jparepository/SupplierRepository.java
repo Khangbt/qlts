@@ -1,9 +1,13 @@
 package com.hust.qlts.project.repository.jparepository;
 
+import com.hust.qlts.project.dto.ISupplierListDto;
+import com.hust.qlts.project.dto.IWarePart;
 import com.hust.qlts.project.entity.SupplierEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface SupplierRepository extends JpaRepository<SupplierEntity, Long> {
@@ -37,5 +41,13 @@ public interface SupplierRepository extends JpaRepository<SupplierEntity, Long> 
         +" ORDER BY sp.SUPPLIER_ID DESC ";
     @Query(value = sql, nativeQuery = true)
     SupplierEntity findById1(Long supplierId);
+
+    String sql2="SELECT wh.SUPPLIER_ID as id,wh.NAME as name,wh.CODE as code from  supplier  as  wh where wh.STATUS=1";
+    @Query(value = sql2,nativeQuery = true)
+    List<ISupplierListDto> findListPart();
+
+
+
+
 
 }

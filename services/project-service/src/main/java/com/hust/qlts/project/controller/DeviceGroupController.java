@@ -1,8 +1,10 @@
 package com.hust.qlts.project.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hust.qlts.project.common.FileUploadUtil;
 import com.hust.qlts.project.dto.DeviceGroupDto;
 import com.hust.qlts.project.dto.DeviceGroupFindDto;
+import com.hust.qlts.project.dto.DeviceGroupListDto;
 import com.hust.qlts.project.service.DeviceGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -24,6 +27,7 @@ public class DeviceGroupController {
     @PostMapping( "/create")
     public ResponseEntity<?> creatDeviceGroup(
                                               @RequestBody DeviceGroupDto dto) {
+        ObjectMapper mapper=new ObjectMapper();
         Object o = deviceGroupService.creatDeviceGoup(dto);
 //        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 //        String uploadDir = "user-photos/" + multipartFile.getName();
@@ -74,5 +78,14 @@ public class DeviceGroupController {
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+    @GetMapping("/getListPart")
+    private ResponseEntity<?> getListPart(@RequestParam("id") Integer id){
+        List<DeviceGroupListDto> list=deviceGroupService.getList(id);
+        if(list.size()==0){
+            return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
 
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+
+    }
 }

@@ -25,6 +25,7 @@ public class DeviceGroupDto {
     private String supperName;
     private String warehouseName;
     private Integer sizeWareHouse;
+    private String nameOrCode;
     private Integer page;
     private Integer pageSize;
 

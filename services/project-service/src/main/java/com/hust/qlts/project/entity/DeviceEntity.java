@@ -58,7 +58,8 @@ public class DeviceEntity implements Serializable {
 
     @Column(name = "LOST_DEVICE")
     private Integer lostDevice;
-
+    @Column(name = "EXIST")
+    private boolean exist;
     @Version
     private Long version;
 

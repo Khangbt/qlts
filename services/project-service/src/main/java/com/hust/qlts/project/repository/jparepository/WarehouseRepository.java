@@ -23,10 +23,10 @@ public interface WarehouseRepository  extends JpaRepository<WarehouseEntity,Long
     @Query(value = "select * from WAREHOUSE where WAREHOUSE_ID=?1 and STATUS=1", nativeQuery = true)
     WarehouseEntity findByID(Long id);
 
-    String sql2="SELECT wh.WAREHOUSE_ID as id,wh.NAME as name,wh.CODE as code from  warehouse  as  wh where  wh.PAR_ID=:id";
+    String sql2="SELECT wh.WAREHOUSE_ID as id,wh.NAME as name,wh.CODE as code from  warehouse  as  wh where  wh.PAR_ID=:id and wh.STATUS=1";
     @Query(value = sql2,nativeQuery = true)
     List<IWarePart> findListPart(Long id);
-    String sql3="SELECT wh.WAREHOUSE_ID as id,wh.NAME as name,wh.CODE as code from  warehouse  as  wh ";
+    String sql3="SELECT wh.WAREHOUSE_ID as id,wh.NAME as name,wh.CODE as code from  warehouse  as  wh where wh.STATUS=1";
     @Query(value = sql3,nativeQuery = true)
     List<IWarePart> findListPartAll();
 }

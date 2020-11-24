@@ -20,8 +20,10 @@ public class ImageEntity {
 
     @Column(name = "PATH")
     private String name;
+
     @Column(name = "ID_CODE")
     private Long idCode;
+
     @Column(name = "TYLE")
     private Integer tyle;
 

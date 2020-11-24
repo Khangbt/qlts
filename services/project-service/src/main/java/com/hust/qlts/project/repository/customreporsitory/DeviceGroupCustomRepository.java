@@ -2,12 +2,12 @@ package com.hust.qlts.project.repository.customreporsitory;
 
 import com.hust.qlts.project.dto.DeviceGroupDto;
 import com.hust.qlts.project.dto.DeviceGroupFindDto;
+import com.hust.qlts.project.dto.DeviceGroupListDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class DeviceGroupCustomRepository {
         sql.append(" (select count(*)  " +
                 "        from device_group as dg1  " +
                 "                 join device as d1 on d1.EQUIPMENT_GROUP_ID = dg1.ID  " +
-                "        where dg1.ID = dg.ID ");
+                "        where dg1.ID = dg.ID and d1.EXIST=true ");
         if (null != dto.getPartId()) {
             sql.append("  and d1.PART_ID=:partId ");
         }
@@ -34,7 +34,7 @@ public class DeviceGroupCustomRepository {
                 "        from device_group as dg2  " +
                 "                 join device as d2 on d2.EQUIPMENT_GROUP_ID = dg2.ID  " +
                 "                 left join part as p on d2.PART_ID = p.ID  " +
-                "        where dg2.ID = dg.ID  ");
+                "        where dg2.ID = dg.ID and  d2.EXIST=true  ");
         if (null != dto.getPartId()) {
             sql.append("  and d2.PART_ID=:partId ");
         }
@@ -42,7 +42,7 @@ public class DeviceGroupCustomRepository {
         sql.append(" (select count(*)  " +
                 "        from device as d3  " +
                 "        where d3.STATUS = 1  " +
-                "          and d3.EQUIPMENT_GROUP_ID = dg.ID    ");
+                "          and d3.EQUIPMENT_GROUP_ID = dg.ID  and  d3.EXIST=true   ");
 
         if (null != dto.getPartId()) {
             sql.append("  and d3.PART_ID=:partId ");
@@ -51,7 +51,7 @@ public class DeviceGroupCustomRepository {
         sql.append("(   select group_concat(distinct s4.NAME)  " +
                 "           from device as d4  " +
                 "                    left join warehouse as s4 on d4.WAREHOUSE_ID = s4.WAREHOUSE_ID  " +
-                "           where d4.STATUS = 1  " +
+                "           where d4.STATUS = 1  and d4.EXIST=true " +
                 "             and d4.EQUIPMENT_GROUP_ID = dg.ID");
 
         if (null != dto.getPartId()) {
@@ -62,7 +62,7 @@ public class DeviceGroupCustomRepository {
         sql.append(" (select group_concat(distinct s5.NAME)  " +
                 "        from device as d5  " +
                 "                 left join supplier as s5 on d5.SUPPLIER_ID = s5.SUPPLIER_ID  " +
-                "        where d5.EQUIPMENT_GROUP_ID = dg.ID ");
+                "        where d5.EQUIPMENT_GROUP_ID = dg.ID and  d5.EXIST=true ");
         if (null != dto.getPartId()) {
             sql.append("   and d5.PART_ID = :partId    ");
         }
@@ -73,6 +73,18 @@ public class DeviceGroupCustomRepository {
         if (null != dto.getPartId()) {
             sql.append("  and d.PART_ID=:partId ");
         }
+        if (null != dto.getNameOrCode()) {
+            sql.append("   and (upper(dg.CODE) like upper(:codeOrName) or upper(dg.NAME) like upper(:codeOrName)) ");
+        }
+        if (null != dto.getWarehouseID()) {
+            sql.append(" and d.WAREHOUSE_ID=:warehoueId  ");
+        }
+        if (null != dto.getSupplierId()) {
+            sql.append(" and d.SUPPLIER_ID=:supplierId");
+        }
+        if (null != dto.getSpecifications()) {
+            sql.append(" and upper(dg.SPECIFICATIONS) like upper(:supplierId)");
+        }
         sql.append("    group by dg.ID ");
 
         Query query = em.createNativeQuery(sql.toString());
@@ -82,6 +94,26 @@ public class DeviceGroupCustomRepository {
             queryCount.setParameter("partId", dto.getPartId());
 
         }
+        if (null != dto.getNameOrCode()) {
+            query.setParameter("codeOrName", "%" + dto.getNameOrCode() + "%");
+            queryCount.setParameter("codeOrName", "%" + dto.getNameOrCode() + "%");
+
+        }
+        if (null != dto.getSupplierId()) {
+            query.setParameter("supplierId", dto.getSupplierId());
+            queryCount.setParameter("supplierId", dto.getSupplierId());
+
+        }
+        if (null != dto.getWarehouseID()) {
+            query.setParameter("warehoueId", dto.getWarehouseID());
+            queryCount.setParameter("warehoueId", dto.getWarehouseID());
+
+        }
+        if (null != dto.getSpecifications()) {
+            query.setParameter("supplierId", dto.getSpecifications());
+            queryCount.setParameter("supplierId", dto.getSpecifications());
+        }
+
         if (dto.getPage() != null && dto.getPageSize() != null) {
             query.setFirstResult((dto.getPage().intValue() - 1) * dto.getPageSize().intValue());
             query.setMaxResults(dto.getPageSize().intValue());
@@ -143,5 +175,52 @@ public class DeviceGroupCustomRepository {
         dto.setTyle((String) o[6]);
 
         return dto;
+    }
+
+    public List<DeviceGroupListDto> getList(Integer id) {
+        if (id == 0) {
+            return null;
+        }
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT dg.ID," +
+                "       dg.CODE," +
+                "       dg.NAME,");
+        sql.append("  (select count(*)  " +
+                "        from device_group as dg1   " +
+                "                 join device as d1 on d1.EQUIPMENT_GROUP_ID = dg1.ID   " +
+                "        where dg1.ID = dg.ID  and d1.EXIST=true  " +
+                "          and d1.PART_ID = :partId)     as size,   ");
+        sql.append(" (select count(*)  " +
+                "        from device as d3  " +
+                "        where d3.STATUS = 1  and d3.EXIST=true  " +
+                "          and d3.EQUIPMENT_GROUP_ID = dg.ID  " +
+                "          and d3.PART_ID = :partId  " +
+                "        group by d3.EQUIPMENT_GROUP_ID) as p ,  ");
+        sql.append("       d.UNIT ");
+        sql.append("from device_group as dg  " +
+                "         join device as d on d.EQUIPMENT_GROUP_ID = dg.ID  " +
+                "where 1 = 1  " +
+                "  and d.PART_ID = :partId  " +
+                "group by dg.ID ");
+        Query query = em.createNativeQuery(sql.toString());
+        query.setParameter("partId", id);
+        List<Object[]> objectList = query.getResultList();
+
+
+        return convDeviceGroupListDtos(objectList);
+    }
+
+    private List<DeviceGroupListDto> convDeviceGroupListDtos(List<Object[]> objects) {
+        List<DeviceGroupListDto> list = new ArrayList<>();
+        for (Object[] o:objects){
+            DeviceGroupListDto dto=new DeviceGroupListDto();
+            dto.setId(Long.valueOf(String.valueOf((o[0]))));
+            dto.setCode((String) o[1]);
+            dto.setName((String) o[2]);
+            dto.setSize(Integer.valueOf(String.valueOf(o[3])));
+            dto.setSizeWarhous(Integer.valueOf(String.valueOf(o[4])));
+            list.add(dto);
+        }
+        return list;
     }
 }

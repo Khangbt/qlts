@@ -48,6 +48,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());
             deviceEntity.setLostDevice(100);
+            deviceEntity.setExist(true);
             list.add(deviceEntity);
 
         }
@@ -76,6 +77,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());
             deviceEntity.setLostDevice(100);
+            deviceEntity.setExist(true);
             list.add(deviceEntity);
 
         }
@@ -139,6 +141,11 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
         }
         code = "%" + code + "%";
         return convent(deviceGroupRepository.findByMaxCode(code));
+    }
+
+    @Override
+    public List<DeviceGroupListDto> getList(Integer id) {
+        return deviceGroupCustomRepository.getList(id);
     }
 
     private String creatCode(int id, String code) {

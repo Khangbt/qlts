@@ -12,4 +12,5 @@ public interface DeviceGroupService {
    public DataPage<DeviceGroupDto> searchAsser(DeviceGroupDto dto);
    DeviceGroupFindDto getFindByCode(String code);
    List<DeviceGroupMaxCodeDto> getMaxCode(String code);
+   List<DeviceGroupListDto> getList(Integer id);
 }

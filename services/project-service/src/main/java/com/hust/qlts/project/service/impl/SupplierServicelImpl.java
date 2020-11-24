@@ -1,6 +1,7 @@
 package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.dto.DataPage;
+import com.hust.qlts.project.dto.ISupplierListDto;
 import com.hust.qlts.project.dto.SupplierDTO;
 import com.hust.qlts.project.entity.SupplierEntity;
 import com.hust.qlts.project.repository.customreporsitory.SupplierCustomRepository;
@@ -140,6 +141,11 @@ public class SupplierServicelImpl implements SupplierService {
             throw new CustomExceptionHandler(ErrorCode.CREATED_HR_EXIST.getCode(), HttpStatus.BAD_REQUEST);
         }
         return supplierMapper.toDto(supplierRepository.findByCode(code));
+    }
+
+    @Override
+    public List<ISupplierListDto> getListPart() {
+        return supplierRepository.findListPart();
     }
 
     public SupplierEntity convertDTOtoEntity(SupplierDTO supplierDTO) {

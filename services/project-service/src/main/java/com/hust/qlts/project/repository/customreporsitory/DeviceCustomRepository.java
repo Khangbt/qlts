@@ -2,7 +2,6 @@ package com.hust.qlts.project.repository.customreporsitory;
 
 import com.hust.qlts.project.dto.DeviceDto;
 import com.hust.qlts.project.dto.DeviceFindDto;
-import com.hust.qlts.project.dto.DeviceGroupFindDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -34,6 +33,7 @@ public class DeviceCustomRepository {
         sql.append("    left join device_to_request as dtr on dtr.DEVICE_ID = d.DEVICE_ID  " +
                 "         left join device_request as dr on dtr.DEVICE_REQUEST_ID = dr.ID  " +
                 "         left join human_resources as hr on hr.HUMAN_RESOURCES_ID = dr.CREAT_HUMMER_ID ");
+        sql.append("  where d.EXIST=true ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (dto.getPage() != null && dto.getPageSize() != null) {

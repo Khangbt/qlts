@@ -27,14 +27,14 @@ public class SupplierControler {
     private final Logger log = LogManager.getLogger(HumanResourcesController.class);
     // TanNV get HumanResourcesShowDTO danh sach
     @PostMapping("/searchSupplier")
-    public ResponseEntity<List<SupplierDTO>> searchHumanResources(@RequestBody SupplierDTO dto) {
+    public ResponseEntity<?> searchHumanResources(@RequestBody SupplierDTO dto) {
         log.info("----------------api searchHumanResources nhan su-----------------");
         try {
             log.info("----------------api searchHumanResources nhan su Ok-----------------");
             return new ResponseEntity(supplierService.getPageSupplierSeach(dto), HttpStatus.OK);
         } catch (Exception e) {
             log.info("----------------api searchHumanResources nhan su fail-----------------");
-            throw e;
+            return new ResponseEntity("Lõi", HttpStatus.BAD_GATEWAY);
         }
     }
 
@@ -109,6 +109,10 @@ public class SupplierControler {
             log.error("<--- api updateHumanResources: error, ");
             return ResultResp.badRequest(ErrorCode.CREATED_HR_EXIST);
         }
+    }
+    @GetMapping(value = "/listpart")
+    public ResponseEntity<?> getListPart(){
+        return new ResponseEntity<>(supplierService.getListPart(),HttpStatus.OK);
     }
 
 }

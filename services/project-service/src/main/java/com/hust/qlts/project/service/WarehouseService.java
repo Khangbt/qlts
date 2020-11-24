@@ -14,4 +14,5 @@ public interface WarehouseService {
     WarehouseDTO findById(Long Id);
     WarehouseDTO findByCode(String code);
     List<IWarePart> findByPart(Long idPart);
+
 }
