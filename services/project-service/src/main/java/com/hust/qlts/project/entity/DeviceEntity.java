@@ -48,7 +48,7 @@ public class DeviceEntity implements Serializable {
     private Long supplierId;
 
     @Column(name = "WAREHOUSE_ID")
-    private Long warehouseID;
+    private Long warehouseId;
 
     @Column(name = "UNIT")
     private Integer unit;

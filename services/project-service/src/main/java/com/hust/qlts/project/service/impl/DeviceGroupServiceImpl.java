@@ -43,7 +43,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setPartId(dto.getPartId());
             deviceEntity.setSupplierId(dto.getSupplierId());
             deviceEntity.setIdEquipmentGroup(entity1.getId());
-            deviceEntity.setWarehouseID(dto.getWarehouseId());
+            deviceEntity.setWarehouseId(dto.getWarehouseId());
             deviceEntity.setStatus(Constants.TRONGKHO);
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());
@@ -72,7 +72,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setPartId(dto.getPartId());
             deviceEntity.setSupplierId(dto.getSupplierId());
             deviceEntity.setIdEquipmentGroup(Long.valueOf(id));
-            deviceEntity.setWarehouseID(dto.getWarehouseId());
+            deviceEntity.setWarehouseId(dto.getWarehouseId());
             deviceEntity.setStatus(Constants.TRONGKHO);
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());

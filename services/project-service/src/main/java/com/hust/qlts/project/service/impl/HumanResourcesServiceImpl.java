@@ -1040,4 +1040,10 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             }
         }
     }
+
+
+    @Override
+    public List<ICusTomDto> listAll() {
+        return repository.getcoe();
+    }
 }

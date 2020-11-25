@@ -84,5 +84,6 @@ public interface HumanResourcesService {
     byte[] importExcel(MultipartFile file) throws IOException;
 
     List<HumanResourcesDTO> findAllHumanResourcesByPositionId(Long id);
+    List<ICusTomDto> listAll();
 
 }

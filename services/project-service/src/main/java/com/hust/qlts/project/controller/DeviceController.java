@@ -21,7 +21,7 @@ public class DeviceController {
         return new ResponseEntity<>(deviceService.searList(reqDto), HttpStatus.OK);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<?> updateDevice(@RequestBody DeviceDto reqDto, @RequestParam Long id) {
         DeviceDto deviceDto = deviceService.update(reqDto, id);
         if (deviceDto == null) {
@@ -29,7 +29,7 @@ public class DeviceController {
         }
         return new ResponseEntity<>(deviceDto, HttpStatus.OK);
     }
-    @PutMapping("/creat")
+    @PostMapping("/creat")
     public ResponseEntity<?> CreatDevice(@RequestBody DeviceDto reqDto) {
         DeviceDto deviceDto = deviceService.craet(reqDto);
         if (deviceDto == null) {

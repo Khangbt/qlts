@@ -396,5 +396,8 @@ public class HumanResourcesController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-
+    @GetMapping("/codeOrName")
+    public ResponseEntity<?> getCodeName(){
+        return new ResponseEntity<>(resourcesService.listAll(),HttpStatus.OK);
+    }
 }

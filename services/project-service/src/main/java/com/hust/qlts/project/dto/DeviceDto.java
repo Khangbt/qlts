@@ -28,7 +28,7 @@ public class DeviceDto {
     private String supperName;
     private String wareHouseName;
     private String handlerHummer;
-
+    private Long idEquipmentGroup;
     private String codeDeviceRequest;
     private String nameOrCode;
     private Integer page;

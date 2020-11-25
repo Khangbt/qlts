@@ -60,8 +60,8 @@ public class DeviceServiceImpl implements DeviceService {
             DeviceEntity entity=deviceRepository.findById(id).get();
             entity= (DeviceEntity) ConvetSetData.xetData(entity,dto);
             assert entity != null;
-            deviceRepository.save(entity);
         return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),deviceRepository.save(entity));
+
     }
 
     @Override

@@ -49,6 +49,7 @@ public class DeviceCustomRepository {
         sql.append("  (select p6.NAME from part as p6 where p6.ID = d.PART_ID)       as partName,  " +
                 "       (select s6.NAME from  supplier as s6 where s6.SUPPLIER_ID=d.SUPPLIER_ID) as supperName,  " +
                 "       (select w6.NAME from warehouse as w6 where w6.WAREHOUSE_ID=d.WAREHOUSE_ID) as wartName  ");
+        sql.append(" , d.EQUIPMENT_GROUP_ID   ");
         sql.append("from device as d    " +
                 "         join device_group as dg on d.EQUIPMENT_GROUP_ID = dg.ID    " +
                 "         left join device_to_request as dtr on dtr.DEVICE_ID = d.DEVICE_ID    " +
@@ -156,6 +157,9 @@ public class DeviceCustomRepository {
             dto.setPartName((String) o[19]);
             dto.setSupperName((String) o[20]);
             dto.setWareHouseName((String) o[21]);
+            if (o[22] != null) {
+                dto.setIdEquipmentGroup(Long.valueOf(String.valueOf((o[22]))));
+            }
             list.add(dto);
         }
 
