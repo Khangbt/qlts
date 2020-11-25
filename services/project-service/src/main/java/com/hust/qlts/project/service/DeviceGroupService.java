@@ -10,7 +10,8 @@ public interface DeviceGroupService {
    public Object deleteDeviceGroup(Integer id);
    public boolean checkCode(String code);
    public DataPage<DeviceGroupDto> searchAsser(DeviceGroupDto dto);
-   DeviceGroupFindDto getFindByCode(String code);
+   DeviceGroupFindDto getFindByCode(Long code);
    List<DeviceGroupMaxCodeDto> getMaxCode(String code);
    List<DeviceGroupListDto> getList(Integer id);
+   List<IDeviceGroupMaxCodeDto> listAll();
 }

@@ -66,7 +66,9 @@ public class DeviceGroupCustomRepository {
         if (null != dto.getPartId()) {
             sql.append("   and d5.PART_ID = :partId    ");
         }
-        sql.append("  )     as p2 ");
+        sql.append("  )     as p2, ");
+        sql.append("      d.UNIT                                as unit," +
+                "       d.SIZE_UNIT                           as sizUnot");
         sql.append(" from device_group as dg ");
         sql.append(" join device as d on d.EQUIPMENT_GROUP_ID = dg.ID ");
         sql.append("    where 1=1 ");
@@ -76,14 +78,14 @@ public class DeviceGroupCustomRepository {
         if (null != dto.getNameOrCode()) {
             sql.append("   and (upper(dg.CODE) like upper(:codeOrName) or upper(dg.NAME) like upper(:codeOrName)) ");
         }
-        if (null != dto.getWarehouseID()) {
+        if (null != dto.getWarehouseId()) {
             sql.append(" and d.WAREHOUSE_ID=:warehoueId  ");
         }
         if (null != dto.getSupplierId()) {
             sql.append(" and d.SUPPLIER_ID=:supplierId");
         }
         if (null != dto.getSpecifications()) {
-            sql.append(" and upper(dg.SPECIFICATIONS) like upper(:supplierId)");
+            sql.append(" and upper(dg.SPECIFICATIONS) like upper(:supplierId1)");
         }
         sql.append("    group by dg.ID ");
 
@@ -104,14 +106,14 @@ public class DeviceGroupCustomRepository {
             queryCount.setParameter("supplierId", dto.getSupplierId());
 
         }
-        if (null != dto.getWarehouseID()) {
-            query.setParameter("warehoueId", dto.getWarehouseID());
-            queryCount.setParameter("warehoueId", dto.getWarehouseID());
+        if (null != dto.getWarehouseId()) {
+            query.setParameter("warehoueId", dto.getWarehouseId());
+            queryCount.setParameter("warehoueId", dto.getWarehouseId());
 
         }
         if (null != dto.getSpecifications()) {
-            query.setParameter("supplierId", dto.getSpecifications());
-            queryCount.setParameter("supplierId", dto.getSpecifications());
+            query.setParameter("supplierId1", dto.getSpecifications());
+            queryCount.setParameter("supplierId1", dto.getSpecifications());
         }
 
         if (dto.getPage() != null && dto.getPageSize() != null) {
@@ -139,6 +141,8 @@ public class DeviceGroupCustomRepository {
             dto.setSizeWareHouse(Integer.valueOf(String.valueOf(o[9])));
             dto.setWarehouseName((String) o[10]);
             dto.setSupperName((String) o[11]);
+            dto.setUnit((Integer) o[12]);
+            dto.setSizeUnit((Integer) o[13]);
             list.add(dto);
         }
 
@@ -146,14 +150,15 @@ public class DeviceGroupCustomRepository {
         return list;
     }
 
-    public DeviceGroupFindDto findByCode(String code) {
+    public DeviceGroupFindDto findByCode(Long id) {
         StringBuffer sql = new StringBuffer();
         sql.append(" SELECT dg.ID,  ");
         sql.append(" dg.CODE, dg.NAME, dg.SIZE_ID, dg.NOTE, dg.SPECIFICATIONS,  ");
         sql.append(" dg.TYLE ");
         sql.append(" from device_group as dg ");
+        sql.append(" where dg.ID=:id");
         Query query = em.createNativeQuery(sql.toString());
-        query.setParameter("code", code);
+        query.setParameter("id", id);
         List<Object[]> objectList = query.getResultList();
         if (objectList == null) {
             return null;
@@ -212,13 +217,16 @@ public class DeviceGroupCustomRepository {
 
     private List<DeviceGroupListDto> convDeviceGroupListDtos(List<Object[]> objects) {
         List<DeviceGroupListDto> list = new ArrayList<>();
-        for (Object[] o:objects){
-            DeviceGroupListDto dto=new DeviceGroupListDto();
+        for (Object[] o : objects) {
+            DeviceGroupListDto dto = new DeviceGroupListDto();
             dto.setId(Long.valueOf(String.valueOf((o[0]))));
             dto.setCode((String) o[1]);
             dto.setName((String) o[2]);
             dto.setSize(Integer.valueOf(String.valueOf(o[3])));
             dto.setSizeWarhous(Integer.valueOf(String.valueOf(o[4])));
+            if (o[5] != null) {
+                dto.setUnit(Integer.valueOf(String.valueOf(o[5])));
+            }
             list.add(dto);
         }
         return list;

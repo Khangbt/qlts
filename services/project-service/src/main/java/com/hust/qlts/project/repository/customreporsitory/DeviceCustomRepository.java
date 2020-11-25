@@ -17,25 +17,100 @@ public class DeviceCustomRepository {
 
     public List<DeviceDto> search(DeviceDto dto) {
         StringBuffer sql = new StringBuffer();
-        sql.append(" select d.DEVICE_ID, dg.NAME, d.CODE, d.PART_ID, dg.SPECIFICATIONS, d.LOCATION, ");
-        sql.append("    d.NOTE,p.NAME as name1,d.STATUS , ");
-        sql.append("    hr.FULLNAME        as creatName,    ");
-        sql.append("       dr.HANDLER_HUMMER_ID,    ");
-        sql.append("(select hr2.FULLNAME  " +
-                "        from human_resources hr2  " +
-                "        where hr2.HUMAN_RESOURCES_ID = dr.HANDLER_HUMMER_ID) as handlerName, ");
-        sql.append("dr.CODE          as reDeCodeq,  " +
-                "       d.WAREHOUSE_ID  ");
-
-        sql.append("    from device as d    ");
-        sql.append("         left join device_group as dg on d.EQUIPMENT_GROUP_ID = dg.ID   ");
-        sql.append("        left join part as p on d.PART_ID=p.ID  ");
-        sql.append("    left join device_to_request as dtr on dtr.DEVICE_ID = d.DEVICE_ID  " +
-                "         left join device_request as dr on dtr.DEVICE_REQUEST_ID = dr.ID  " +
-                "         left join human_resources as hr on hr.HUMAN_RESOURCES_ID = dr.CREAT_HUMMER_ID ");
-        sql.append("  where d.EXIST=true ");
+        sql.append(" select d.DEVICE_ID,    " +
+                "       dg.NAME,    " +
+                "       d.CODE,    d.PART_ID, " +
+                "       d.STATUS,    " +
+                "       d.UNIT,    " +
+                "       d.SIZE_UNIT,    " +
+                "       d.LOST_DEVICE,    " +
+                "       d.USE_HUMMER_ID,    " +
+                "       dg.SPECIFICATIONS,    " +
+                "       concat(dg.NOTE,d.NOTE)  as note,    " +
+                "       dg.NOTE as groupNote,    " +
+                "       d.NOTE as deviceNote,   ");
+        sql.append(" (select hr1.FULLNAME from human_resources as hr1 " +
+                "where hr1.HUMAN_RESOURCES_ID = d.USE_HUMMER_ID) as hu,    ");
+        sql.append("   (select group_concat(dr3.CODE)    " +
+                "        from device_request as dr3    " +
+                "                 left join device_to_request as dtr3 on dr3.ID = dtr3.DEVICE_REQUEST_ID    " +
+                "        where dtr3.DEVICE_ID = d.DEVICE_ID)         as codeRe, ");
+        sql.append(" (select group_concat(dr4.STATUS)    " +
+                "        from device_request as dr4    " +
+                "                 left join device_to_request as dtr4 on dr4.ID = dtr4.DEVICE_REQUEST_ID    " +
+                "        where dtr4.DEVICE_ID = d.DEVICE_ID)              as reStaus,  ");
+        sql.append("  (select dr5.CODE    " +
+                "        from device_request as dr5    " +
+                "                 left join device_to_request as dtr5 on dr5.ID = dtr5.DEVICE_REQUEST_ID    " +
+                "        where dtr5.DEVICE_ID = d.DEVICE_ID    " +
+                "          and dr5.STATUS = 2)            as reRresent , ");
+        sql.append(" d.WAREHOUSE_ID," +
+                "       d.SUPPLIER_ID ,  ");
+        sql.append("  (select p6.NAME from part as p6 where p6.ID = d.PART_ID)       as partName,  " +
+                "       (select s6.NAME from  supplier as s6 where s6.SUPPLIER_ID=d.SUPPLIER_ID) as supperName,  " +
+                "       (select w6.NAME from warehouse as w6 where w6.WAREHOUSE_ID=d.WAREHOUSE_ID) as wartName  ");
+        sql.append("from device as d    " +
+                "         join device_group as dg on d.EQUIPMENT_GROUP_ID = dg.ID    " +
+                "         left join device_to_request as dtr on dtr.DEVICE_ID = d.DEVICE_ID    " +
+                "         left join device_request as dr on dr.ID = dtr.DEVICE_REQUEST_ID    " +
+                "where d.EXIST = true  ");
+        if (null != dto.getNameOrCode()) {
+            sql.append("   and (upper(dg.CODE) like upper(:codeOrName) or upper(dg.NAME) like upper(:codeOrName)) ");
+        }
+        if (null != dto.getUseHummerId()) {
+            sql.append("    and d.USE_HUMMER_ID=:id     ");
+        }
+        if (null != dto.getWarehouseId()) {
+            sql.append(" and d.WAREHOUSE_ID=:warehoueId  ");
+        }
+        if (null != dto.getPartId()) {
+            sql.append("  and d.PART_ID=:partId ");
+        }
+        if (null != dto.getSupplierId()) {
+            sql.append(" and d.SUPPLIER_ID=:supplierId");
+        }
+        if (null != dto.getStatus()) {
+            sql.append(" and d.STATUS=:status");
+        }
+        if(null!=dto.getReQuest()){
+            sql.append("    and dr.CODE=:reQ   ");
+        }
+        sql.append("    group by d.DEVICE_ID    ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
+        if (null != dto.getNameOrCode()) {
+            query.setParameter("codeOrName", "%" + dto.getNameOrCode() + "%");
+            queryCount.setParameter("codeOrName", "%" + dto.getNameOrCode() + "%");
+        }
+        if (null != dto.getUseHummerId()) {
+            query.setParameter("id", dto.getUseHummerId());
+            queryCount.setParameter("id", dto.getUseHummerId());
+        }
+        if (null != dto.getSupplierId()) {
+            query.setParameter("supplierId", dto.getSupplierId());
+            queryCount.setParameter("supplierId", dto.getSupplierId());
+
+        }
+        if (null != dto.getWarehouseId()) {
+            query.setParameter("warehoueId", dto.getWarehouseId());
+            queryCount.setParameter("warehoueId", dto.getWarehouseId());
+
+        }
+        if (null != dto.getStatus()) {
+            query.setParameter("status", dto.getStatus());
+            queryCount.setParameter("status", dto.getStatus());
+        }
+        if (null != dto.getPartId()) {
+            query.setParameter("partId", dto.getPartId());
+            queryCount.setParameter("partId", dto.getPartId());
+
+        }
+        if (null != dto.getReQuest()) {
+            query.setParameter("reQ", dto.getReQuest());
+            queryCount.setParameter("reQ", dto.getReQuest());
+
+        }
+
         if (dto.getPage() != null && dto.getPageSize() != null) {
             query.setFirstResult((dto.getPage().intValue() - 1) * dto.getPageSize().intValue());
             query.setMaxResults(dto.getPageSize().intValue());
@@ -55,11 +130,32 @@ public class DeviceCustomRepository {
             if (o[3] != null) {
                 dto.setPartId(Long.valueOf(String.valueOf((o[3]))));
             }
-            dto.setSpecifications((String) o[4]);
-            dto.setLocation((String) o[5]);
-            dto.setNote((String) o[6]);
-            dto.setPartName((String) o[7]);
-            dto.setStatus((Integer) o[8]);
+
+            dto.setStatus((Integer) o[4]);
+            dto.setUnit((Integer) o[5]);
+            dto.setSizeUnit((Integer) o[6]);
+            dto.setLostDevice((Integer) o[7]);
+            if (o[8] != null) {
+                dto.setUseHummerId(Long.valueOf(String.valueOf((o[8]))));
+            }
+            dto.setSpecifications((String) o[9]);
+            dto.setNote((String) o[10]);
+            dto.setNodeGroup((String) o[11]);
+            dto.setNodeDevice((String) o[12]);
+            dto.setUseHummerName((String) o[13]);
+            String codelisst = (String) o[14];
+            String status = (String) o[15];
+            dto.setReQuest((String) o[16]);
+            if (o[17] != null) {
+                dto.setWarehouseId(Long.valueOf(String.valueOf((o[17]))));
+            }
+            if (o[18] != null) {
+                dto.setSupplierId(Long.valueOf(String.valueOf((o[18]))));
+            }
+
+            dto.setPartName((String) o[19]);
+            dto.setSupperName((String) o[20]);
+            dto.setWareHouseName((String) o[21]);
             list.add(dto);
         }
 

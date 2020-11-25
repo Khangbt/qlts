@@ -43,7 +43,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setPartId(dto.getPartId());
             deviceEntity.setSupplierId(dto.getSupplierId());
             deviceEntity.setIdEquipmentGroup(entity1.getId());
-            deviceEntity.setWarehouseID(dto.getWarehouseID());
+            deviceEntity.setWarehouseID(dto.getWarehouseId());
             deviceEntity.setStatus(Constants.TRONGKHO);
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());
@@ -72,7 +72,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setPartId(dto.getPartId());
             deviceEntity.setSupplierId(dto.getSupplierId());
             deviceEntity.setIdEquipmentGroup(Long.valueOf(id));
-            deviceEntity.setWarehouseID(dto.getWarehouseID());
+            deviceEntity.setWarehouseID(dto.getWarehouseId());
             deviceEntity.setStatus(Constants.TRONGKHO);
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());
@@ -129,7 +129,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     }
 
     @Override
-    public DeviceGroupFindDto getFindByCode(String code) {
+    public DeviceGroupFindDto getFindByCode(Long code) {
         return deviceGroupCustomRepository.findByCode(code);
     }
 
@@ -146,6 +146,11 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     @Override
     public List<DeviceGroupListDto> getList(Integer id) {
         return deviceGroupCustomRepository.getList(id);
+    }
+
+    @Override
+    public List<IDeviceGroupMaxCodeDto> listAll() {
+        return deviceGroupRepository.getAllCode();
     }
 
     private String creatCode(int id, String code) {
@@ -166,7 +171,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             codeDto.setCode(dto.getCode());
             codeDto.setId(dto.getId());
             codeDto.setMaxCode(dto.getMaxCode());
-            codeDto.setSize(dto.size());
+            codeDto.setSize(dto.getSize());
             if (dto.getMaxCode() != null) {
                 String data = dto.getMaxCode();
                 codeDto.setNextMaxCode(creatCode(Integer.parseInt(String.copyValueOf(data.toCharArray(), data.length() - 4, 4)+1), dto.getCode()));

@@ -33,4 +33,21 @@ public interface DeviceGroupRepository extends JpaRepository<DeviceGroupEntity,L
             "   group by dg.CODE    " ;
     @Query(value = sql2,nativeQuery = true)
     List<IDeviceGroupMaxCodeDto> findByMaxCode(String code);
+
+    String sql3="select dg.ID                            as id,  " +
+            "       dg.CODE                          as code,  " +
+            "       dg.NAME                          as name,  " +
+            "       (select d1.UNIT  " +
+            "        from device as d1  " +
+            "        where d1.EQUIPMENT_GROUP_ID = dg.ID  " +
+            "        group by d1.EQUIPMENT_GROUP_ID) as unit,  " +
+            "       (select d1.SIZE_UNIT  " +
+            "        from device as d1  " +
+            "        where d1.EQUIPMENT_GROUP_ID = dg.ID  " +
+            "        group by d1.EQUIPMENT_GROUP_ID) as sizeUnit  " +
+            "  " +
+            "from device_group as dg";
+    @Query(value = sql3,nativeQuery = true)
+    List<IDeviceGroupMaxCodeDto> getAllCode();
+
 }

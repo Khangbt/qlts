@@ -9,4 +9,6 @@ public class DeviceGroupListDto {
     private String name;
     private Integer size;
     private Integer sizeWarhous;
+    private Integer unit;
+    private Integer sizeUnit;
 }

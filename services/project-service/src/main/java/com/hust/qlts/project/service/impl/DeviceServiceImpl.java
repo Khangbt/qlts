@@ -3,7 +3,6 @@ package com.hust.qlts.project.service.impl;
 import com.hust.qlts.project.dto.DataPage;
 import com.hust.qlts.project.dto.DeviceDto;
 import com.hust.qlts.project.dto.DeviceFindDto;
-import com.hust.qlts.project.dto.DeviceGroupFindDto;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.repository.customreporsitory.DeviceCustomRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceRepository;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -78,7 +78,9 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public DeviceDto craet(DeviceDto dto) {
         DeviceEntity deviceEntity= (DeviceEntity) ConvetSetData.xetData(new DeviceEntity(),dto);
-
+        assert deviceEntity != null;
+        deviceEntity.setExist(true);
+        deviceEntity.setDateAdd(new Date());
         return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),deviceRepository.save(deviceEntity));
     }
 

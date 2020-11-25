@@ -10,19 +10,27 @@ public class DeviceDto {
     private String tyle;
     private String specifications;
     private String note;
-
+    private String nodeDevice;
+    private String nodeGroup;
     private Long supplierId;
     private Long partId;
     private String location;
-    private Long warehouseID;
+    private Long warehouseId;
     private String hummer;
     private Integer status;
     private String partName;
     private Integer sizeUnit;
-    private String unit;
+    private Integer unit;
     private Integer lostDevice;
+    private Long useHummerId;
+    private String useHummerName;
+    private String reQuest;
+    private String supperName;
+    private String wareHouseName;
+    private String handlerHummer;
 
-
+    private String codeDeviceRequest;
+    private String nameOrCode;
     private Integer page;
     private Integer pageSize;
 

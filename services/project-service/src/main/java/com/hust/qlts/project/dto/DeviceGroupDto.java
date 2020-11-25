@@ -17,10 +17,10 @@ public class DeviceGroupDto {
     private Long supplierId;
     private Long partId;
     private String location;
-    private Long warehouseID;
+    private Long warehouseId;
     private String partName;
     private Integer sizeUnit;
-    private String unit;
+    private Integer unit;
     private Integer lostDevice;
     private String supperName;
     private String warehouseName;

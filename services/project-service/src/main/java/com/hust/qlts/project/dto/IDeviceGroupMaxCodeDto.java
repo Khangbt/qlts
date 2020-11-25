@@ -4,5 +4,8 @@ public interface IDeviceGroupMaxCodeDto {
     Long getId();
     String getCode();
     String getMaxCode();
-    Integer size();
+    Integer getSize();
+    String getName();
+    Integer getSizeUnit();
+    Integer getUnit();
 }

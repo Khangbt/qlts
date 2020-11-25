@@ -41,8 +41,7 @@ public class DeviceGroupController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateDeviceGroup(@RequestBody DeviceGroupDto dto, @PathVariable("id") Integer id,
-                                               @RequestParam("image") MultipartFile[] multipartFile) {
+    public ResponseEntity<?> updateDeviceGroup(@RequestBody DeviceGroupDto dto, @PathVariable("id") Integer id) {
         Object o = deviceGroupService.updateDeviceGroup(dto, id);
 
         return new ResponseEntity<>(o, HttpStatus.OK);
@@ -70,8 +69,8 @@ public class DeviceGroupController {
         return new ResponseEntity<>(deviceGroupService.searchAsser(reqDto), HttpStatus.OK);
     }
 
-    @GetMapping("/findbyid/{code}")
-    public ResponseEntity<?> getFindByCode(@PathVariable("code") String code) {
+    @GetMapping("/findbyid/{id}")
+    public ResponseEntity<?> getFindByCode(@PathVariable("id") Long code) {
         DeviceGroupFindDto dto = deviceGroupService.getFindByCode(code);
         if (dto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
@@ -87,5 +86,9 @@ public class DeviceGroupController {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
 
+    }
+    @GetMapping("/searhAllList")
+    private  ResponseEntity<?> getAllGroup(){
+        return new ResponseEntity<>(deviceGroupService.listAll(),HttpStatus.OK);
     }
 }

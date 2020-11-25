@@ -51,7 +51,7 @@ public class DeviceEntity implements Serializable {
     private Long warehouseID;
 
     @Column(name = "UNIT")
-    private String unit;
+    private Integer unit;
 
     @Column(name = "SIZE_UNIT")
     private Integer sizeUnit;
@@ -60,6 +60,8 @@ public class DeviceEntity implements Serializable {
     private Integer lostDevice;
     @Column(name = "EXIST")
     private boolean exist;
+    @Column(name = "USE_HUMMER_ID")
+    private Long useHummerId;
     @Version
     private Long version;
 
