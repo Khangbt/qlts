@@ -16,4 +16,6 @@ public interface DeviceService {
      DeviceDto craet(DeviceDto dto);
      String getMaxCode(Long code);
      boolean updateListStatus(List<String> code);
+     List<DeviceEntity> listSetStatus(List<Long> list);
+
 }

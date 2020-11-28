@@ -8,4 +8,10 @@ public interface ICusTomDto {
     String getName();
 
     String getPartName();
+
+    Integer getUnit();
+
+    Integer getSizeUnit();
+
+    Integer getSizeId();
 }

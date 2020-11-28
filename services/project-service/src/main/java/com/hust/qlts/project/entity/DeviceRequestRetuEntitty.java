@@ -1,6 +1,5 @@
 package com.hust.qlts.project.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.Date;
 @Table(name = "DEVICE_REQUEST")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceRequestEntity {
+public class DeviceRequestRetuEntitty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -25,33 +24,18 @@ public class DeviceRequestEntity {
     @Column(name = "CREAT_HUMMER_ID")
     private Long creatHummerId;
 
-    @Column(name = "STATUS")
-    private Integer status;
-
-    @Column(name = "START_DATE_BORROW")
-    private Date startDateBorrow;
-
-    @Column(name = "END_DATE_BORROW")
-    private Date endDateBorrow;
-
-    @Column(name = "NOTE")
-    private String note;
-
     @Column(name = "CREAT_DATE")
     private Date creatDate;
 
     @Column(name = "REASON")
     private String reason;
 
+    @Column(name = "PART_ID")
+    private Long partId;
+
     @Column(name ="APPROVED_DATE")
     private Date approvedDate;
 
-    @Column(name = "HANDLER_HUMMER_ID")
-    private Long handlerHummerId;
-
-    @Column(name = "PART_ID")
-    private Long partId;
     @Version
     private Long version;
-
 }

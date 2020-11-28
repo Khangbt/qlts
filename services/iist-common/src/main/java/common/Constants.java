@@ -146,8 +146,8 @@ public class Constants {
 
 
     public static final Integer TRONGKHO = 1;
-    public static final Integer SUACHUA = 2;
-    public static final Integer DANGSUDUNG = 3;
+    public static final Integer SUACHUA = 3;
+    public static final Integer DANGSUDUNG = 2;
 
     public static final Integer CHUAXACNHAN = 1;
     public static final Integer XACNHAN = 2;

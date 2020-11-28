@@ -180,4 +180,18 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
         }
         return list;
     }
+    @Override
+    public List<ICusTomDto> getAllListId(List<Long> id) {
+        return deviceGroupRepository.getAllXet(id);
+    }
+
+    @Override
+    public List<DeviceGroupEntity> getAllListLong(List<Long> id) {
+        return deviceGroupRepository.getListAllId(id);
+    }
+
+    @Override
+    public List<DeviceGroupEntity> saveList(List<DeviceGroupEntity> list) {
+        return deviceGroupRepository.saveAll(list);
+    }
 }

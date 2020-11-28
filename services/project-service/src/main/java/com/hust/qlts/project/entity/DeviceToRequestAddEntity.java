@@ -18,7 +18,10 @@ public class DeviceToRequestAddEntity {
     private Long id;
 
     @Column(name = "DEVICE_GROUP_ID")
-    private Long deviceRequestId;
+    private Long deviceGroup;
+
+    @Column(name = "DEVICE_REQUEST_ADD_ID")
+    private Long deviceRequestAddId;
 
     @Column(name = "SIZE")
     private Long size;
@@ -29,6 +32,8 @@ public class DeviceToRequestAddEntity {
     @Column(name = "SUPPLIER_ID")
     private Long supplierId;
 
+    @Column(name = "WAREHOUSE_ID")
+    private Long warehouseId;
 
     @Column(name = "STATUS")
     private Integer status;

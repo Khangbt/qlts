@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 
 public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
@@ -13,4 +15,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
     @Query(value = sql, nativeQuery = true)
     String getMaxCode(Long id);
 
+    String sql2="select * from device as d where d.DEVICE_ID in :list";
+    @Query(value = sql2, nativeQuery = true)
+    List<DeviceEntity> getListCode(List<Long> list);
 }

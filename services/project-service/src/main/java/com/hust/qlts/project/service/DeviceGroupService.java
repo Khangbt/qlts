@@ -1,6 +1,7 @@
 package com.hust.qlts.project.service;
 
 import com.hust.qlts.project.dto.*;
+import com.hust.qlts.project.entity.DeviceGroupEntity;
 
 import java.util.List;
 
@@ -14,4 +15,7 @@ public interface DeviceGroupService {
    List<DeviceGroupMaxCodeDto> getMaxCode(String code);
    List<DeviceGroupListDto> getList(Integer id);
    List<IDeviceGroupMaxCodeDto> listAll();
+   List<ICusTomDto> getAllListId(List<Long> id);
+   List<DeviceGroupEntity> getAllListLong(List<Long> id);
+   List<DeviceGroupEntity> saveList(List<DeviceGroupEntity> list);
 }

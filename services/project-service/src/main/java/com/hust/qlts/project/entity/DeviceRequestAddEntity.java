@@ -36,6 +36,9 @@ public class DeviceRequestAddEntity {
     @Column(name = "NOTE")
     private String note;
 
+    @Column(name = "PART_ID")
+    private Long partId;
+
     @Column(name = "STATUS")
     private Integer status;
     @Version

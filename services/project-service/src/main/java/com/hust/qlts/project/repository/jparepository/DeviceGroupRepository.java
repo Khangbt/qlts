@@ -1,5 +1,6 @@
 package com.hust.qlts.project.repository.jparepository;
 
+import com.hust.qlts.project.dto.ICusTomDto;
 import com.hust.qlts.project.dto.IDeviceGroupMaxCodeDto;
 import com.hust.qlts.project.entity.DeviceGroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,4 +51,16 @@ public interface DeviceGroupRepository extends JpaRepository<DeviceGroupEntity,L
     @Query(value = sql3,nativeQuery = true)
     List<IDeviceGroupMaxCodeDto> getAllCode();
 
+    String sql4="  select dg.ID as id,d.SIZE_UNIT as sizeUnit,d.UNIT as unit,dg.SIZE_ID as sizeId  " +
+            "   ,dg.CODE as code  " +
+            "   from device_group as dg  " +
+            "         left join device as d on dg.ID = d.EQUIPMENT_GROUP_ID  " +
+            "   where dg.ID in :id  " +
+            "   group by dg.ID ";
+    @Query(value = sql4,nativeQuery = true)
+    List<ICusTomDto> getAllXet(List<Long> id);
+
+    String sql5="select * from device_group  as dg where dg.ID in :id ";
+    @Query(value = sql5,nativeQuery = true)
+    List<DeviceGroupEntity> getListAllId(List<Long> id);
 }

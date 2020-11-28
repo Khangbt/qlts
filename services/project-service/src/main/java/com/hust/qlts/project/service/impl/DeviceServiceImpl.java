@@ -52,15 +52,15 @@ public class DeviceServiceImpl implements DeviceService {
 
     }
 
-        @Override
-        public DeviceDto update(DeviceDto dto,Long id) {
-            if (!deviceRepository.findById(id).isPresent()){
-                return null;
-            }
-            DeviceEntity entity=deviceRepository.findById(id).get();
-            entity= (DeviceEntity) ConvetSetData.xetData(entity,dto);
-            assert entity != null;
-        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),deviceRepository.save(entity));
+    @Override
+    public DeviceDto update(DeviceDto dto, Long id) {
+        if (!deviceRepository.findById(id).isPresent()) {
+            return null;
+        }
+        DeviceEntity entity = deviceRepository.findById(id).get();
+        entity = (DeviceEntity) ConvetSetData.xetData(entity, dto);
+        assert entity != null;
+        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceRepository.save(entity));
 
     }
 
@@ -77,11 +77,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceDto craet(DeviceDto dto) {
-        DeviceEntity deviceEntity= (DeviceEntity) ConvetSetData.xetData(new DeviceEntity(),dto);
+        DeviceEntity deviceEntity = (DeviceEntity) ConvetSetData.xetData(new DeviceEntity(), dto);
         assert deviceEntity != null;
         deviceEntity.setExist(true);
         deviceEntity.setDateAdd(new Date());
-        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),deviceRepository.save(deviceEntity));
+        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceRepository.save(deviceEntity));
     }
 
     @Override
@@ -92,5 +92,12 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public boolean updateListStatus(List<String> code) {
         return false;
+    }
+
+    @Override
+    public List<DeviceEntity> listSetStatus(List<Long> list) {
+        String a = list.toString().replace('[', '(');
+        String b = a.replace(']', ')');
+        return deviceRepository.getListCode(list);
     }
 }
