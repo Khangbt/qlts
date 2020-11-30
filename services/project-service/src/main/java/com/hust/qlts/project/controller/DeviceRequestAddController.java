@@ -39,7 +39,7 @@ public class DeviceRequestAddController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteDevice(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteDevice(@PathVariable("id") Long id) {
 
         if (deviceRequestAddService.deleteDevice(id)) {
             return new ResponseEntity<>("OK", HttpStatus.OK);
@@ -48,7 +48,7 @@ public class DeviceRequestAddController {
     }
 
     @GetMapping("/findbyid/{code}")
-    public ResponseEntity<?> getFindByCode(@PathVariable("code") String code) {
+    public ResponseEntity<?> getFindByCode(@PathVariable("code") Long code) {
         DeviceRequestAddDto dto = deviceRequestAddService.getFindByCode(code);
         if (dto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);

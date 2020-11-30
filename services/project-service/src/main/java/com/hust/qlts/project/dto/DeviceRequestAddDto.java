@@ -12,7 +12,7 @@ public class DeviceRequestAddDto {
     private Long creatHummerId;
     private Integer status;
     private String note;
-    private String creatDate;
+    private Date creatDate;
     private String reason;
     private Date approvedDate;
     private Long handlerHummerId;

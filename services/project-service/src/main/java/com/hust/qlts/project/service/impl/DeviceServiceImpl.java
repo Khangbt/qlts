@@ -1,8 +1,6 @@
 package com.hust.qlts.project.service.impl;
 
-import com.hust.qlts.project.dto.DataPage;
-import com.hust.qlts.project.dto.DeviceDto;
-import com.hust.qlts.project.dto.DeviceFindDto;
+import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.repository.customreporsitory.DeviceCustomRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceRepository;
@@ -12,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -99,5 +98,27 @@ public class DeviceServiceImpl implements DeviceService {
         String a = list.toString().replace('[', '(');
         String b = a.replace(']', ')');
         return deviceRepository.getListCode(list);
+    }
+
+    @Override
+    public List<DeviceListIdDto> getList(List<Long> list) {
+        List<ICusTomDto> tomDtos = deviceRepository.listDevice(list);
+        List<DeviceListIdDto> idDtos = new ArrayList<>();
+        for (ICusTomDto dto : tomDtos) {
+            DeviceListIdDto idDto = new DeviceListIdDto();
+            idDto.setId(dto.getId());
+            idDto.setCode(dto.getCode());
+            idDto.setName(dto.getName());
+            String s = dto.getListName();
+            List<String> lists = Arrays.asList(s.split(","));
+            idDto.setListDevice(lists);
+            idDtos.add(idDto);
+        }
+        return idDtos;
+    }
+
+    @Override
+    public List<ICusTomDto> getListIdHumme(Long id) {
+        return deviceRepository.listByID(id);
     }
 }

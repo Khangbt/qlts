@@ -14,4 +14,10 @@ public interface ICusTomDto {
     Integer getSizeUnit();
 
     Integer getSizeId();
+
+    String getListName();
+
+    String getLocalion();
+
+    Integer getLostDevice();
 }

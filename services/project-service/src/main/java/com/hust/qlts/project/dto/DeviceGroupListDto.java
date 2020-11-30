@@ -11,4 +11,5 @@ public class DeviceGroupListDto {
     private Integer sizeWarhous;
     private Integer unit;
     private Integer sizeUnit;
+    private boolean disabled;
 }

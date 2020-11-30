@@ -2,8 +2,8 @@ package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.DataPage;
-import com.hust.qlts.project.dto.DeviceDto;
 import com.hust.qlts.project.dto.DeviceRequestDTO;
+import com.hust.qlts.project.dto.IListDeviceToReDto;
 import com.hust.qlts.project.dto.custom.ListDeviceDto;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.entity.DeviceRequestEntity;
@@ -13,7 +13,6 @@ import com.hust.qlts.project.repository.jparepository.DeviceRequestRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestRepository;
 import com.hust.qlts.project.service.DeviceRequestService;
 import com.hust.qlts.project.service.DeviceService;
-import com.hust.qlts.project.service.DeviceToRequestService;
 import com.hust.qlts.project.service.RequestService;
 import common.Constants;
 import common.ConvetSetData;
@@ -44,13 +43,67 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
 
 
     @Override
-    public boolean deleteDevice(Integer id) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteDevice(Long id) {
+
+        if (!deviceRequestRepository.findById(id).isPresent()) {
+            return false;
+        }
+
+        DeviceRequestEntity deviceRequestEntity = deviceRequestRepository.findById(id).get();
+        if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
+            return false;
+        }
+        if (deviceRequestEntity.getStatus() == 1) {
+            deviceRequestRepository.deleteById(id);
+            deviceToRequestRepository.deleteByDeviceRequestId(id);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public DeviceRequestDTO getFindByCode(String code) {
-        return null;
+    public DeviceRequestDTO getFindByCode(Long code) {
+        DeviceRequestDTO dto = new DeviceRequestDTO();
+        if (!deviceRequestRepository.findById(code).isPresent()) {
+            return null;
+        }
+        DeviceRequestEntity entity = deviceRequestRepository.findById(code).get();
+        dto.setId(entity.getId());
+        dto.setCode(entity.getCode());
+        dto.setApprovedDate(entity.getApprovedDate());
+        dto.setCreatDate(entity.getCreatDate());
+        dto.setCreatHummerId(entity.getCreatHummerId());
+        dto.setHandlerHummerId(entity.getHandlerHummerId());
+        dto.setReason(entity.getReason());
+        dto.setStatus(entity.getStatus());
+        dto.setEndDateBorrow(entity.getEndDateBorrow());
+        dto.setStartDateBorrow(entity.getStartDateBorrow());
+        dto.setNote(entity.getNote());
+        dto.setPartId(entity.getPartId());
+        List<ListDeviceDto> list = new ArrayList<>();
+
+        List<IListDeviceToReDto> device = deviceToRequestRepository.getListAllIdCustom(code);
+        for (IListDeviceToReDto entity1 : device) {
+            ListDeviceDto dto1 = new ListDeviceDto();
+            dto1.setIdGroup(entity1.getGroupId());
+            dto1.setQuantity(entity1.getSize());
+            dto1.setUnit(entity1.getUnit());
+            String s=entity1.getListLongId();
+            if(s!=null){
+                String[] strings=s.split(",");
+                List<Long> longList=new ArrayList<>();
+                for (String a1:strings){
+                    longList.add(Long.valueOf(a1));
+                }
+                dto1.setListCode(longList);
+            }
+
+
+            list.add(dto1);
+        }
+        dto.setListDeviceR(list);
+        return dto;
     }
 
     @Override
@@ -107,7 +160,7 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         deviceRequestEntity.setStartDateBorrow(dto.getStartDateBorrow());
         deviceRequestEntity.setPartId(dto.getPartId());
         deviceRequestEntity.setNote(dto.getNote());
-        DeviceRequestEntity requestEntity=deviceRequestRepository.save(deviceRequestEntity);
+        DeviceRequestEntity requestEntity = deviceRequestRepository.save(deviceRequestEntity);
         List<DeviceToRequestEntity> listAll = deviceToRequestRepository.getListAll(dto.getId());
         deviceToRequestRepository.deleteAll(listAll);
         List<DeviceToRequestEntity> deviceToRequestEntities = new ArrayList<>();
@@ -155,11 +208,13 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         }
         requestEntity.setReason(dto.getReason());
         requestEntity.setStatus(Constants.XACNHAN);
+        requestEntity.setHandlerHummerId(dto.getHandlerHummerId());
+        requestEntity.setApprovedDate(new Date());
 //        deviceToRequestRepository.saveAll(listAll);
 //        deviceRequestRepository.save(requestEntity);
 //        deviceService.saveList(deviceEntities);
 //        return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRepository.save(requestEntity));
-    return null;
+        return null;
     }
 
     @Override
@@ -173,6 +228,8 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
             return null;
         }
         deviceRequestEntity.setStatus(Constants.HUY);
+        deviceRequestEntity.setReason(dto.getReason());
+
         return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRepository.save(deviceRequestEntity));
     }
 

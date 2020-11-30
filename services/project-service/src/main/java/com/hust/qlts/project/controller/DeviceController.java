@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/device")
 @CrossOrigin("*")
@@ -29,6 +31,7 @@ public class DeviceController {
         }
         return new ResponseEntity<>(deviceDto, HttpStatus.OK);
     }
+
     @PostMapping("/creat")
     public ResponseEntity<?> CreatDevice(@RequestBody DeviceDto reqDto) {
         DeviceDto deviceDto = deviceService.craet(reqDto);
@@ -46,12 +49,22 @@ public class DeviceController {
         }
         return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
     }
+
     @GetMapping("/findbyid/{code}")
     public ResponseEntity<?> getFindByCode(@PathVariable("code") String code) {
-        DeviceFindDto dto=deviceService.getFindByCode(code);
-        if(dto==null){
+        DeviceFindDto dto = deviceService.getFindByCode(code);
+        if (dto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getListId")
+    public ResponseEntity<?> getList(@RequestParam List<Long> id) {
+        return new ResponseEntity(deviceService.getList(id), HttpStatus.OK);
+    }
+    @GetMapping("/getListyId")
+    public ResponseEntity<?> getListIdHummer(@RequestParam Long id) {
+        return new ResponseEntity(deviceService.getListIdHumme(id), HttpStatus.OK);
     }
 }

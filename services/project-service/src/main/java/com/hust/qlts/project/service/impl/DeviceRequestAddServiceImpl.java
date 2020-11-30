@@ -44,13 +44,71 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
     }
 
     @Override
-    public boolean deleteDevice(Integer id) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteDevice(Long id) {
+        if (!deviceRequestAddRepository.findById(id).isPresent()) {
+            return false;
+        }
+        DeviceRequestAddEntity deviceRequestEntity = deviceRequestAddRepository.findById(id).get();
+        if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
+            return false;
+        }
+        if(deviceRequestEntity.getStatus()==1){
+        deviceRequestAddRepository.deleteById(id);
+        deviceToRequestAddRepository.deleteByDeviceRequestAddId(id);
+
+        return true;
+        }
         return false;
     }
 
     @Override
-    public DeviceRequestAddDto getFindByCode(String code) {
-        return null;
+    public DeviceRequestAddDto getFindByCode(Long code) {
+        DeviceRequestAddDto dto=new DeviceRequestAddDto();
+        if(!deviceRequestAddRepository.findById(code).isPresent()){
+            return null;
+        }
+        DeviceRequestAddEntity entity=deviceRequestAddRepository.findById(code).get();
+        dto.setId(entity.getId());
+        dto.setApprovedDate(entity.getProcessingDate());
+        dto.setCode(entity.getCode());
+        dto.setCreatDate(entity.getCreatDate());
+        dto.setCreatHummerId(entity.getCreatHummerId());
+        dto.setHandlerHummerId(entity.getHandlerHummerId());
+        dto.setNote(entity.getNote());
+        dto.setReason(entity.getReason());
+        dto.setPartId(entity.getPartId());
+        dto.setStatus(entity.getStatus());
+        List<DeviceToRequestAddEntity> device=deviceToRequestAddRepository.getListAll(code);
+        List<Long> listId=new ArrayList<>();;
+        for (DeviceToRequestAddEntity addEntity:device){
+            listId.add(addEntity.getDeviceGroup());
+        }
+
+        List<ICusTomDto> deviceGroupEntities=deviceGroupService.getAllListId(listId);
+        List<ListDeviceAddDto> deviceAddDtos=new ArrayList<>();
+        for (DeviceToRequestAddEntity addEntity:device){
+            ListDeviceAddDto addDto=new ListDeviceAddDto();
+            addDto.setId(addEntity.getId());
+            addDto.setIdGroup(addEntity.getDeviceGroup());
+            addDto.setPrice(addEntity.getPrice());
+            addDto.setSize(addEntity.getSize());
+            addDto.setSupplierId(addEntity.getSupplierId());
+            if(deviceGroupEntities.stream().
+                    filter(a -> a.getId().equals(addDto.getIdGroup())).findFirst().isPresent()){
+                ICusTomDto groupEntity = deviceGroupEntities.stream().
+                        filter(a -> a.getId().equals(addDto.getIdGroup())).findFirst().get();
+                addDto.setSizeUnit(Long.valueOf(groupEntity.getSizeUnit()));
+                addDto.setUnit(Long.valueOf(groupEntity.getUnit()));
+            }
+
+            deviceAddDtos.add(addDto);
+        }
+        dto.setListDeviceR(deviceAddDtos);
+
+
+
+        return dto;
     }
 
     @Override
@@ -77,6 +135,8 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         requestEntity.setTyle("YCM");
         requestService.creat(requestEntity);
         List<DeviceToRequestAddEntity> addEntityList = new ArrayList<>();
+
+
         for (ListDeviceAddDto addDto : dto.getListDeviceR()) {
             DeviceToRequestAddEntity device = new DeviceToRequestAddEntity();
             device.setDeviceRequestAddId(entity.getId());
@@ -167,6 +227,10 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
 
         }
         requestEntity.setStatus(Constants.XACNHAN);
+        requestEntity.setReason(dto.getReason());
+        requestEntity.setHandlerHummerId(dto.getHandlerHummerId());
+        requestEntity.setProcessingDate(new Date());
+
 //        deviceRequestAddRepository.save(requestEntity);
 //        deviceService.saveList(deviceEntities);
 //        deviceGroupService.saveList(deviceGroupEntities);
@@ -185,7 +249,7 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
             return null;
         }
         deviceRequestEntity.setStatus(Constants.HUY);
-
+        deviceRequestEntity.setReason(dto.getReason());
         return (DeviceRequestAddDto) ConvetSetData.xetData(new DeviceRequestAddDto(), deviceRequestAddRepository.save(deviceRequestEntity));
     }
 

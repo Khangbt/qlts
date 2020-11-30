@@ -201,7 +201,7 @@ public class DeviceGroupCustomRepository {
                 "          and d3.EQUIPMENT_GROUP_ID = dg.ID  " +
                 "          and d3.PART_ID = :partId  " +
                 "        group by d3.EQUIPMENT_GROUP_ID) as p ,  ");
-        sql.append("       d.UNIT ");
+        sql.append("       d.UNIT  ");
         sql.append("from device_group as dg  " +
                 "         join device as d on d.EQUIPMENT_GROUP_ID = dg.ID  " +
                 "where 1 = 1  " +
@@ -227,6 +227,7 @@ public class DeviceGroupCustomRepository {
             if (o[5] != null) {
                 dto.setUnit(Integer.valueOf(String.valueOf(o[5])));
             }
+            dto.setDisabled(false);
             list.add(dto);
         }
         return list;

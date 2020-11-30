@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "DEVICE_TO_REQUEST")
+@Table(name = "DEVICE_TO_REQUEST_RETU")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceToRequestRetuEntitty {
@@ -21,8 +21,12 @@ public class DeviceToRequestRetuEntitty {
     private Long deviceId;
 
     @Column(name = "STATUS")
-    private Long status;
+    private Integer status;
 
+    @Column(name = "LOST_DEVICE")
+    private Integer lostDevice;
+    @Column(name = "DEVICE_REQUEST_ID_RETU")
+    private Long deviceRequestIdRetu;
     @Version
     private Long version;
 }

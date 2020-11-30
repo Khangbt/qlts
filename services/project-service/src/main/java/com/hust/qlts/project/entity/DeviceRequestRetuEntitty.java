@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "DEVICE_REQUEST")
+@Table(name = "DEVICE_REQUEST_RETU  ")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceRequestRetuEntitty {
@@ -32,9 +32,17 @@ public class DeviceRequestRetuEntitty {
 
     @Column(name = "PART_ID")
     private Long partId;
+    @Column(name = "HANDLER_HUMMER_ID")
+    private Long handlerHummerId;
 
     @Column(name ="APPROVED_DATE")
     private Date approvedDate;
+
+    @Column(name = "NOTE")
+    private String note;
+
+    @Column(name = "STATUS")
+    private Integer status;
 
     @Version
     private Long version;

@@ -18,10 +18,11 @@ public class DeviceRequestDTO {
     private Date startDateBorrow;
     private Date endDateBorrow;
     private String note;
-    private String creatDate;
+    private Date creatDate;
     private String reason;
     private Date approvedDate;
     private Long handlerHummerId;
-    private List<ListDeviceDto> listDeviceR;
     private Long partId;
+    private List<ListDeviceDto> listDeviceR;
+
 }

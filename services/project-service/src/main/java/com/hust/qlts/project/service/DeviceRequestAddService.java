@@ -8,8 +8,8 @@ import com.hust.qlts.project.dto.DeviceRequestDTO;
 public interface DeviceRequestAddService{
 
     DataPage<DeviceRequestAddDto> searList(DeviceRequestAddDto dto);
-    boolean deleteDevice(Integer id);
-    DeviceRequestAddDto getFindByCode(String code);
+    boolean deleteDevice(Long id);
+    DeviceRequestAddDto getFindByCode(Long code);
     DeviceRequestAddDto craet(DeviceRequestAddDto dto);
     DeviceRequestAddDto update(DeviceRequestAddDto dto,Long id);
     DeviceRequestAddDto browserRequest(DeviceRequestAddDto dto,Long id);

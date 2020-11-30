@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface DeviceRequestService{
     DataPage<DeviceRequestDTO> searList(DeviceRequestDTO dto);
-    boolean deleteDevice(Integer id);
-    DeviceRequestDTO getFindByCode(String code);
+    boolean deleteDevice(Long id);
+    DeviceRequestDTO getFindByCode(Long code);
     DeviceRequestDTO craet(DeviceRequestDTO dto);
     DeviceRequestDTO update(DeviceRequestDTO dto,Long id);
     DeviceRequestDTO browserRequest(DeviceRequestDTO dto,Long id);

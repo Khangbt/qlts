@@ -1,31 +1,27 @@
 package com.hust.qlts.project.controller;
-
-import com.hust.qlts.project.dto.DeviceDto;
-import com.hust.qlts.project.dto.DeviceFindDto;
-import com.hust.qlts.project.dto.DeviceRequestAddDto;
-import com.hust.qlts.project.dto.DeviceRequestDTO;
-import com.hust.qlts.project.service.DeviceRequestService;
+import com.hust.qlts.project.service.DeviceRequestRetuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.hust.qlts.project.dto.DeviceRequestRetuDto;
 
 @RestController
-@RequestMapping("/deviceRequest")
+@RequestMapping("/deviceRequestRetu")
 @CrossOrigin("*")
-public class DeviceRequestController {
+public class DeviceRequestRetuController {
     @Autowired
-    private DeviceRequestService deviceRequestService;
+    private DeviceRequestRetuService deviceRequestRetuService;
 
     @PostMapping("/search")
-    public ResponseEntity<?> searchDevice(@RequestBody DeviceRequestDTO dto) {
+    public ResponseEntity<?> searchDevice(@RequestBody DeviceRequestRetuDto dto) {
 
-        return new ResponseEntity<>(deviceRequestService.searList(dto), HttpStatus.OK);
+        return new ResponseEntity<>(deviceRequestRetuService.searList(dto), HttpStatus.OK);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateDevice(@RequestBody DeviceRequestDTO reqDto, @RequestParam Long id) {
-        DeviceRequestDTO deviceDto = deviceRequestService.update(reqDto, id);
+    public ResponseEntity<?> updateDevice(@RequestBody DeviceRequestRetuDto reqDto, @RequestParam Long id) {
+        DeviceRequestRetuDto deviceDto = deviceRequestRetuService.update(reqDto, id);
         if (deviceDto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }
@@ -33,8 +29,8 @@ public class DeviceRequestController {
     }
 
     @PostMapping("/creat")
-    public ResponseEntity<?> CreatDevice(@RequestBody DeviceRequestDTO reqDto) {
-        DeviceRequestDTO deviceDto = deviceRequestService.craet(reqDto);
+    public ResponseEntity<?> CreatDevice(@RequestBody DeviceRequestRetuDto reqDto) {
+        DeviceRequestRetuDto deviceDto = deviceRequestRetuService.craet(reqDto);
         if (deviceDto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }
@@ -44,7 +40,7 @@ public class DeviceRequestController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteDevice(@PathVariable("id") Long id) {
 
-        if (deviceRequestService.deleteDevice(id)) {
+        if (deviceRequestRetuService.deleteDevice(id)) {
             return new ResponseEntity<>("OK", HttpStatus.OK);
         }
         return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
@@ -52,7 +48,7 @@ public class DeviceRequestController {
 
     @GetMapping("/findbyid/{code}")
     public ResponseEntity<?> getFindByCode(@PathVariable("code") Long code) {
-        DeviceRequestDTO dto = deviceRequestService.getFindByCode(code);
+        DeviceRequestRetuDto dto = deviceRequestRetuService.getFindByCode(code);
         if (dto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }
@@ -60,9 +56,9 @@ public class DeviceRequestController {
     }
 
     @PostMapping("/browserRequest")
-    public ResponseEntity<?> browserRequest(@RequestBody DeviceRequestDTO reqDto, @RequestParam Long id) {
+    public ResponseEntity<?> browserRequest(@RequestBody DeviceRequestRetuDto reqDto, @RequestParam Long id) {
         try {
-            DeviceRequestDTO dto = deviceRequestService.browserRequest(reqDto, id);
+            DeviceRequestRetuDto dto = deviceRequestRetuService.browserRequest(reqDto, id);
             if (dto == null) {
                 return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
             }
@@ -74,9 +70,9 @@ public class DeviceRequestController {
     }
 
     @PostMapping("/cancelRequest")
-    public ResponseEntity<?> cancelRequest(@RequestBody DeviceRequestDTO reqDto, @RequestParam Long id) {
+    public ResponseEntity<?> cancelRequest(@RequestBody DeviceRequestRetuDto reqDto, @RequestParam Long id) {
 //        try {
-        DeviceRequestDTO dto = deviceRequestService.cancelRequest(reqDto, id);
+        DeviceRequestRetuDto dto = deviceRequestRetuService.cancelRequest(reqDto, id);
         if (dto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }

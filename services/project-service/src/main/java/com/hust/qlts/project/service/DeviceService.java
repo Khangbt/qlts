@@ -1,8 +1,6 @@
 package com.hust.qlts.project.service;
 
-import com.hust.qlts.project.dto.DataPage;
-import com.hust.qlts.project.dto.DeviceDto;
-import com.hust.qlts.project.dto.DeviceFindDto;
+import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.entity.DeviceEntity;
 
 import java.util.List;
@@ -17,5 +15,9 @@ public interface DeviceService {
      String getMaxCode(Long code);
      boolean updateListStatus(List<String> code);
      List<DeviceEntity> listSetStatus(List<Long> list);
+
+     List<DeviceListIdDto> getList(List<Long> list);
+
+     List<ICusTomDto> getListIdHumme(Long id);
 
 }

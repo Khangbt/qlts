@@ -1,7 +1,6 @@
 package com.hust.qlts.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hust.qlts.project.common.FileUploadUtil;
 import com.hust.qlts.project.dto.DeviceGroupDto;
 import com.hust.qlts.project.dto.DeviceGroupFindDto;
 import com.hust.qlts.project.dto.DeviceGroupListDto;
@@ -9,13 +8,9 @@ import com.hust.qlts.project.service.DeviceGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/deviceGroup")
@@ -87,7 +82,7 @@ public class DeviceGroupController {
         return new ResponseEntity<>(list, HttpStatus.OK);
 
     }
-    @GetMapping("/searhAllList")
+    @GetMapping("/searhListAll")
     private  ResponseEntity<?> getAllGroup(){
         return new ResponseEntity<>(deviceGroupService.listAll(),HttpStatus.OK);
     }
