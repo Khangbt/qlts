@@ -20,4 +20,6 @@ public interface ICusTomDto {
     String getLocalion();
 
     Integer getLostDevice();
+
+
 }

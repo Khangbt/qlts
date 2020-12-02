@@ -23,6 +23,8 @@ public class DeviceRequestDTO {
     private Date approvedDate;
     private Long handlerHummerId;
     private Long partId;
+    private String nameCreat;
+    private String nameHandler;
     private List<ListDeviceDto> listDeviceR;
 
 }

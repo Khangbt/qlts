@@ -10,4 +10,5 @@ public class ListDeviceAddDto {
     private Long price;
     private Long unit;
     private Long sizeUnit;
+    private Long warehouseId;
 }

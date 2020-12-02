@@ -16,7 +16,7 @@ public interface DeviceService {
      boolean updateListStatus(List<String> code);
      List<DeviceEntity> listSetStatus(List<Long> list);
 
-     List<DeviceListIdDto> getList(List<Long> list);
+     List<DeviceListIdDto> getList(Long Request,Long partId);
 
      List<ICusTomDto> getListIdHumme(Long id);
 

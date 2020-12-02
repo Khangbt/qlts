@@ -24,6 +24,8 @@ public class DeviceRequestRetuDto {
     private Date approvedDate;
     private Long handlerHummerId;
     private Long partId;
+    private String nameCreat;
+    private String nameHandler;
     private List<ListDeviceRetuDto> listDeviceR;
 
 }

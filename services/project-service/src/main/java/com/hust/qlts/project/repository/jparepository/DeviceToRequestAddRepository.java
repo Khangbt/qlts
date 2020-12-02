@@ -21,4 +21,8 @@ public interface DeviceToRequestAddRepository extends JpaRepository<DeviceToRequ
     //  @Modifying
 //  @Query(value = sql1)
     void deleteByDeviceRequestAddId(Long id);
+
+
+
+
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -59,9 +60,9 @@ public class DeviceController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @GetMapping("/getListId")
-    public ResponseEntity<?> getList(@RequestParam List<Long> id) {
-        return new ResponseEntity(deviceService.getList(id), HttpStatus.OK);
+    @PostMapping("/getListId")
+    public ResponseEntity<?> getList(@RequestParam Long Request,@RequestParam Long partId) {
+        return new ResponseEntity(deviceService.getList(Request,partId), HttpStatus.OK);
     }
     @GetMapping("/getListyId")
     public ResponseEntity<?> getListIdHummer(@RequestParam Long id) {

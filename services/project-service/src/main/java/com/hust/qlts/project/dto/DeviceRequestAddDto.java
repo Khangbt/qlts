@@ -16,6 +16,8 @@ public class DeviceRequestAddDto {
     private String reason;
     private Date approvedDate;
     private Long handlerHummerId;
+    private String nameCreat;
+    private String nameHandler;
     private List<ListDeviceAddDto> listDeviceR;
     private Long partId;
 }

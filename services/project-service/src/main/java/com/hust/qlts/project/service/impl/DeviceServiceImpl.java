@@ -101,8 +101,9 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<DeviceListIdDto> getList(List<Long> list) {
-        List<ICusTomDto> tomDtos = deviceRepository.listDevice(list);
+    public List<DeviceListIdDto> getList(Long Request, Long partId) {
+        List<Long> longs=deviceRepository.getAllLog(Request);
+        List<ICusTomDto> tomDtos = deviceRepository.listDevice(longs, partId);
         List<DeviceListIdDto> idDtos = new ArrayList<>();
         for (ICusTomDto dto : tomDtos) {
             DeviceListIdDto idDto = new DeviceListIdDto();
@@ -111,7 +112,16 @@ public class DeviceServiceImpl implements DeviceService {
             idDto.setName(dto.getName());
             String s = dto.getListName();
             List<String> lists = Arrays.asList(s.split(","));
+            List<DeviceListIdDto.Xet> xets = new ArrayList<>();
+            for (String s1 : lists) {
+                DeviceListIdDto.Xet xet = new DeviceListIdDto.Xet();
+                String[] strings = s1.split("===");
+                xet.setCode(strings[0]);
+                xet.setId(Long.valueOf(strings[1]));
+                xets.add(xet);
+            }
             idDto.setListDevice(lists);
+            idDto.setListXet(xets);
             idDtos.add(idDto);
         }
         return idDtos;

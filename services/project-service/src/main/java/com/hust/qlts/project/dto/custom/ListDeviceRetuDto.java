@@ -5,5 +5,5 @@ import lombok.Data;
 public class ListDeviceRetuDto {
     private Long deviceId;
     private Integer unit;
-    private Integer lostDevice;
+    private Integer lostDevice; 
 }

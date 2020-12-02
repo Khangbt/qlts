@@ -4,6 +4,7 @@ import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.DataPage;
 import com.hust.qlts.project.dto.DeviceRequestDTO;
 import com.hust.qlts.project.dto.IListDeviceToReDto;
+import com.hust.qlts.project.dto.IRequestDto;
 import com.hust.qlts.project.dto.custom.ListDeviceDto;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.entity.DeviceRequestEntity;
@@ -68,10 +69,11 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         if (!deviceRequestRepository.findById(code).isPresent()) {
             return null;
         }
-        DeviceRequestEntity entity = deviceRequestRepository.findById(code).get();
+        IRequestDto entity = deviceRequestRepository.getIdCustom(code);
         dto.setId(entity.getId());
         dto.setCode(entity.getCode());
         dto.setApprovedDate(entity.getApprovedDate());
+        System.out.println(entity.getCreatDate());
         dto.setCreatDate(entity.getCreatDate());
         dto.setCreatHummerId(entity.getCreatHummerId());
         dto.setHandlerHummerId(entity.getHandlerHummerId());
@@ -81,6 +83,8 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         dto.setStartDateBorrow(entity.getStartDateBorrow());
         dto.setNote(entity.getNote());
         dto.setPartId(entity.getPartId());
+        dto.setNameCreat(entity.getNamecreat());
+        dto.setNameHandler(entity.getNameHandler());
         List<ListDeviceDto> list = new ArrayList<>();
 
         List<IListDeviceToReDto> device = deviceToRequestRepository.getListAllIdCustom(code);
@@ -112,7 +116,7 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         RequestEntity requestEntity = new RequestEntity();
         DeviceRequestEntity deviceRequestEntity = new DeviceRequestEntity();
         deviceRequestEntity.setCreatDate(new Date());
-        String code = "PYCM" + CoreUtils.castDateToStringByPattern(new Date(), "yyMMdd");
+        String code = "PYCM" + CoreUtils.castDateToStringByPattern(new Date(), "MMdd")+CoreUtils.castDateToStringByPattern(new Date(), "hhmmss");
         deviceRequestEntity.setCode(code);
         deviceRequestEntity.setCreatHummerId(dto.getCreatHummerId());
         deviceRequestEntity.setEndDateBorrow(dto.getEndDateBorrow());
@@ -231,6 +235,11 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         deviceRequestEntity.setReason(dto.getReason());
 
         return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRepository.save(deviceRequestEntity));
+    }
+
+    @Override
+    public IRequestDto getIdList(Long id) {
+        return null;
     }
 
 }

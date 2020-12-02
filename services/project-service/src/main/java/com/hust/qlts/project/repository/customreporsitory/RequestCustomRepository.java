@@ -55,7 +55,6 @@ public class RequestCustomRepository {
             if(o[5]!=null){
                 dto.setPartId(Long.valueOf( o[5].toString()));
             }
-            dto.setPartId(Long.valueOf( o[5].toString()));
             dto.setCreatDate((Date) o[6]);
             dtos.add(dto);
 

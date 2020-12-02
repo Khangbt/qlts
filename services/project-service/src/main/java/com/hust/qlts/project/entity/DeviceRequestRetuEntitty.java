@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "DEVICE_REQUEST_RETU  ")
+@Table(name = "DEVICE_REQUEST_RETU")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceRequestRetuEntitty {

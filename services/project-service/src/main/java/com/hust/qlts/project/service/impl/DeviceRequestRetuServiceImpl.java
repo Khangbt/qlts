@@ -4,6 +4,7 @@ import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.DataPage;
 import com.hust.qlts.project.dto.DeviceRequestDTO;
 import com.hust.qlts.project.dto.DeviceRequestRetuDto;
+import com.hust.qlts.project.dto.IRequestDto;
 import com.hust.qlts.project.dto.custom.ListDeviceRetuDto;
 import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestRetuRepository;
@@ -62,10 +63,10 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
     @Override
     public DeviceRequestRetuDto getFindByCode(Long code) {
         DeviceRequestRetuDto dto = new DeviceRequestRetuDto();
-        if(!deviceRequestRetuRepository.findById(code).isPresent()){
+        if (!deviceRequestRetuRepository.findById(code).isPresent()) {
             return null;
         }
-        DeviceRequestRetuEntitty entitty=deviceRequestRetuRepository.findById(code).get();
+        IRequestDto entitty = deviceRequestRetuRepository.getIdCustom(code);
         dto.setStatus(entitty.getStatus());
         dto.setId(entitty.getId());
         dto.setApprovedDate(entitty.getApprovedDate());
@@ -76,10 +77,12 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         dto.setNote(entitty.getNote());
         dto.setReason(entitty.getReason());
         dto.setPartId(entitty.getPartId());
-        List<ListDeviceRetuDto> list=new ArrayList<>();
-        List<DeviceToRequestRetuEntitty> device=deviceToRequestRetuRepository.getListbyid(code);
-        for (DeviceToRequestRetuEntitty retuEntitty:device){
-            ListDeviceRetuDto retuDto=new ListDeviceRetuDto();
+        dto.setNameCreat(entitty.getNamecreat());
+        dto.setNameHandler(entitty.getNameHandler());
+        List<ListDeviceRetuDto> list = new ArrayList<>();
+        List<DeviceToRequestRetuEntitty> device = deviceToRequestRetuRepository.getListbyid(code);
+        for (DeviceToRequestRetuEntitty retuEntitty : device) {
+            ListDeviceRetuDto retuDto = new ListDeviceRetuDto();
             retuDto.setDeviceId(retuEntitty.getDeviceId());
             retuDto.setLostDevice(retuEntitty.getLostDevice());
 //            retuDto.setUnit(retuEntitty.get);
@@ -94,7 +97,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
     @Transactional(rollbackFor = Exception.class)
     public DeviceRequestRetuDto craet(DeviceRequestRetuDto dto) {
         DeviceRequestRetuEntitty entitty = new DeviceRequestRetuEntitty();
-        String code = "PT" + CoreUtils.castDateToStringByPattern(new Date(), "yyMMdd");
+        String code = "PT" + CoreUtils.castDateToStringByPattern(new Date(), "MMdd")+CoreUtils.castDateToStringByPattern(new Date(), "hhmmss");
         entitty.setCode(code);
         entitty.setCreatHummerId(dto.getCreatHummerId());
         entitty.setCreatDate(new Date());
