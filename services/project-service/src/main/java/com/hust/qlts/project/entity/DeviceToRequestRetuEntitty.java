@@ -27,6 +27,9 @@ public class DeviceToRequestRetuEntitty {
     private Integer lostDevice;
     @Column(name = "DEVICE_REQUEST_ID_RETU")
     private Long deviceRequestIdRetu;
+
+    @Column(name = "WAREHOUSE_ID")
+    private Long warehouseId;
     @Version
     private Long version;
 }

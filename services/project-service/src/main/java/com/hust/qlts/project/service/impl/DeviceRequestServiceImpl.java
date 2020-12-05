@@ -214,11 +214,11 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         requestEntity.setStatus(Constants.XACNHAN);
         requestEntity.setHandlerHummerId(dto.getHandlerHummerId());
         requestEntity.setApprovedDate(new Date());
-//        deviceToRequestRepository.saveAll(listAll);
-//        deviceRequestRepository.save(requestEntity);
-//        deviceService.saveList(deviceEntities);
-//        return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRepository.save(requestEntity));
-        return null;
+        deviceToRequestRepository.saveAll(listAll);
+        deviceRequestRepository.save(requestEntity);
+        deviceService.saveList(deviceEntities);
+        return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRepository.save(requestEntity));
+//        return null;
     }
 
     @Override

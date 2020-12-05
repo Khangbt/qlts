@@ -19,4 +19,8 @@ public interface SupplierService {
 
     SupplierDTO findByCode(String code);
     List<ISupplierListDto> getListPart();
+    boolean checkCode(String code);
+
+
+
 }

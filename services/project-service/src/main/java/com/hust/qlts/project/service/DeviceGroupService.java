@@ -29,4 +29,8 @@ public interface DeviceGroupService {
     List<DeviceGroupEntity> getAllListLong(List<Long> id);
 
     List<DeviceGroupEntity> saveList(List<DeviceGroupEntity> list);
+
+
+
+
 }

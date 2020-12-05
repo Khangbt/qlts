@@ -21,5 +21,6 @@ public interface ICusTomDto {
 
     Integer getLostDevice();
 
+    Long getWarehouseId();
 
 }

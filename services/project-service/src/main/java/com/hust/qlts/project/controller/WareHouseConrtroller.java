@@ -111,6 +111,15 @@ public class WareHouseConrtroller {
         return new ResponseEntity<>(warehouseService.findByPart(id), HttpStatus.OK);
 
     }
+    @GetMapping("/checkCode")
+    public ResponseEntity<?> checkCode(@RequestParam String id) {
+        if(warehouseService.checkCode(id)){
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>("Lỗi", HttpStatus.BAD_REQUEST);
+
+    }
 
 
 }

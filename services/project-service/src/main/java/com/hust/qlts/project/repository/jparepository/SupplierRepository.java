@@ -37,17 +37,22 @@ public interface SupplierRepository extends JpaRepository<SupplierEntity, Long> 
             + "  left join HUMAN_RESOURCES as hr on sp.HUMAN_ID = hr.HUMAN_RESOURCES_ID "
 
             + "  where sp.STATUS != 0  and( sp.SUPPLIER_ID = :supplierId )"
-        +" GROUP BY SUPPLIER_ID "
-        +" ORDER BY sp.SUPPLIER_ID DESC ";
+            + " GROUP BY SUPPLIER_ID "
+            + " ORDER BY sp.SUPPLIER_ID DESC ";
+
     @Query(value = sql, nativeQuery = true)
     SupplierEntity findById1(Long supplierId);
 
-    String sql2="SELECT wh.SUPPLIER_ID as id,wh.NAME as name,wh.CODE as code from  supplier  as  wh where wh.STATUS=1";
-    @Query(value = sql2,nativeQuery = true)
+    String sql2 = "SELECT wh.SUPPLIER_ID as id,wh.NAME as name,wh.CODE as code from  supplier  as  wh where wh.STATUS=1";
+
+    @Query(value = sql2, nativeQuery = true)
     List<ISupplierListDto> findListPart();
 
 
-
-
+    String sql5 = "SELECT *  " +
+            "   from supplier as w  " +
+            "   where upper(w.CODE)=upper(:code)";
+    @Query(value = sql5, nativeQuery = true)
+    List<SupplierEntity> getCheckCode(String code);
 
 }

@@ -144,6 +144,8 @@ public class WarehouseServiceMpl implements WarehouseService {
         return list;
     }
 
+
+
     public WarehouseDTO convertEntitytoDTO(WarehouseEntity warehouseEntity) {
         WarehouseDTO warehouseDTO = new WarehouseDTO();
         warehouseDTO.setAddress(warehouseEntity.getAddress());
@@ -154,5 +156,12 @@ public class WarehouseServiceMpl implements WarehouseService {
 //       warehouseDTO.setProvinceID(warehouseEntity.getProvincecode());
         warehouseDTO.setPartId(warehouseEntity.getParid());
         return warehouseDTO;
+    }
+    @Override
+    public boolean checkCode(String code) {
+        if(warehouseRepository.getCodeCheck(code).size()>0){
+            return false;
+        }
+        return true;
     }
 }

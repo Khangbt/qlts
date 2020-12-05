@@ -20,4 +20,13 @@ public interface DeviceService {
 
      List<ICusTomDto> getListIdHumme(Long id);
 
+
+     List<ICusTomDto> getIdHummeReti(Long idHummer,Long partId);
+     List<DeviceListIdDto> getListReturn(Long Request);
+
+     boolean checkCode(String code);
+     List<ICusTomDto> getListReturnbor(Long id);
+     List<ICusTomDto> getIdHummeRetiByReque(Long idHummer,Long partId,Long idReque);
+     List<ICusTomDto> getIdHummeRetiByIdStaue(Long idReque);
+
 }

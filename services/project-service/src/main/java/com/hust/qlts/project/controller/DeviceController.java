@@ -68,4 +68,35 @@ public class DeviceController {
     public ResponseEntity<?> getListIdHummer(@RequestParam Long id) {
         return new ResponseEntity(deviceService.getListIdHumme(id), HttpStatus.OK);
     }
+
+    @GetMapping("/getListyReturm")
+        public ResponseEntity<?> getListReturn(@RequestParam Long idHummer,@RequestParam Long partId) {
+        return new ResponseEntity(deviceService.getIdHummeReti(idHummer, partId), HttpStatus.OK);
+    }
+
+    @GetMapping("/getListFormRe")
+    public ResponseEntity<?> getListFormRe(@RequestParam Long idRequest) {
+        return new ResponseEntity(deviceService.getListReturn(idRequest), HttpStatus.OK);
+    }
+    @GetMapping("/getListFormReBrowser")
+    public ResponseEntity<?> getListFormReBrowser(@RequestParam Long idRequestRe) {
+        return new ResponseEntity(deviceService.getListReturnbor(idRequestRe), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/checkcode")
+    public ResponseEntity<?> checkcode(@RequestParam String code) {
+        if(deviceService.checkCode(code)){
+            return new ResponseEntity("ok", HttpStatus.OK);
+        }
+        return new ResponseEntity("Lỗi", HttpStatus.BAD_GATEWAY);
+    }
+    @GetMapping("/getListyReturmById")
+    public ResponseEntity<?> getListyReturmById(@RequestParam Long idHummer,@RequestParam Long partId,@RequestParam Long idReque) {
+        return new ResponseEntity(deviceService.getIdHummeRetiByReque(idHummer, partId,idReque), HttpStatus.OK);
+    }
+    @GetMapping("/getListyReturmByIdStus")
+    public ResponseEntity<?> getListyReturmById(@RequestParam Long idReque) {
+        return new ResponseEntity(deviceService.getIdHummeRetiByIdStaue(idReque), HttpStatus.OK);
+    }
 }

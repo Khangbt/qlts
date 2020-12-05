@@ -81,7 +81,6 @@ public class Part implements PartService {
                 partEntity.setName(partnerDTO.getPartName());
                 partEntity.setIsActive(partnerDTO.getStatus());
                 partEntity.setNote(partnerDTO.getNote());
-
                 partRepository.save(partEntity);
                 return convertEntitytoDTO(partEntity);
 

@@ -148,6 +148,8 @@ public class SupplierServicelImpl implements SupplierService {
         return supplierRepository.findListPart();
     }
 
+
+
     public SupplierEntity convertDTOtoEntity(SupplierDTO supplierDTO) {
         SupplierEntity supplierEntity = new SupplierEntity();
 //        supplierEntity.setGroupSupplierid(supplierDTO.getId());
@@ -179,5 +181,11 @@ public class SupplierServicelImpl implements SupplierService {
         supplierDTO.setSupplierId(BigInteger.valueOf(supplierEntity.getSupplierId()));
         return supplierDTO;
     }
-
+    @Override
+    public boolean checkCode(String code) {
+        if(supplierRepository.getCheckCode(code).size()>0){
+            return false;
+        }
+        return true;
+    }
 }

@@ -102,7 +102,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<DeviceListIdDto> getList(Long Request, Long partId) {
-        List<Long> longs=deviceRepository.getAllLog(Request);
+        List<Long> longs = deviceRepository.getAllLog(Request);
         List<ICusTomDto> tomDtos = deviceRepository.listDevice(longs, partId);
         List<DeviceListIdDto> idDtos = new ArrayList<>();
         for (ICusTomDto dto : tomDtos) {
@@ -131,4 +131,60 @@ public class DeviceServiceImpl implements DeviceService {
     public List<ICusTomDto> getListIdHumme(Long id) {
         return deviceRepository.listByID(id);
     }
+
+    @Override
+    public List<ICusTomDto> getIdHummeReti(Long idHummer, Long partId) {
+        return deviceRepository.listDeviceRetu(idHummer, partId);
+    }
+
+    @Override
+    public List<DeviceListIdDto> getListReturn(Long Request) {
+        List<ICusTomDto> tomDtos = deviceRepository.listReturnRequest(Request);
+        List<DeviceListIdDto> idDtos = new ArrayList<>();
+        for (ICusTomDto dto : tomDtos) {
+            DeviceListIdDto idDto = new DeviceListIdDto();
+            idDto.setId(dto.getId());
+            idDto.setCode(dto.getCode());
+            idDto.setName(dto.getName());
+            System.out.println(dto.getId()+dto.getName());
+            String[] lists = dto.getListName().split(",");
+            List<DeviceListIdDto.Xet> xets = new ArrayList<>();
+            for (String s1 : lists) {
+                DeviceListIdDto.Xet xet = new DeviceListIdDto.Xet();
+                String[] strings = s1.split("===");
+                xet.setCode(strings[0]);
+                xet.setId(Long.valueOf(strings[1]));
+                xets.add(xet);
+            }
+
+            idDto.setListXet(xets);
+            idDtos.add(idDto);
+        }
+
+        return idDtos;
+    }
+
+    @Override
+    public boolean checkCode(String code) {
+        if(deviceRepository.getByCodeCustom(code).size()>0){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public List<ICusTomDto> getListReturnbor(Long id) {
+        return deviceRepository.listRequestRetuBorw(id);
+    }
+
+    @Override
+    public List<ICusTomDto> getIdHummeRetiByReque(Long idHummer, Long partId, Long idReque) {
+        return deviceRepository.listDeviceRetuById(idHummer, partId, idReque);
+    }
+
+    @Override
+    public List<ICusTomDto> getIdHummeRetiByIdStaue(Long idReque) {
+        return deviceRepository.listDeviceRetuGetStaus(idReque);
+    }
+
 }

@@ -1,10 +1,7 @@
 package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.common.CoreUtils;
-import com.hust.qlts.project.dto.DataPage;
-import com.hust.qlts.project.dto.DeviceRequestDTO;
-import com.hust.qlts.project.dto.DeviceRequestRetuDto;
-import com.hust.qlts.project.dto.IRequestDto;
+import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.dto.custom.ListDeviceRetuDto;
 import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestRetuRepository;
@@ -80,12 +77,14 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         dto.setNameCreat(entitty.getNamecreat());
         dto.setNameHandler(entitty.getNameHandler());
         List<ListDeviceRetuDto> list = new ArrayList<>();
-        List<DeviceToRequestRetuEntitty> device = deviceToRequestRetuRepository.getListbyid(code);
-        for (DeviceToRequestRetuEntitty retuEntitty : device) {
+        List<ICusTomDto> device = deviceToRequestRetuRepository.getListbyidCustom(code);
+        for (ICusTomDto retuEntitty : device) {
             ListDeviceRetuDto retuDto = new ListDeviceRetuDto();
-            retuDto.setDeviceId(retuEntitty.getDeviceId());
+            retuDto.setDeviceId(retuEntitty.getId());
             retuDto.setLostDevice(retuEntitty.getLostDevice());
-//            retuDto.setUnit(retuEntitty.get);
+            retuDto.setUnit(retuEntitty.getUnit());
+            retuDto.setWarehouseId(retuEntitty.getWarehouseId());
+
             list.add(retuDto);
         }
         dto.setListDeviceR(list);
@@ -114,6 +113,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
             retuEntitty.setLostDevice(retuDto.getLostDevice());
             retuEntitty.setStatus(Constants.CHUAXACNHAN);
             retuEntitty.setDeviceRequestIdRetu(entitty1.getId());
+            retuEntitty.setWarehouseId(retuDto.getWarehouseId());
             device.add(retuEntitty);
         }
         RequestEntity requestEntity = new RequestEntity();
@@ -156,6 +156,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
             retuEntitty.setLostDevice(retuDto.getLostDevice());
             retuEntitty.setStatus(Constants.CHUAXACNHAN);
             retuEntitty.setDeviceRequestIdRetu(deviceRequestEntity.getId());
+            retuEntitty.setWarehouseId(retuDto.getWarehouseId());
             list.add(retuEntitty);
         }
         deviceToRequestRetuRepository.saveAll(list);
@@ -185,8 +186,12 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         for (ListDeviceRetuDto retuDto : dto.getListDeviceR()) {
             listId.add(retuDto.getDeviceId());
         }
+        List<DeviceToRequestRetuEntitty> device = deviceToRequestRetuRepository.getListbyid(deviceRequestEntity.getId());
 
-
+        for (DeviceToRequestRetuEntitty entitty:device){
+            entitty.setStatus(2);
+        }
+        deviceToRequestRetuRepository.saveAll(device);
         List<DeviceEntity> deviceEntities = deviceService.listSetStatus(listId);
         for (DeviceEntity entity : deviceEntities) {
             Optional<ListDeviceRetuDto> retuDto = dto.getListDeviceR().stream().filter(a
@@ -194,6 +199,8 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
             if (retuDto.isPresent()) {
                 entity.setStatus(Constants.TRONGKHO);
                 entity.setLostDevice(retuDto.get().getLostDevice());
+                entity.setWarehouseId(retuDto.get().getWarehouseId());
+
             }
 
         }

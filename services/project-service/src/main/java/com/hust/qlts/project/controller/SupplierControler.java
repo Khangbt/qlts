@@ -23,8 +23,9 @@ public class SupplierControler {
     @Autowired
     private SupplierService supplierService;
     @Autowired
-    SupplierRepository supplierRepository;
+    private SupplierRepository supplierRepository;
     private final Logger log = LogManager.getLogger(HumanResourcesController.class);
+
     // TanNV get HumanResourcesShowDTO danh sach
     @PostMapping("/searchSupplier")
     public ResponseEntity<?> searchHumanResources(@RequestBody SupplierDTO dto) {
@@ -42,7 +43,7 @@ public class SupplierControler {
     public ResultResp createHR(@RequestBody SupplierDTO supplierDTO, HttpServletRequest request) {
         log.info("<--- api createNewHr: start,", supplierDTO);
         //lấy ra username đang đăng nhập
-       // String username = authenService.getEmailCurrentlyLogged(request);
+        // String username = authenService.getEmailCurrentlyLogged(request);
 
         try {
             return ResultResp.success(ErrorCode.CREATED_HR_OK, supplierService.create(supplierDTO));
@@ -85,6 +86,7 @@ public class SupplierControler {
             return ResultResp.badRequest(ErrorCode.DELETE_HR_FAIL);
         }
     }
+
     @GetMapping("/get-supplier-by-id/{id}")
     public ResultResp getOneById(@PathVariable("id") Long id) {
         log.info("<-- api updateHumanResources: start, ", id);
@@ -99,6 +101,7 @@ public class SupplierControler {
         }
 
     }
+
     @GetMapping(value = "/check-usercode/{code}")
     public ResultResp checkUsername(@PathVariable("code") String code) {
         log.info("<-- api check duplicate code: start, ");
@@ -110,9 +113,17 @@ public class SupplierControler {
             return ResultResp.badRequest(ErrorCode.CREATED_HR_EXIST);
         }
     }
-    @GetMapping(value = "/listpart")
-    public ResponseEntity<?> getListPart(){
-        return new ResponseEntity<>(supplierService.getListPart(),HttpStatus.OK);
-    }
 
+    @GetMapping(value = "/listpart")
+    public ResponseEntity<?> getListPart() {
+        return new ResponseEntity<>(supplierService.getListPart(), HttpStatus.OK);
+    }
+    @GetMapping(value = "/checkCode")
+    public ResponseEntity<?> checkCode(@RequestParam String code) {
+        if(supplierService.checkCode(code)){
+            return new ResponseEntity<>("OK", HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>("Lỗi", HttpStatus.BAD_REQUEST);
+    }
 }

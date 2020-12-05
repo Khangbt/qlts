@@ -39,7 +39,7 @@ public class DeviceCustomRepository {
                 "        from device_request as dr4    " +
                 "                 left join device_to_request as dtr4 on dr4.ID = dtr4.DEVICE_REQUEST_ID    " +
                 "        where dtr4.DEVICE_ID = d.DEVICE_ID)              as reStaus,  ");
-        sql.append("  (select dr5.CODE    " +
+        sql.append("  (select group_concat(dr5.CODE)    " +
                 "        from device_request as dr5    " +
                 "                 left join device_to_request as dtr5 on dr5.ID = dtr5.DEVICE_REQUEST_ID    " +
                 "        where dtr5.DEVICE_ID = d.DEVICE_ID    " +

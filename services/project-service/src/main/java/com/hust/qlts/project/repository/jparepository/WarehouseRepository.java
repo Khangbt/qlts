@@ -29,4 +29,11 @@ public interface WarehouseRepository  extends JpaRepository<WarehouseEntity,Long
     String sql3="SELECT wh.WAREHOUSE_ID as id,wh.NAME as name,wh.CODE as code from  warehouse  as  wh where wh.STATUS=1";
     @Query(value = sql3,nativeQuery = true)
     List<IWarePart> findListPartAll();
+
+
+    String sql4="SELECT *  " +
+            "from warehouse as w  " +
+            "where upper(w.CODE)=upper(:code)";
+    @Query(value = sql4,nativeQuery = true)
+    List<WarehouseEntity> getCodeCheck(String code);
 }

@@ -13,6 +13,13 @@ public class RequestDto {
     private Long creatHummerId;
     private Long partId;
     private Date creatDate;
+    private Date handDate;
+    private Integer status;
+    private Long handlerHummerId;
+    private String note;
+    private String reason;
+    private String nameCreat;
+    private String handlerName;
 
 
     private Integer page;
