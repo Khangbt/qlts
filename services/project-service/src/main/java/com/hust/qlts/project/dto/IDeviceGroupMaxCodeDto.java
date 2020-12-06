@@ -8,4 +8,6 @@ public interface IDeviceGroupMaxCodeDto {
     String getName();
     Integer getSizeUnit();
     Integer getUnit();
+    Integer getSizeId();
+    String getSpecifications();
 }

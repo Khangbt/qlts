@@ -67,10 +67,12 @@ public class DeviceGroupCustomRepository {
             sql.append("   and d5.PART_ID = :partId    ");
         }
         sql.append("  )     as p2, ");
-        sql.append("      d.UNIT                                as unit," +
-                "       d.SIZE_UNIT                           as sizUnot");
+        sql.append("      (CASE when d.UNIT IS NULL then dg.UNIT  " +
+                "           else d.UNIT end ) as unit,  " +
+                "       (CASE when d.SIZE_UNIT IS NULL then dg.SIZE_UNIT  " +
+                "               else d.SIZE_UNIT end)                          as sizUnit");
         sql.append(" from device_group as dg ");
-        sql.append(" join device as d on d.EQUIPMENT_GROUP_ID = dg.ID ");
+        sql.append("left join device as d on d.EQUIPMENT_GROUP_ID = dg.ID ");
         sql.append("    where 1=1 ");
         if (null != dto.getPartId()) {
             sql.append("  and d.PART_ID=:partId ");
@@ -136,13 +138,21 @@ public class DeviceGroupCustomRepository {
             dto.setNote((String) o[4]);
             dto.setSpecifications((String) o[5]);
             dto.setTyle((String) o[6]);
-            dto.setSize(Integer.valueOf(String.valueOf(o[7])));
+            if (o[7] == null) {
+                dto.setSize(0);
+            } else {
+                dto.setSize(Integer.valueOf(String.valueOf(o[7])));
+            }
             dto.setPartName((String) o[8]);
-            dto.setSizeWareHouse(Integer.valueOf(String.valueOf(o[9])));
+            if (o[9] == null) {
+                dto.setSizeWareHouse(0);
+            } else {
+                dto.setSizeWareHouse(Integer.valueOf(String.valueOf(o[9])));
+            }
             dto.setWarehouseName((String) o[10]);
             dto.setSupperName((String) o[11]);
-            dto.setUnit((Integer) o[12]);
-            dto.setSizeUnit((Integer) o[13]);
+            dto.setUnit(Integer.parseInt(String.valueOf(o[12])) );
+            dto.setSizeUnit(Integer.parseInt(String.valueOf(o[12])));
             list.add(dto);
         }
 

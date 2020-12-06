@@ -33,6 +33,7 @@ public class DeviceDto {
     private String nameOrCode;
     private Integer page;
     private Integer pageSize;
-
+    private Integer size;
+    private boolean check;
     private Long totalRecord;
 }

@@ -47,6 +47,8 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setStatus(Constants.TRONGKHO);
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());
+            deviceEntity.setNote(dto.getNote());
+            deviceEntity.setSpecifications(dto.getSpecifications());
             deviceEntity.setLostDevice(100);
             deviceEntity.setExist(true);
             list.add(deviceEntity);
@@ -76,7 +78,9 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             deviceEntity.setStatus(Constants.TRONGKHO);
             deviceEntity.setUnit(dto.getUnit());
             deviceEntity.setSizeUnit(dto.getSizeUnit());
+            deviceEntity.setSpecifications(dto.getSpecifications());
             deviceEntity.setLostDevice(100);
+            deviceEntity.setNote(dto.getNote());
             deviceEntity.setExist(true);
             list.add(deviceEntity);
 

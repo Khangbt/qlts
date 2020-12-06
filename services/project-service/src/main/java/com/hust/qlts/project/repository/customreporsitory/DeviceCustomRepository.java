@@ -25,7 +25,7 @@ public class DeviceCustomRepository {
                 "       d.SIZE_UNIT,    " +
                 "       d.LOST_DEVICE,    " +
                 "       d.USE_HUMMER_ID,    " +
-                "       dg.SPECIFICATIONS,    " +
+                "       d.SPECIFICATIONS,    " +
                 "       concat(dg.NOTE,d.NOTE)  as note,    " +
                 "       dg.NOTE as groupNote,    " +
                 "       d.NOTE as deviceNote,   ");
@@ -169,7 +169,7 @@ public class DeviceCustomRepository {
 
     public DeviceFindDto getFindByCode(String code) {
         StringBuffer sql = new StringBuffer();
-        sql.append(" select d.DEVICE_ID, dg.NAME, d.CODE, d.PART_ID, dg.SPECIFICATIONS, d.LOCATION, ");
+        sql.append(" select d.DEVICE_ID, dg.NAME, d.CODE, d.PART_ID, d.SPECIFICATIONS, d.LOCATION, ");
         sql.append("    d.NOTE,p.NAME as name1,d.STATUS  ");
         sql.append("    from device as d    ");
         sql.append("         left join device_group as dg on d.EQUIPMENT_GROUP_ID = dg.ID   ");

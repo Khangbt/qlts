@@ -2,12 +2,16 @@ package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.entity.DeviceEntity;
+import com.hust.qlts.project.entity.DeviceGroupEntity;
 import com.hust.qlts.project.repository.customreporsitory.DeviceCustomRepository;
+import com.hust.qlts.project.repository.jparepository.DeviceGroupRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceRepository;
 import com.hust.qlts.project.service.DeviceService;
+import common.Constants;
 import common.ConvetSetData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +25,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private DeviceCustomRepository deviceCustomRepository;
 
+    @Autowired
+    private DeviceGroupRepository deviceGroupRepository;
     @Override
     public boolean saveList(List<DeviceEntity> list) {
         deviceRepository.saveAll(list);
@@ -75,12 +81,40 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeviceDto craet(DeviceDto dto) {
-        DeviceEntity deviceEntity = (DeviceEntity) ConvetSetData.xetData(new DeviceEntity(), dto);
-        assert deviceEntity != null;
-        deviceEntity.setExist(true);
-        deviceEntity.setDateAdd(new Date());
-        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceRepository.save(deviceEntity));
+        if(dto.isCheck()){
+            DeviceEntity deviceEntity = (DeviceEntity) ConvetSetData.xetData(new DeviceEntity(), dto);
+            assert deviceEntity != null;
+            deviceEntity.setExist(true);
+            deviceEntity.setDateAdd(new Date());
+            return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceRepository.save(deviceEntity));
+        }
+        if(!deviceGroupRepository.findById(dto.getIdEquipmentGroup()).isPresent()){
+            return null;
+        }
+        DeviceGroupEntity groupEntity=deviceGroupRepository.findById(dto.getIdEquipmentGroup()).get();
+        List<DeviceEntity> list=new ArrayList<>();
+        for (int i = 0; i <dto.getSize() ; i++) {
+            DeviceEntity deviceEntity = new DeviceEntity();
+            deviceEntity.setCode(creatCode(i+groupEntity.getSizeId(), groupEntity.getCode()));
+            deviceEntity.setDateAdd(new Date());
+            deviceEntity.setPartId(dto.getPartId());
+            deviceEntity.setSupplierId(dto.getSupplierId());
+            deviceEntity.setIdEquipmentGroup(dto.getIdEquipmentGroup());
+            deviceEntity.setWarehouseId(dto.getWarehouseId());
+            deviceEntity.setStatus(Constants.TRONGKHO);
+            deviceEntity.setUnit(dto.getUnit());
+            deviceEntity.setSizeUnit(dto.getSizeUnit());
+            deviceEntity.setNote(dto.getNote());
+            deviceEntity.setSpecifications(groupEntity.getSpecifications());
+            deviceEntity.setLostDevice(100);
+            deviceEntity.setExist(true);
+            list.add(deviceEntity);
+        }
+        groupEntity.setSizeId(groupEntity.getSizeId()+dto.getSize());
+        deviceRepository.saveAll(list);
+        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),dto);
     }
 
     @Override
@@ -185,6 +219,27 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<ICusTomDto> getIdHummeRetiByIdStaue(Long idReque) {
         return deviceRepository.listDeviceRetuGetStaus(idReque);
+    }
+
+    @Override
+    public byte[] exportXel() {
+
+
+
+
+
+        return new byte[0];
+    }
+
+    private String creatCode(int id, String code) {
+        StringBuilder codeData = new StringBuilder();
+        codeData.append(code);
+        for (int i = String.valueOf(id).length(); i < 4; i++) {
+            codeData.append("0");
+        }
+        codeData.append(id);
+
+        return codeData.toString();
     }
 
 }

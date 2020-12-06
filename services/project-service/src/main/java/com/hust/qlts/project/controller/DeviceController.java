@@ -99,4 +99,10 @@ public class DeviceController {
     public ResponseEntity<?> getListyReturmById(@RequestParam Long idReque) {
         return new ResponseEntity(deviceService.getIdHummeRetiByIdStaue(idReque), HttpStatus.OK);
     }
+
+
+    @GetMapping("/export")
+    public ResponseEntity<?> exportt(@RequestBody DeviceDto reqDto){
+        return new ResponseEntity<>("ok",HttpStatus.OK);
+    }
 }

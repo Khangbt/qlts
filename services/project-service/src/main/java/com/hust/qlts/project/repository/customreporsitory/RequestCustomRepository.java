@@ -143,6 +143,7 @@ public class RequestCustomRepository {
         if (dto.getCode() != null) {
             sql.append("    and r.CODE like  upper(:code)  ");
         }
+
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (dto.getStatus() != null) {

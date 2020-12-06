@@ -27,12 +27,17 @@ public class DeviceGroupEntity {
     @Column(name = "TYLE")
     private String tyle;
 
-
     @Column(name = "SIZE_ID")
     private Integer sizeId;
 
     @Column(name = "SPECIFICATIONS")//thông số ki thuât
     private String specifications;
+
+    @Column(name = "UNIT")
+    private Integer unit;
+
+    @Column(name = "SIZE_UNIT")
+    private Integer sizeUnit;
 
     @Column(name = "NOTE")
     private String note;
