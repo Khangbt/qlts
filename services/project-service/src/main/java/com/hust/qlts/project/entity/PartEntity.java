@@ -12,7 +12,7 @@ import java.util.Date;
 @Table(name ="PART")
 @AllArgsConstructor
 @NoArgsConstructor
-public class PartEntity {
+public class PartEntity extends Auditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

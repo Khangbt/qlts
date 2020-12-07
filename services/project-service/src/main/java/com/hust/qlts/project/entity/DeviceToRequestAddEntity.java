@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "DEVICE_TO_REQUEST_ADD")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceToRequestAddEntity {
+public class DeviceToRequestAddEntity  extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

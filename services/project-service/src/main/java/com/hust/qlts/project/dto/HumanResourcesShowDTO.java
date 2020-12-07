@@ -35,7 +35,7 @@ public class HumanResourcesShowDTO {
 
     private Integer positionId;
 
-    private Integer partId;
+    private Long partId;
 
     private String part;
 
@@ -72,5 +72,6 @@ public class HumanResourcesShowDTO {
     private Long totalRecord;
     private Long departmentId;
     private String password;
+    private String tyleDto;
 
 }

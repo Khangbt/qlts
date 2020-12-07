@@ -26,4 +26,5 @@ public class RequestDto {
     private Integer pageSize;
 
     private Long totalRecord;
+    private String tyleDto;
 }

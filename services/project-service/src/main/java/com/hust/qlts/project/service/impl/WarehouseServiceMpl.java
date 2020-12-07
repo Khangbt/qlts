@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service(value = "warehouse")
@@ -76,6 +77,7 @@ public class WarehouseServiceMpl implements WarehouseService {
             warehouseEntity.setAddress(dto.getAddress());
             warehouseEntity.setNote(dto.getNote());
             warehouseEntity.setParid(dto.getPartId());
+            warehouseEntity.setLastModifiedDate(new Date());
 
         } else if (dto.getIdWare() == null) {
             //TODO: create nha cung cap
@@ -86,6 +88,9 @@ public class WarehouseServiceMpl implements WarehouseService {
             warehouseEntity.setNote(dto.getNote());
             warehouseEntity.setParid(dto.getPartId());
             warehouseEntity.setStatus(1);
+            warehouseEntity.setCreatedDate(new Date());
+            warehouseEntity.setLastModifiedDate(new Date());
+
 
         }
         warehouseRepository.save(warehouseEntity);

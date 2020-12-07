@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "REQUEST")
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestEntity implements Serializable {
+public class RequestEntity extends Auditable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

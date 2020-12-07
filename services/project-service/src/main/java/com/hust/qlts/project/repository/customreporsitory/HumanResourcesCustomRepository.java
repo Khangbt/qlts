@@ -145,8 +145,8 @@ public class HumanResourcesCustomRepository {
         sql.append(" hr.EMAIL as email,      ");
         sql.append(" hr.NOTE as note,      ");
         sql.append(" hr.CODE as code,         ");
-        sql.append(" hr.PASSWORD as password         ");
-
+        sql.append(" hr.PASSWORD as password    ,     ");
+        sql.append(" pr.ID as parId");
         sql.append(" from HUMAN_RESOURCES as hr              ");
         sql.append(" LEFT JOIN POSITION as ps on hr.POSITION_ID = ps.ID                ");
         sql.append(" LEFT JOIN PART as pr on hr.PART_ID = pr.ID              ");
@@ -232,6 +232,10 @@ public class HumanResourcesCustomRepository {
                 humanResourcesDTO.setNote((String) obj[7]);
                 humanResourcesDTO.setCode((String) obj[8]);
                 humanResourcesDTO.setPassword((String) obj[9]);
+                if(obj[10]!=null){
+                    humanResourcesDTO.setPartId(Long.valueOf(String.valueOf(obj[10])));
+                }
+                humanResourcesDTO.setTyleDto("HUMMER");
                 listDto.add(humanResourcesDTO);
             }
         }

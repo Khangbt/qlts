@@ -123,8 +123,8 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         deviceRequestAddEntity.setHandlerHummerId(dto.getCreatHummerId());
         deviceRequestAddEntity.setNote(dto.getNote());
         deviceRequestAddEntity.setPartId(dto.getPartId());
-
-
+        deviceRequestAddEntity.setCreatedDate(new Date());
+        deviceRequestAddEntity.setLastModifiedDate(new Date());
         DeviceRequestAddEntity entity = deviceRequestAddRepository.save(deviceRequestAddEntity);
         RequestEntity requestEntity = new RequestEntity();
         requestEntity.setCode(entity.getCode());
@@ -133,6 +133,7 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         requestEntity.setIdRequest(entity.getId());
         requestEntity.setPartId(entity.getPartId());
         requestEntity.setTyle("YCM");
+
         requestService.creat(requestEntity);
         List<DeviceToRequestAddEntity> addEntityList = new ArrayList<>();
 
@@ -158,10 +159,13 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         if (!deviceRequestAddRepository.findById(dto.getId()).isPresent()) {
             return null;
         }
+
         DeviceRequestAddEntity deviceRequestEntity = deviceRequestAddRepository.findById(dto.getId()).get();
         if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
             return null;
         }
+        deviceRequestEntity.setLastModifiedDate(new Date());
+
         deviceRequestEntity.setPartId(dto.getPartId());
         deviceRequestEntity.setNote(dto.getNote());
         DeviceRequestAddEntity addEntity = deviceRequestAddRepository.save(deviceRequestEntity);
@@ -215,6 +219,8 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
                     entity.setDateAdd(new Date());
                     entity.setExist(true);
                     entity.setLostDevice(100);
+                    entity.setCreatedDate(new Date());
+                    entity.setLastModifiedDate(new Date());
                     entity.setSupplierId(device.getSupplierId());
                     entity.setCode(creatCode(groupEntity.get().getSizeId() + i, groupEntity.get().getCode()));
                     entity.setStatus(Constants.TRONGKHO);
@@ -228,6 +234,8 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
 
 
         }
+        requestEntity.setLastModifiedDate(new Date());
+
         requestEntity.setStatus(Constants.XACNHAN);
         requestEntity.setReason(dto.getReason());
         requestEntity.setHandlerHummerId(dto.getHandlerHummerId());
@@ -250,6 +258,8 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN)) {
             return null;
         }
+        deviceRequestEntity.setLastModifiedDate(new Date());
+
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
         return (DeviceRequestAddDto) ConvetSetData.xetData(new DeviceRequestAddDto(), deviceRequestAddRepository.save(deviceRequestEntity));

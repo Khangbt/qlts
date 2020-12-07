@@ -38,7 +38,13 @@ public class AuditingConfig {
             Long id = null;
             if (obj instanceof UserDetails) {
                 email = ((UserDetails) obj).getUsername();
-                id = humanResourcesRepository.findByEmail2(email).getHumanResourceId();
+                try {
+                    id = humanResourcesRepository.findByEmail2(email).getHumanResourceId();
+
+                }catch (Exception e){
+                    return Optional.ofNullable(0L);
+                }
+
             } else {
                 throw new CustomExceptionHandler("Unauthorized", HttpStatus.UNAUTHORIZED );
             }

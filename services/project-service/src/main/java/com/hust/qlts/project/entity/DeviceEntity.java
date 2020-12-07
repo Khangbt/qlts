@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "DEVICE")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceEntity implements Serializable {
+public class DeviceEntity extends Auditable implements Serializable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DEVICE_ID")

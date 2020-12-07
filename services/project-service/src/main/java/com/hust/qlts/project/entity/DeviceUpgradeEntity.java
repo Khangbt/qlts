@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "DEVICE_UPGRADE")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceUpgradeEntity {
+public class DeviceUpgradeEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

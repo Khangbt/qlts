@@ -96,7 +96,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
     @Transactional(rollbackFor = Exception.class)
     public DeviceRequestRetuDto craet(DeviceRequestRetuDto dto) {
         DeviceRequestRetuEntitty entitty = new DeviceRequestRetuEntitty();
-        String code = "PT" + CoreUtils.castDateToStringByPattern(new Date(), "MMdd")+CoreUtils.castDateToStringByPattern(new Date(), "hhmmss");
+        String code = "PT" + CoreUtils.castDateToStringByPattern(new Date(), "MMdd") + CoreUtils.castDateToStringByPattern(new Date(), "hhmmss");
         entitty.setCode(code);
         entitty.setCreatHummerId(dto.getCreatHummerId());
         entitty.setCreatDate(new Date());
@@ -104,6 +104,8 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         entitty.setNote(dto.getNote());
         entitty.setPartId(dto.getPartId());
         entitty.setStatus(Constants.CHUAXACNHAN);
+        entitty.setCreatedDate(new Date());
+        entitty.setLastModifiedDate(new Date());
         DeviceRequestRetuEntitty entitty1 = deviceRequestRetuRepository.save(entitty);
 
         List<DeviceToRequestRetuEntitty> device = new ArrayList<>();
@@ -139,6 +141,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
             return null;
         }
+        deviceRequestEntity.setLastModifiedDate(new Date());
         deviceRequestEntity.setCreatHummerId(dto.getCreatHummerId());
         deviceRequestEntity.setCreatDate(new Date());
         deviceRequestEntity.setPartId(dto.getPartId());
@@ -179,6 +182,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         deviceRequestEntity.setReason(dto.getReason());
         deviceRequestEntity.setHandlerHummerId(dto.getHandlerHummerId());
         deviceRequestEntity.setApprovedDate(new Date());
+        deviceRequestEntity.setLastModifiedDate(new Date());
         deviceRequestRetuRepository.save(deviceRequestEntity);
 
 
@@ -188,7 +192,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         }
         List<DeviceToRequestRetuEntitty> device = deviceToRequestRetuRepository.getListbyid(deviceRequestEntity.getId());
 
-        for (DeviceToRequestRetuEntitty entitty:device){
+        for (DeviceToRequestRetuEntitty entitty : device) {
             entitty.setStatus(2);
         }
         deviceToRequestRetuRepository.saveAll(device);
@@ -200,6 +204,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
                 entity.setStatus(Constants.TRONGKHO);
                 entity.setLostDevice(retuDto.get().getLostDevice());
                 entity.setWarehouseId(retuDto.get().getWarehouseId());
+                entity.setLastModifiedDate(new Date());
 
             }
 
@@ -222,7 +227,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         }
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
-
+        deviceRequestEntity.setLastModifiedDate(new Date());
         return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRetuRepository.save(deviceRequestEntity));
     }
 }

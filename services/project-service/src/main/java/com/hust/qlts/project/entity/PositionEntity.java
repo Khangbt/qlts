@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name ="POSITION")
 @AllArgsConstructor
 @NoArgsConstructor
-public class PositionEntity {
+public class PositionEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

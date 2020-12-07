@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "DEVICE_REQUEST")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceRequestEntity {
+public class DeviceRequestEntity  extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

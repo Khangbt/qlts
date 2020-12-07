@@ -22,7 +22,10 @@ public interface HumanResourcesRepository extends JpaRepository<HumanResourcesEn
     @Query(value = "select * from HUMAN_RESOURCES where EMAIL=?1 and STATUS=1", nativeQuery = true)
     List<HumanResourcesEntity> findByEmail(String email);
 
-    @Query("SELECT HR FROM HumanResourcesEntity HR WHERE HR.email=?1")
+    String sql5="SELECT *  " +
+            "FROM human_resources HR  " +
+            "WHERE HR.email = :email";
+    @Query(value = sql5,nativeQuery = true)
     HumanResourcesEntity findByEmail2(String email);
 
     /*end duc */

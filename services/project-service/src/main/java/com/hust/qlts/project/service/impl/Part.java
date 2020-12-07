@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,8 @@ public class Part implements PartService {
             partEntity.setCode(partnerDTO.getCode());
             partEntity.setIsActive(partnerDTO.getStatus());
             partEntity.setName(partnerDTO.getPartName());
+            partEntity.setCreateDate(new Date());
+            partEntity.setLastModifiedDate(new Date());
 //            partEntity.setProvinceCode(partnerDTO.getProvinceID());
             partEntity.setNote(partnerDTO.getNote());
             partRepository.save(partEntity);
@@ -81,6 +84,7 @@ public class Part implements PartService {
                 partEntity.setName(partnerDTO.getPartName());
                 partEntity.setIsActive(partnerDTO.getStatus());
                 partEntity.setNote(partnerDTO.getNote());
+                partEntity.setLastModifiedDate(new Date());
                 partRepository.save(partEntity);
                 return convertEntitytoDTO(partEntity);
 

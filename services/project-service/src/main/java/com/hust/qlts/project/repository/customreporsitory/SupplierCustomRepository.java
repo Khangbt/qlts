@@ -111,7 +111,7 @@ public class SupplierCustomRepository {
                 supplierDTO.setNote((String) obj[7]);
                 supplierDTO.setWebsite((String) obj[8]);
                 supplierDTO.setFax((String) obj[9]);
-
+                supplierDTO.setTyleDto("SUPPLIER");
                 listDto.add(supplierDTO);
             }
         }

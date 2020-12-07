@@ -153,6 +153,7 @@ public class DeviceGroupCustomRepository {
             dto.setSupperName((String) o[11]);
             dto.setUnit(Integer.parseInt(String.valueOf(o[12])) );
             dto.setSizeUnit(Integer.parseInt(String.valueOf(o[12])));
+            dto.setTyleDto("DEVICE_GROUP");
             list.add(dto);
         }
 

@@ -30,7 +30,7 @@ public class WarehouseCustomRepository {
         sql.append("  sp.NOTE, ");
         sql.append("  sp.ADDRESS, ");
         sql.append("(SELECT name FROM PART where ID  like sp.PAR_ID)  ");
-
+        sql.append("        ,sp.PAR_ID  ");
         sql.append(" from WAREHOUSE as sp              ");
 
 
@@ -92,8 +92,10 @@ public class WarehouseCustomRepository {
                 dto.setNote((String) obj[3]);
                 dto.setAddress((String) obj[4]);
                 dto.setParname((String) obj[5]);
-
-
+                if(obj[6]!=null){
+                    dto.setPartId(Long.valueOf(String.valueOf(obj[6])));
+                }
+                dto.setTyleDto("WAREHOUSE");
                 listDto.add(dto);
             }
         }

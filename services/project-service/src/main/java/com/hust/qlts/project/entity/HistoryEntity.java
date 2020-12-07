@@ -17,7 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class HistoryEntity {
+public class HistoryEntity extends Auditable{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

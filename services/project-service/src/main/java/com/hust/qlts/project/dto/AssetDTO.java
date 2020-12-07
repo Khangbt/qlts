@@ -31,4 +31,5 @@ public class AssetDTO {
 
     private Long totalRecord;
     private Long departmentId;
+    private String tyleDto;
 }

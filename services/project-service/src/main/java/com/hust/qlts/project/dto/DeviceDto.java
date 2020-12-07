@@ -36,4 +36,5 @@ public class DeviceDto {
     private Integer size;
     private boolean check;
     private Long totalRecord;
+    private String tyleDto;
 }

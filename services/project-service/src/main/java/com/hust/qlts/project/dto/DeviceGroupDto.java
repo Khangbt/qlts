@@ -28,7 +28,7 @@ public class DeviceGroupDto {
     private String nameOrCode;
     private Integer page;
     private Integer pageSize;
-
+    private String tyleDto;
     private Long totalRecord;
 
 

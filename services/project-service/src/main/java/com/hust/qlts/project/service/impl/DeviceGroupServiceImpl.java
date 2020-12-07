@@ -33,6 +33,8 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     @Transactional(rollbackFor = Exception.class)
     public Object creatDeviceGoup(DeviceGroupDto dto) {
         DeviceGroupEntity entity = (DeviceGroupEntity) ConvetSetData.xetData(new DeviceGroupEntity(), dto);
+        entity.setLastModifiedDate(new Date());
+        entity.setCreatedDate(new Date());
         assert entity != null;
         DeviceGroupEntity entity1 = deviceGroupRepository.save(entity);
         List<DeviceEntity> list = new ArrayList<>();
@@ -66,6 +68,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
             return null;
         }
         DeviceGroupEntity entity = deviceGroupRepository.findById(Long.valueOf(id)).get();
+        entity.setLastModifiedDate(new Date());
         List<DeviceEntity> list = new ArrayList<>();
         for (int i = entity.getSizeId(); i < (dto.getSizeId()); i++) {
             DeviceEntity deviceEntity = new DeviceEntity();
@@ -86,6 +89,7 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
 
         }
         DeviceGroupEntity entity1 = deviceGroupRepository.save((DeviceGroupEntity) Objects.requireNonNull(ConvetSetData.xetData(entity, dto)));
+
         deviceService.saveList(list);
         return entity1;
     }

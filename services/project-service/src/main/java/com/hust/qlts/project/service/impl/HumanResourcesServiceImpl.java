@@ -183,7 +183,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
 
     @Override
     public Long checkPassword(HumanResourcesDTO humanResourcesDTO) {
-        HumanResourcesEntity entity = repository.findByUsername(humanResourcesDTO.getUsername());
+        HumanResourcesEntity entity = repository.findByEmail2(humanResourcesDTO.getEmail());
         if (!BCrypt.checkpw(humanResourcesDTO.getPassword(), entity.getPassword())) {
             throw new CustomExceptionHandler("sai_password", HttpStatus.BAD_REQUEST);
         }
@@ -233,6 +233,19 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             humanResourcesEntity.setDateGraduate(humanResourcesDTO.getDateGraduate());
 //            humanResourcesEntity.setDateMajor(humanResourcesDTO.getDateMajor());
             humanResourcesEntity.setNote(humanResourcesDTO.getNote());
+            switch (humanResourcesDTO.getRoleId()){
+                case 1:
+                    humanResourcesEntity.setRole("ROLE_USER");
+                    break;
+                case 2:
+                    humanResourcesEntity.setRole("ROLE_ADMINPART");
+                    break;
+                case 3:
+                    humanResourcesEntity.setRole("ROLE_ALL");
+                    break;
+                default:
+                    humanResourcesEntity.setRole("ROLE_USER");
+            }
 
             humanResourcesEntity.setIsNew(1);
 
@@ -252,7 +265,8 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             }
             humanResourcesEntity.setIsNew(1);
             humanResourcesEntity.setUsername(usernameFE);
-
+            humanResourcesEntity.setCreateDate(new Date());
+            humanResourcesEntity.setLastModifiedDate(new Date());
             humanResourcesEntity1 = repository.save(humanResourcesEntity);
 
         }
@@ -291,6 +305,8 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
     @Override
     public HumanResourcesDTO update(HumanResourcesDTO humanResourcesDTO) {
         HumanResourcesEntity hrResourcesEntity = humanResourcesMapper.toEntity(humanResourcesDTO);
+        hrResourcesEntity.setLastModifiedDate(new Date());
+
         hrResourcesEntity = repository.save(hrResourcesEntity);
         return humanResourcesMapper.toDto(hrResourcesEntity);
     }

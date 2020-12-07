@@ -12,7 +12,7 @@ import java.util.Date;
 @Table(name = "IMAGE")
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageEntity {
+public class ImageEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

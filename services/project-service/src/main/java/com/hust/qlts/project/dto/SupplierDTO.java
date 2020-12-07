@@ -37,7 +37,7 @@ public class SupplierDTO {
     private String humanresources;
     private Integer page;
     private Integer pageSize;
-
+    private String tyleDto;
     private Long totalRecord;
     private Long departmentId;
 

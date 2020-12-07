@@ -12,7 +12,7 @@ import java.util.Date;
 @Table(name = "DEVICE_REQUEST_RETU")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceRequestRetuEntitty {
+public class DeviceRequestRetuEntitty extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

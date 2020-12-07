@@ -64,7 +64,9 @@ public class DeviceServiceImpl implements DeviceService {
         }
         DeviceEntity entity = deviceRepository.findById(id).get();
         entity = (DeviceEntity) ConvetSetData.xetData(entity, dto);
+
         assert entity != null;
+        entity.setLastModifiedDate(new Date());
         return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceRepository.save(entity));
 
     }
@@ -94,6 +96,7 @@ public class DeviceServiceImpl implements DeviceService {
             return null;
         }
         DeviceGroupEntity groupEntity=deviceGroupRepository.findById(dto.getIdEquipmentGroup()).get();
+        Long version=groupEntity.getVersion();
         List<DeviceEntity> list=new ArrayList<>();
         for (int i = 0; i <dto.getSize() ; i++) {
             DeviceEntity deviceEntity = new DeviceEntity();
@@ -110,10 +113,16 @@ public class DeviceServiceImpl implements DeviceService {
             deviceEntity.setSpecifications(groupEntity.getSpecifications());
             deviceEntity.setLostDevice(100);
             deviceEntity.setExist(true);
+            deviceEntity.setCreatedDate(new Date());
+            deviceEntity.setLastModifiedDate(new Date());
+
             list.add(deviceEntity);
         }
-        groupEntity.setSizeId(groupEntity.getSizeId()+dto.getSize());
+        int z=groupEntity.getSizeId();
+        groupEntity.setSizeId(z+dto.getSize());
         deviceRepository.saveAll(list);
+        groupEntity.setLastModifiedDate(new Date());
+        DeviceGroupEntity entity=deviceGroupRepository.saveAndFlush(groupEntity);
         return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),dto);
     }
 

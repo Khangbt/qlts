@@ -67,7 +67,6 @@ public class AsserCustomRepository  {
                 assetDTO.setAssetStatus((String) obj[8]);
                 assetDTO.setWarehouseName((String) obj[9]);
                 assetDTO.setWarehouseAddress((String) obj[10]);
-
                 list.add(assetDTO);
             }
         }

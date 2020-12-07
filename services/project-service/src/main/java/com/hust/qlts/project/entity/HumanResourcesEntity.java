@@ -12,9 +12,8 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "HUMAN_RESOURCES")
-@AllArgsConstructor
 @NoArgsConstructor
-public class HumanResourcesEntity {
+public class HumanResourcesEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "HUMAN_RESOURCES_ID")

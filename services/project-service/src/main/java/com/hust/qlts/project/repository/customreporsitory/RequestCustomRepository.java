@@ -204,7 +204,7 @@ public class RequestCustomRepository {
             dto.setReason((String) o[11]);
             dto.setNameCreat((String) o[12]);
             dto.setHandlerName((String) o[13]);
-
+            dto.setTyleDto("REQUEST");
             dtos.add(dto);
 
         }

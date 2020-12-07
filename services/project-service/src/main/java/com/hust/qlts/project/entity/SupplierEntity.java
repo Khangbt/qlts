@@ -12,7 +12,7 @@ import java.math.BigInteger;
 @Table(name = "SUPPLIER")
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierEntity {
+public class SupplierEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SUPPLIER_ID")

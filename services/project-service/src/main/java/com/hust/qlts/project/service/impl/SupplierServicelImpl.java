@@ -85,13 +85,19 @@ public class SupplierServicelImpl implements SupplierService {
             supplierEntity.setPhoneNumber(supplierDTO.getPhone());
             supplierEntity.setHumanContact(supplierDTO.getNameHummer());
             supplierEntity.setStatus(1);
-        } else if (supplierDTO.getSupplierId() == null) {
+        } else {
             //TODO: create nha cung cap
-            supplierEntity = convertDTOtoEntity(supplierDTO);
+            supplierEntity=new SupplierEntity();
+            supplierEntity.setCode(supplierDTO.getCode());
+            supplierEntity.setName(supplierDTO.getFullName());
             supplierEntity.setFax(supplierDTO.getFax());
+            supplierEntity.setAddress(supplierDTO.getAddress());
+            supplierEntity.setEmail(supplierDTO.getEmail());
+            supplierEntity.setWebsite(supplierDTO.getWebsite());
+            supplierEntity.setNote(supplierDTO.getNote());
+            supplierEntity.setPhoneNumber(supplierDTO.getPhone());
             supplierEntity.setHumanContact(supplierDTO.getNameHummer());
             supplierEntity.setStatus(1);
-
 
         }
             supplierRepository.save(supplierEntity);

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "WAREHOUSE")
 @AllArgsConstructor
 @NoArgsConstructor
-public class WarehouseEntity {
+public class WarehouseEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "WAREHOUSE_ID")

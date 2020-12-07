@@ -160,6 +160,7 @@ public class DeviceCustomRepository {
             if (o[22] != null) {
                 dto.setIdEquipmentGroup(Long.valueOf(String.valueOf((o[22]))));
             }
+            dto.setTyleDto("DEVICE");
             list.add(dto);
         }
 

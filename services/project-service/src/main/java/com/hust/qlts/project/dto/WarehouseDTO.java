@@ -23,4 +23,5 @@ public class WarehouseDTO {
     private Integer size;
     private Long totalRecord;
     private Long departmentId;
+    private String tyleDto;
 }

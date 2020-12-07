@@ -123,7 +123,8 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         deviceRequestEntity.setStartDateBorrow(dto.getStartDateBorrow());
         deviceRequestEntity.setNote(dto.getNote());
         deviceRequestEntity.setPartId(dto.getPartId());
-
+        deviceRequestEntity.setCreatedDate(new Date());
+        deviceRequestEntity.setLastModifiedDate(new Date());
         deviceRequestEntity.setStatus(Constants.CHUAXACNHAN);
         DeviceRequestEntity entity = deviceRequestRepository.save(deviceRequestEntity);
         List<DeviceToRequestEntity> list = new ArrayList<>();
@@ -160,6 +161,7 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
             return null;
         }
+        deviceRequestEntity.setLastModifiedDate(new Date());
         deviceRequestEntity.setEndDateBorrow(dto.getEndDateBorrow());
         deviceRequestEntity.setStartDateBorrow(dto.getStartDateBorrow());
         deviceRequestEntity.setPartId(dto.getPartId());
@@ -209,7 +211,9 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         for (DeviceEntity entity : deviceEntities) {
             entity.setUseHummerId(dto.getCreatHummerId());
             entity.setStatus(Constants.DANGSUDUNG);
+            entity.setLastModifiedDate(new Date());
         }
+        requestEntity.setLastModifiedDate(new Date());
         requestEntity.setReason(dto.getReason());
         requestEntity.setStatus(Constants.XACNHAN);
         requestEntity.setHandlerHummerId(dto.getHandlerHummerId());
