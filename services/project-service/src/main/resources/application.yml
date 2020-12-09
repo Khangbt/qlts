@@ -77,3 +77,5 @@ hostCross: http://localhost:9003
 #folder-upload
 #folderUpload: /home/iist/services/qlda-service-phase2/fileUpload/
 folderUpload: D:/fileUpload/
+
+pathLocal: C:/Users/KhangBui/Pictures/project/

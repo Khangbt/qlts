@@ -9,10 +9,16 @@ import com.hust.qlts.project.repository.jparepository.DeviceRepository;
 import com.hust.qlts.project.service.DeviceService;
 import common.Constants;
 import common.ConvetSetData;
+import net.sf.jxls.transformer.XLSTransformer;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.*;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -231,13 +237,27 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public byte[] exportXel() {
+    public byte[] exportXel(DeviceDto dto) {
 
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        InputStream in;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            in = new FileInputStream(new File(getFileFromURL("/templates/import/Danh_Sach_Tai_San.xlsx")));
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+        HashedMap beans = new HashedMap();
+        try {
+            XLSTransformer transformer = new XLSTransformer();
+            org.apache.poi.ss.usermodel.Workbook workBook = transformer.transformXLS(in, beans);
+            workBook.write(out);
+            return out.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-
-
-
-        return new byte[0];
+        return null;
     }
 
     private String creatCode(int id, String code) {
@@ -250,5 +270,9 @@ public class DeviceServiceImpl implements DeviceService {
 
         return codeData.toString();
     }
-
+    private String getFileFromURL(String path) {
+        URL url = this.getClass().getResource(path);
+        assert url != null;
+        return url.getPath();
+    }
 }

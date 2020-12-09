@@ -1,15 +1,26 @@
 package com.hust.qlts.project.controller;
 
+import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.DeviceDto;
 import com.hust.qlts.project.dto.DeviceFindDto;
 import com.hust.qlts.project.service.DeviceService;
+import common.CommonUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/device")
@@ -104,5 +115,47 @@ public class DeviceController {
     @GetMapping("/export")
     public ResponseEntity<?> exportt(@RequestBody DeviceDto reqDto){
         return new ResponseEntity<>("ok",HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/doImport", method = RequestMethod.POST)
+    public ResponseEntity<?> importExcel(@RequestBody DeviceDto reqDto) throws IOException {
+//        HttpHeaders headers = new HttpHeaders();
+//        byte[] result = deviceService.exportXel(reqDto);
+//        if (!Objects.isNull(result)) {
+//
+//            String fileNameExcel = "BÁO CÁI" +
+//                    CoreUtils.castDateToStringByPattern(new Date(), "yyMMdd") + "_" +
+//                    CoreUtils.castDateToStringByPattern(new Date(), "hhmmss") + ".xlsx";
+//
+//            headers.add("File", fileNameExcel);
+//
+//            headers.add("Content-Disposition", "attachment; filename=" + fileNameExcel);
+//            headers.add("Access-Control-Expose-Headers", "File");
+//            headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
+//
+//            return ResponseEntity.ok().headers(headers).body(result);
+//        }
+//
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        try {
+            byte[] result = deviceService.exportXel(reqDto);
+
+            HttpHeaders headers = new HttpHeaders();
+
+//            String fileName = CommonUtils.getFileNameReportUpdate("IMPORT_DanhSachNhanSu");
+            String fileNameExcel = "BÁO CÁI" +
+                    CoreUtils.castDateToStringByPattern(new Date(), "yyMMdd") + "_" +
+                    CoreUtils.castDateToStringByPattern(new Date(), "hhmmss") + ".xlsx";
+//
+            headers.add("File", fileNameExcel);
+            headers.add("Content-Disposition", "attachment; filename=" + fileNameExcel);
+            headers.add("Access-Control-Expose-Headers", "File");
+            headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));
+            return new ResponseEntity<>(result,headers,HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+        }
     }
 }

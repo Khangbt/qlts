@@ -2,6 +2,7 @@ package com.hust.qlts.project.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -13,6 +14,8 @@ import java.util.List;
 @Entity
 @Table(name = "HUMAN_RESOURCES")
 @NoArgsConstructor
+//@EqualsAndHashCode(callSuper=false)
+
 public class HumanResourcesEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

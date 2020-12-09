@@ -24,9 +24,16 @@ public class RequestCustomRepository {
                 "       r.ID_REQUEST,   " +
                 "       r.TYLE,   " +
                 "       r.CODE,   " +
-                "       r.CREART_HUMMER_ID,   " +
-                "       r.PART_ID,   " +
-                "       r.CREART_DATE,   " +
+                "       r.CREART_HUMMER_ID,   ");
+        sql.append("(case" +
+                "            when r.TYLE = \"YCM\" then (select dra.PART_ID" +
+                "                                      from device_request_add as dra" +
+                "                                      where dra.ID = r.ID_REQUEST)" +
+                "            when r.TYLE = \"PYCM\" then (select dra.PART_ID from device_request as dra where dra.ID = r.ID_REQUEST)" +
+                "            ELSE (select dra.PART_ID" +
+                "                  from device_request_retu as dra" +
+                "                  where dra.ID = r.ID_REQUEST) end)   part, ");
+        sql.append("       r.CREART_DATE,   " +
                 "       ");
         sql.append("  (case   " +
                 "            when r.TYLE = \"YCM\" then (select dra.PROCESSING_DATE   " +
@@ -117,7 +124,16 @@ public class RequestCustomRepository {
                 "                           left join human_resources as hr on dra.HANDLER_HUMMER_ID = hr.HUMAN_RESOURCES_ID   " +
                 "                  where dra.ID = r.ID_REQUEST)   " +
                 "           end   " +
-                "           ) as hander");
+                "           ) as hander ,");
+
+        sql.append("   (select p.NAME from part as p where p.ID= (case" +
+                "                        when r.TYLE = \"YCM\" then (select dra.PART_ID" +
+                "                           from device_request_add as dra" +
+                "                        where dra.ID = r.ID_REQUEST)" +
+                "                            when r.TYLE = \"PYCM\" then (select dra.PART_ID from device_request as dra where dra.ID = r.ID_REQUEST)" +
+                "                                  ELSE (select dra.PART_ID" +
+                "                                   from device_request_retu as dra" +
+                "                                 where dra.ID = r.ID_REQUEST) end)) as partName ");
         sql.append("    from request as r  where 1=1 ");
 
         if (dto.getStatus() != null) {
@@ -143,7 +159,16 @@ public class RequestCustomRepository {
         if (dto.getCode() != null) {
             sql.append("    and r.CODE like  upper(:code)  ");
         }
-
+        if(dto.getPartId()!=null){
+            sql.append(" and  (case  " +
+                    "            when r.TYLE = \"YCM\" then (select dra.PART_ID  " +
+                    "                                      from device_request_add as dra  " +
+                    "                                      where dra.ID = r.ID_REQUEST)  " +
+                    "            when r.TYLE = \"PYCM\" then (select dra.PART_ID from device_request as dra where dra.ID = r.ID_REQUEST)  " +
+                    "            ELSE (select dra.PART_ID  " +
+                    "                  from device_request_retu as dra  " +
+                    "                  where dra.ID = r.ID_REQUEST) end) =:partId   ");
+        }
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (dto.getStatus() != null) {
@@ -159,8 +184,12 @@ public class RequestCustomRepository {
             queryCount.setParameter("tyle", dto.getTyle());
         }
         if (StringUtils.isNotBlank(dto.getCode())) {
-            query.setParameter("code", "%"+dto.getCode().toUpperCase()+"%");
-            queryCount.setParameter("code", "%"+dto.getCode().toUpperCase()+"%");
+            query.setParameter("code", "%" + dto.getCode().toUpperCase() + "%");
+            queryCount.setParameter("code", "%" + dto.getCode().toUpperCase() + "%");
+        }
+        if (dto.getPartId()!=null) {
+            query.setParameter("partId", dto.getPartId());
+            queryCount.setParameter("partId", dto.getPartId());
         }
         if (dto.getPage() != null && dto.getPageSize() != null) {
             query.setFirstResult((dto.getPage().intValue() - 1) * dto.getPageSize().intValue());
@@ -204,6 +233,7 @@ public class RequestCustomRepository {
             dto.setReason((String) o[11]);
             dto.setNameCreat((String) o[12]);
             dto.setHandlerName((String) o[13]);
+            dto.setPartName((String) o[14]);
             dto.setTyleDto("REQUEST");
             dtos.add(dto);
 

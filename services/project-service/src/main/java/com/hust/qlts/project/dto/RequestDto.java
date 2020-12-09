@@ -21,7 +21,7 @@ public class RequestDto {
     private String nameCreat;
     private String handlerName;
 
-
+    private String partName;
     private Integer page;
     private Integer pageSize;
 

@@ -28,5 +28,5 @@ public interface DeviceService {
      List<ICusTomDto> getListReturnbor(Long id);
      List<ICusTomDto> getIdHummeRetiByReque(Long idHummer,Long partId,Long idReque);
      List<ICusTomDto> getIdHummeRetiByIdStaue(Long idReque);
-     byte[] exportXel();
+     byte[] exportXel(DeviceDto dto);
 }

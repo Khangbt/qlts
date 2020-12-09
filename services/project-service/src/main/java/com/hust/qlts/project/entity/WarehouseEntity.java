@@ -2,6 +2,7 @@ package com.hust.qlts.project.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Table(name = "WAREHOUSE")
 @AllArgsConstructor
 @NoArgsConstructor
+//@EqualsAndHashCode(callSuper=false)
 public class WarehouseEntity extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
