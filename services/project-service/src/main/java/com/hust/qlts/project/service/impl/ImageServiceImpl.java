@@ -1,5 +1,6 @@
 package com.hust.qlts.project.service.impl;
 
+import com.hust.qlts.project.controller.ImageController;
 import com.hust.qlts.project.entity.ImageEntity;
 import com.hust.qlts.project.repository.jparepository.ImageRepository;
 import com.hust.qlts.project.service.ImageService;
@@ -43,13 +44,13 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void deleteImgDevice(Long id,Integer tyle) {
-        imageRepository.deleteByIdCodeAndAndTyle(id,tyle);
+    public void deleteImgDevice(Long id, Integer tyle) {
+        imageRepository.deleteByIdCodeAndAndTyle(id, tyle);
     }
 
     @Override
-    public void deleteImgGroup(Long id,Integer tyle) {
-        imageRepository.deleteByIdCodeAndAndTyle(id,tyle);
+    public void deleteImgGroup(Long id, Integer tyle) {
+        imageRepository.deleteByIdCodeAndAndTyle(id, tyle);
     }
 
     @Override
@@ -61,7 +62,14 @@ public class ImageServiceImpl implements ImageService {
             Path path = Paths.get(pathLocal);
             String uniqueID = UUID.randomUUID().toString();
             String filename = multipartFile.getOriginalFilename();
-            String pathLoca = uniqueID + "." + filename.substring(filename.lastIndexOf(".") + 1);
+            String pathLoca;
+            assert filename != null;
+            if (filename.substring(filename.lastIndexOf(".") + 1).equals("blob")) {
+                pathLoca = uniqueID + "." + "png";
+            } else {
+                pathLoca = uniqueID + "." + filename.substring(filename.lastIndexOf(".") + 1);
+            }
+
             Files.copy(multipartFile.getInputStream(), path.resolve(pathLoca));
             imageEntity.setDateAdd(new Date());
             imageEntity.setIdCode(idevice);
@@ -77,7 +85,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public boolean updateLoad(MultipartFile[] file, Long idevice, Long tyle, List<String> data) throws IOException {
-        imageRepository.deleteByIdCodeAndAndTyle(idevice,Integer.valueOf(tyle.toString()));
+        imageRepository.deleteByIdCodeAndAndTyle(idevice, Integer.valueOf(tyle.toString()));
         List<ImageEntity> list = new ArrayList<>();
         for (MultipartFile multipartFile : file) {
             ImageEntity imageEntity = new ImageEntity();
@@ -85,7 +93,14 @@ public class ImageServiceImpl implements ImageService {
             Path path = Paths.get(pathLocal);
             String uniqueID = UUID.randomUUID().toString();
             String filename = multipartFile.getOriginalFilename();
-            String pathLoca = uniqueID + "." + filename.substring(filename.lastIndexOf(".") + 1);
+            String pathLoca;
+            assert filename != null;
+            if (filename.substring(filename.lastIndexOf(".") + 1).equals("blob")) {
+                pathLoca = uniqueID + "." + "png";
+            } else {
+                pathLoca = uniqueID + "." + filename.substring(filename.lastIndexOf(".") + 1);
+            }
+
             Files.copy(multipartFile.getInputStream(), path.resolve(pathLoca));
             imageEntity.setDateAdd(new Date());
             imageEntity.setIdCode(idevice);
@@ -93,7 +108,8 @@ public class ImageServiceImpl implements ImageService {
             imageEntity.setName(pathLoca);
             list.add(imageEntity);
         }
-        for (String s:data){
+        for (String s : data) {
+
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setDateAdd(new Date());
             imageEntity.setIdCode(idevice);
@@ -103,5 +119,30 @@ public class ImageServiceImpl implements ImageService {
         }
         imageRepository.saveAll(list);
         return true;
+    }
+
+    @Override
+    public List<String> getListDevice(Long id) {
+        return imageRepository.getListDeviceGruop(id, 2L);
+    }
+
+    @Override
+    public List<ImageController.DeviceImageDto> getDevice(Long id, Long idGroup) {
+        List<String> group = imageRepository.getListDeviceGruop(idGroup, 2L);
+        List<String> device = imageRepository.getListDeviceGruop(id, 1L);
+        List<ImageController.DeviceImageDto> list = new ArrayList<>();
+        for (String s : group) {
+            ImageController.DeviceImageDto dto = new ImageController.DeviceImageDto();
+            dto.setGroup(true);
+            dto.setUrl(s);
+            list.add(dto);
+        }
+        for (String s : device) {
+            ImageController.DeviceImageDto dto = new ImageController.DeviceImageDto();
+            dto.setGroup(false);
+            dto.setUrl(s);
+            list.add(dto);
+        }
+        return list;
     }
 }

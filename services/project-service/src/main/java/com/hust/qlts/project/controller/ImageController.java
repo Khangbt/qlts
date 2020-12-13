@@ -1,6 +1,7 @@
 package com.hust.qlts.project.controller;
 
 import com.hust.qlts.project.service.ImageService;
+import lombok.Data;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,5 +55,19 @@ public class ImageController {
     @GetMapping(value = "/getImgList")
     public ResponseEntity<?> getImgList(){
         return new ResponseEntity<>("ấ",HttpStatus.OK);
+    }
+    @GetMapping(value = "/deviceGroup/{id}")
+    public ResponseEntity<?> getDeviceGroup( @PathVariable Long id){
+        return new ResponseEntity<>(imageService.getListDevice(id),HttpStatus.OK);
+    }
+    @GetMapping(value = "/device/{id}/{idGroup}")
+    public ResponseEntity<?> getDevice( @PathVariable Long id,@PathVariable Long idGroup){
+        return new ResponseEntity<>(imageService.getDevice(id, idGroup),HttpStatus.OK);
+    }
+
+    @Data
+    public static class DeviceImageDto{
+        private boolean group;
+        private String url;
     }
 }

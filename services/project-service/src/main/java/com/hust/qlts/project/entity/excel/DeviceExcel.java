@@ -6,18 +6,25 @@ import java.util.Date;
 
 @Data
 public class DeviceExcel {
+    private Integer stt;
     private String code;
     private Date dateAdd;
     private String codeGroup;
-    private Integer status;
+    private String status;
     private String partName;
     private String note;
     private Integer lostDevice;
     private String unitName;
-    private Integer unit;
+    private String unit;
     private Integer sizeUnit;
     private String supplierName;
     private String wareHouseName;
+    private String wareHouseAdd;
+
     private String nameHummerUse;
+    private String local;
+    private String name;
+    private String specifications;
+
 
 }

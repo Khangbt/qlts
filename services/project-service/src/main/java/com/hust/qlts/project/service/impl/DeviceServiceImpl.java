@@ -3,6 +3,7 @@ package com.hust.qlts.project.service.impl;
 import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.entity.DeviceGroupEntity;
+import com.hust.qlts.project.entity.excel.DeviceExcel;
 import com.hust.qlts.project.repository.customreporsitory.DeviceCustomRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceGroupRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceRepository;
@@ -248,6 +249,8 @@ public class DeviceServiceImpl implements DeviceService {
             return null;
         }
         HashedMap beans = new HashedMap();
+        List<DeviceExcel> deviceExcels=deviceCustomRepository.getExcal(dto);
+        beans.put("deviceExcels",deviceExcels);
         try {
             XLSTransformer transformer = new XLSTransformer();
             org.apache.poi.ss.usermodel.Workbook workBook = transformer.transformXLS(in, beans);

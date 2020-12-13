@@ -1,5 +1,6 @@
 package com.hust.qlts.project.service;
 
+import com.hust.qlts.project.controller.ImageController;
 import com.hust.qlts.project.entity.ImageEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,4 +15,6 @@ public interface ImageService {
     void deleteImgGroup(Long id,Integer tyle);
     boolean saveImgCreat(MultipartFile[] file, Long idevice,Long tyle) throws IOException;
     boolean updateLoad(MultipartFile[] file, Long idevice,Long tyle,List<String> data) throws IOException;
+    List<String> getListDevice(Long id);
+    List<ImageController.DeviceImageDto> getDevice(Long id,Long idGroup);
 }

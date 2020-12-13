@@ -39,7 +39,7 @@ public class AuditingConfig {
             if (obj instanceof UserDetails) {
                 email = ((UserDetails) obj).getUsername();
                 try {
-                    id = humanResourcesRepository.findByEmail2(email).getHumanResourceId();
+//                    id = humanResourcesRepository.findByEmail2(email).getHumanResourceId();
 
                 }catch (Exception e){
                     return Optional.ofNullable(0L);
