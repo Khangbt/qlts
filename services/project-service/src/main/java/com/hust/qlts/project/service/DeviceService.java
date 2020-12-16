@@ -9,7 +9,7 @@ public interface DeviceService {
      boolean saveList(List<DeviceEntity> list);
      DataPage<DeviceDto> searList(DeviceDto dto);
      DeviceDto update(DeviceDto dto,Long id);
-     boolean deleteDevice(Integer id);
+     boolean deleteDevice(Long id);
      DeviceFindDto getFindByCode(String code);
      DeviceDto craet(DeviceDto dto);
      String getMaxCode(Long code);

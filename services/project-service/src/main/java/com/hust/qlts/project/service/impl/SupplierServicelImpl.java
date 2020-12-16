@@ -5,6 +5,7 @@ import com.hust.qlts.project.dto.ISupplierListDto;
 import com.hust.qlts.project.dto.SupplierDTO;
 import com.hust.qlts.project.entity.SupplierEntity;
 import com.hust.qlts.project.repository.customreporsitory.SupplierCustomRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.repository.jparepository.HumanResourcesRepository;
 import com.hust.qlts.project.repository.jparepository.SupplierRepository;
 import com.hust.qlts.project.service.SupplierService;
@@ -37,6 +38,8 @@ public class SupplierServicelImpl implements SupplierService {
     @Autowired
     private HumanResourcesRepository humanResourcesRepository;
 
+    @Autowired
+    private HistoryRepository historyRepository;
     @Override
     public DataPage<SupplierDTO> getPageSupplierSeach(SupplierDTO dto) {
 

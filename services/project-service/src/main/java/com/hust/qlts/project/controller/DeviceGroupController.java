@@ -72,6 +72,15 @@ public class DeviceGroupController {
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+    @GetMapping("/findbycode/{code}")
+    public ResponseEntity<?> getFindBy(@PathVariable("code") String code) {
+        DeviceGroupFindDto dto = deviceGroupService.getFindByCodeCustom(code);
+        if (dto == null) {
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
+
+    }
     @GetMapping("/getListPart")
     private ResponseEntity<?> getListPart(@RequestParam("id") Integer id){
         List<DeviceGroupListDto> list=deviceGroupService.getList(id);

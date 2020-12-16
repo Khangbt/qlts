@@ -73,6 +73,12 @@ public class HumanResourcesEntity extends Auditable{
     @Column(name = "VERIFY_KEY")
     private String verifyKey;
 
+    @Column(name = "PHONE")
+    private String phone;
+    @Column(name = "DATE_OF_BIRTH")
+    private Date dateOfBirth;
+
+
     @Column(name = "ROLE")
     private String role;
     @Transient

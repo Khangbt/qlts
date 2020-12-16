@@ -55,7 +55,7 @@ public class SupplierCustomRepository {
         }
 
         sql.append(" GROUP BY SUPPLIER_ID ");
-        sql.append(" ORDER BY sp.SUPPLIER_ID DESC");
+        sql.append( "order by sp.LAST_MODIFIED_DATE desc ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
 

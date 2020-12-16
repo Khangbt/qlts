@@ -4,6 +4,7 @@ import com.hust.qlts.project.dto.UserLoginDTO;
 import common.ObjectError;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public interface AuthenService {
     String login(UserLoginDTO userLoginDTO);
@@ -13,4 +14,8 @@ public interface AuthenService {
     ObjectError forgotPassword(String email);
 
     String getEmailCurrentlyLogged(HttpServletRequest request);
+
+    Long getIdHummer(HttpServletRequest request);
+
+    Map<String,Object> getRole(HttpServletRequest request);
 }

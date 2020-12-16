@@ -1,11 +1,14 @@
 package com.hust.qlts.project.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.dto.custom.ListDeviceRetuDto;
 import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestRetuRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestRetuRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.service.DeviceRequestRetuService;
 import com.hust.qlts.project.service.DeviceService;
 import com.hust.qlts.project.service.RequestService;
@@ -32,6 +35,8 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private HistoryRepository historyRepository;
     @Override
     public DataPage<DeviceRequestRetuDto> searList(DeviceRequestRetuDto dto) {
         return null;
@@ -229,5 +234,49 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         deviceRequestEntity.setReason(dto.getReason());
         deviceRequestEntity.setLastModifiedDate(new Date());
         return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRetuRepository.save(deviceRequestEntity));
+    }
+
+
+    private void saveHisory(Object oldValue,Object newValus,Long id,Long idHummer){
+        HistoryEntity historyEntity=new HistoryEntity();
+        historyEntity.setTypeScreen(Constants.REQUESTRETU);
+        historyEntity.setUserCreate(idHummer);
+        ObjectMapper objectMapper=new ObjectMapper();
+        if(oldValue==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.TAOMOI);
+
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else if(newValus==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.XOA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(oldValue));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else {
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.SUA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+                historyEntity.setValueOld(objectMapper.writeValueAsString(oldValue));
+
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+                historyEntity.setValueOld(null);
+            }
+        }
+        historyRepository.save(historyEntity);
     }
 }

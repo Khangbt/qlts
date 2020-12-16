@@ -22,7 +22,7 @@ public class HumanResourcesShowDTO {
     private String Password;
 
     private String phone;
-
+    private Date dateOfBirth;
     private String username;
 
     private String parcode;

@@ -6,6 +6,7 @@ import com.hust.qlts.project.dto.WarehouseDTO;
 import com.hust.qlts.project.entity.WarehouseEntity;
 import com.hust.qlts.project.repository.customreporsitory.HumanResourcesCustomRepository;
 import com.hust.qlts.project.repository.customreporsitory.WarehouseCustomRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.repository.jparepository.WarehouseRepository;
 import com.hust.qlts.project.service.WarehouseService;
 import com.hust.qlts.project.service.mapper.WarehouseMapper;
@@ -34,6 +35,8 @@ public class WarehouseServiceMpl implements WarehouseService {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
+    @Autowired
+    private HistoryRepository historyRepository;
     @Autowired
     private WarehouseMapper warehouseMapper;
 

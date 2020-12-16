@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -51,6 +52,41 @@ public class JWTProvider {
             }
         }
         return null;
+    }
+    public Long getIdHummer(String header) {
+        String token = ""; Long id ;
+        if (header != null || header.startsWith(JWTConstants.TOKEN_PREFIX)) {
+            token = header.substring(JWTConstants.TOKEN_PREFIX.length());
+            if (token.length() != 0) {
+                id = this.getLongHummer(token);
+                return id;
+            }
+        }
+        return null;
+    }
+    public Map<String,Object> getListDataToken(String header) {
+        String token = ""; Long id ;
+        Map<String,Object> map;
+        if (header != null || header.startsWith(JWTConstants.TOKEN_PREFIX)) {
+            token = header.substring(JWTConstants.TOKEN_PREFIX.length());
+            if (token.length() != 0) {
+                final Claims claims = getClaimsFromToken(token);
+                map=claims;
+                return map;
+            }
+        }
+        return null;
+    }
+    public Long getLongHummer(String token) {
+        Long id;
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            id = Long.valueOf(String.valueOf(claims.get("humanResourceId")));
+        } catch (Exception e) {
+            log.error("Not found Username by Token", token);
+            id = null;
+        }
+        return id;
     }
 
     public String getEmailFromToken(String token) {

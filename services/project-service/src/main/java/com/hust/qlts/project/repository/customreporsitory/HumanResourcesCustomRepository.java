@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //ANHTT_IIST
@@ -146,7 +147,9 @@ public class HumanResourcesCustomRepository {
         sql.append(" hr.NOTE as note,      ");
         sql.append(" hr.CODE as code,         ");
         sql.append(" hr.PASSWORD as password    ,     ");
-        sql.append(" pr.ID as parId");
+        sql.append(" pr.ID as parId     ,");
+        sql.append(" hr.PHONE as phone     , " +
+                "   hr.DATE_OF_BIRTH   as pppp ");
         sql.append(" from HUMAN_RESOURCES as hr              ");
         sql.append(" LEFT JOIN POSITION as ps on hr.POSITION_ID = ps.ID                ");
         sql.append(" LEFT JOIN PART as pr on hr.PART_ID = pr.ID              ");
@@ -168,9 +171,7 @@ public class HumanResourcesCustomRepository {
         }
 
 
-
-        sql.append(" GROUP BY HUMAN_RESOURCES_ID ");
-        sql.append(" ORDER BY hr.HUMAN_RESOURCES_ID DESC ");
+        sql.append(" ORDER BY hr.LAST_MODIFIED_DATE DESC ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
 
@@ -234,6 +235,12 @@ public class HumanResourcesCustomRepository {
                 humanResourcesDTO.setPassword((String) obj[9]);
                 if(obj[10]!=null){
                     humanResourcesDTO.setPartId(Long.valueOf(String.valueOf(obj[10])));
+                }
+                if(obj[11]!=null){
+                    humanResourcesDTO.setPhone((String) obj[11]);
+                }
+                if(obj[12]!=null){
+                    humanResourcesDTO.setDateOfBirth((Date) obj[12]);
                 }
                 humanResourcesDTO.setTyleDto("HUMMER");
                 listDto.add(humanResourcesDTO);

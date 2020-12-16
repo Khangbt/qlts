@@ -28,6 +28,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.UUID;
 
 //ANHTT_IIST
@@ -96,13 +97,13 @@ public class AuthenServiceImpl implements AuthenService {
             humanResourcesRepository.save(en);
             MimeMessage message = javaMailSender.createMimeMessage();
             message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
-            message.setSubject("THÔNG TIN TÀI KHOẢN HỆ THỐNG QUẢN LÝ DỰ ÁN", "UTF-8");
+            message.setSubject("THÔNG TIN TÀI KHOẢN HỆ THỐNG QUẢN LÝ TÀI SẢN", "UTF-8");
             String subject = "Kính gửi anh/chị,\n\n" +
-                    "Hệ thống Quản lý dự án của CÔNG TY TNHH GIẢI PHÁP VÀ CÔNG NGHỆ TÍCH HỢP ĐÔNG DƯƠNG gửi đến anh chị thông tin như sau:\n" +
+                    "Hệ thống Quản lý dự án của ***** gửi đến anh chị thông tin như sau:\n" +
                     "Anh/chị click link phía dưới để nhận mật khẩu mới:\n" +
                     "Link truy cập hệ thống:" + urlForgotPassword + email + "/" + key + "\n" +
                     "Họ và tên: " + en.getFullName()+ "\n" +
-                    "Tên đăng nhập: " + en.getUsername() + "\n" +
+                    "Tên đăng nhập: " + en.getEmail() + "\n" +
                     "Trân trọng!";
             message.setText(subject, "UTF-8");
             javaMailSender.send(message);
@@ -119,7 +120,20 @@ public class AuthenServiceImpl implements AuthenService {
     public String getEmailCurrentlyLogged(HttpServletRequest request) {
         String header = request.getHeader(JWTConstants.HEADER_STRING);
         String email = jwtProvider.getEmailFromHeaders(header);
-        return humanResourcesRepository.findByEmail2(email).getUsername();
+        return email;
+    }
+
+    @Override
+    public Long getIdHummer(HttpServletRequest request) {
+        String header = request.getHeader(JWTConstants.HEADER_STRING);
+        Long id=jwtProvider.getIdHummer(header);
+        return id;
+    }
+
+    @Override
+    public Map<String, Object> getRole(HttpServletRequest request) {
+        String header = request.getHeader(JWTConstants.HEADER_STRING);
+        return jwtProvider.getListDataToken(header);
     }
 
 }

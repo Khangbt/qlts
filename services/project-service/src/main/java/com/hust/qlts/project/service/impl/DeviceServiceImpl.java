@@ -1,19 +1,26 @@
 package com.hust.qlts.project.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.entity.DeviceGroupEntity;
+import com.hust.qlts.project.entity.HistoryEntity;
 import com.hust.qlts.project.entity.excel.DeviceExcel;
 import com.hust.qlts.project.repository.customreporsitory.DeviceCustomRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceGroupRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.service.DeviceService;
 import common.Constants;
 import common.ConvetSetData;
 import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +34,7 @@ import java.util.List;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
+    private final Logger log = LogManager.getLogger(HumanResourcesServiceImpl.class);
     @Autowired
     private DeviceRepository deviceRepository;
     @Autowired
@@ -34,6 +42,10 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
     private DeviceGroupRepository deviceGroupRepository;
+
+    @Autowired
+    private HistoryRepository historyRepository;
+    private ObjectMapper objectMapper=new ObjectMapper();
     @Override
     public boolean saveList(List<DeviceEntity> list) {
         deviceRepository.saveAll(list);
@@ -79,9 +91,17 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public boolean deleteDevice(Integer id) {
-        ///check dieedeuf kiên xóa
-        return false;
+    public boolean deleteDevice(Long id) {
+        if(!deviceRepository.findById(id).isPresent()){
+            return false;
+        }
+        DeviceEntity entity=deviceRepository.findById(id).get();
+        if(entity.getStatus()==2){
+            return false;
+        }
+        entity.setExist(false);
+        deviceRepository.save(entity);
+        return true;
     }
 
     @Override
@@ -92,22 +112,29 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public DeviceDto craet(DeviceDto dto) {
-        if(dto.isCheck()){
+        if (dto.isCheck()) {
             DeviceEntity deviceEntity = (DeviceEntity) ConvetSetData.xetData(new DeviceEntity(), dto);
             assert deviceEntity != null;
             deviceEntity.setExist(true);
             deviceEntity.setDateAdd(new Date());
-            return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceRepository.save(deviceEntity));
+            DeviceEntity deviceE=deviceRepository.save(deviceEntity);
+            HistoryEntity historyEntity=new HistoryEntity();
+            historyEntity.setDate(new Date());
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(deviceE));
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+            return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceE);
         }
-        if(!deviceGroupRepository.findById(dto.getIdEquipmentGroup()).isPresent()){
+        if (!deviceGroupRepository.findById(dto.getIdEquipmentGroup()).isPresent()) {
             return null;
         }
-        DeviceGroupEntity groupEntity=deviceGroupRepository.findById(dto.getIdEquipmentGroup()).get();
-        Long version=groupEntity.getVersion();
-        List<DeviceEntity> list=new ArrayList<>();
-        for (int i = 0; i <dto.getSize() ; i++) {
+        DeviceGroupEntity groupEntity = deviceGroupRepository.findById(dto.getIdEquipmentGroup()).get();
+        List<DeviceEntity> list = new ArrayList<>();
+        for (int i = 0; i < dto.getSize(); i++) {
             DeviceEntity deviceEntity = new DeviceEntity();
-            deviceEntity.setCode(creatCode(i+groupEntity.getSizeId(), groupEntity.getCode()));
+            deviceEntity.setCode(creatCode(i + groupEntity.getSizeId(), groupEntity.getCode()));
             deviceEntity.setDateAdd(new Date());
             deviceEntity.setPartId(dto.getPartId());
             deviceEntity.setSupplierId(dto.getSupplierId());
@@ -122,15 +149,17 @@ public class DeviceServiceImpl implements DeviceService {
             deviceEntity.setExist(true);
             deviceEntity.setCreatedDate(new Date());
             deviceEntity.setLastModifiedDate(new Date());
-
+            deviceEntity.setSeri(dto.getSeri());
+            deviceEntity.setPrice(dto.getPrice());
             list.add(deviceEntity);
         }
-        int z=groupEntity.getSizeId();
-        groupEntity.setSizeId(z+dto.getSize());
+        int z = groupEntity.getSizeId();
+        groupEntity.setSizeId(z + dto.getSize());
         deviceRepository.saveAll(list);
         groupEntity.setLastModifiedDate(new Date());
-        DeviceGroupEntity entity=deviceGroupRepository.saveAndFlush(groupEntity);
-        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(),dto);
+        DeviceGroupEntity entity = deviceGroupRepository.saveAndFlush(groupEntity);
+
+        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), dto);
     }
 
     @Override
@@ -196,7 +225,7 @@ public class DeviceServiceImpl implements DeviceService {
             idDto.setId(dto.getId());
             idDto.setCode(dto.getCode());
             idDto.setName(dto.getName());
-            System.out.println(dto.getId()+dto.getName());
+            System.out.println(dto.getId() + dto.getName());
             String[] lists = dto.getListName().split(",");
             List<DeviceListIdDto.Xet> xets = new ArrayList<>();
             for (String s1 : lists) {
@@ -216,7 +245,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean checkCode(String code) {
-        if(deviceRepository.getByCodeCustom(code).size()>0){
+        if (deviceRepository.getByCodeCustom(code).size() > 0) {
             return false;
         }
         return true;
@@ -245,17 +274,34 @@ public class DeviceServiceImpl implements DeviceService {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             in = new FileInputStream(new File(getFileFromURL("/templates/import/Danh_Sach_Tai_San.xlsx")));
+            log.info("có fieldataa");
         } catch (FileNotFoundException e) {
-            return null;
+
+            try {
+                String file1="/templates/import/Danh_Sach_Tai_San.xlsx";
+                in= new ClassPathResource(file1).getInputStream();
+                log.info("dường dẫn 2");
+
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+                log.info("Khong có file data");
+
+                return null;
+            }
+
         }
         HashedMap beans = new HashedMap();
-        List<DeviceExcel> deviceExcels=deviceCustomRepository.getExcal(dto);
-        beans.put("deviceExcels",deviceExcels);
+        List<DeviceExcel> deviceExcels = deviceCustomRepository.getExcal(dto);
+        beans.put("deviceExcels", deviceExcels);
         try {
             XLSTransformer transformer = new XLSTransformer();
             org.apache.poi.ss.usermodel.Workbook workBook = transformer.transformXLS(in, beans);
             workBook.write(out);
-            return out.toByteArray();
+            byte[] bytes = out.toByteArray();
+            workBook.close();
+            in.close();
+            out.close();
+            return bytes;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -273,9 +319,53 @@ public class DeviceServiceImpl implements DeviceService {
 
         return codeData.toString();
     }
+
     private String getFileFromURL(String path) {
         URL url = this.getClass().getResource(path);
         assert url != null;
         return url.getPath();
+    }
+
+    private void saveHisory(Object oldValue,Object newValus,Long id,Long idHummer){
+        HistoryEntity historyEntity=new HistoryEntity();
+        historyEntity.setTypeScreen(Constants.DEVICE);
+        historyEntity.setUserCreate(idHummer);
+        ObjectMapper objectMapper=new ObjectMapper();
+        if(oldValue==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.TAOMOI);
+
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else if(newValus==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.XOA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(oldValue));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else {
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.SUA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+                historyEntity.setValueOld(objectMapper.writeValueAsString(oldValue));
+
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+                historyEntity.setValueOld(null);
+            }
+        }
+        historyRepository.save(historyEntity);
     }
 }

@@ -49,7 +49,8 @@ public class WarehouseCustomRepository {
 
 
         sql.append(" GROUP BY WAREHOUSE_ID ");
-        sql.append(" ORDER BY sp.WAREHOUSE_ID DESC");
+        sql.append( "order by sp.LAST_MODIFIED_DATE desc ");
+
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
 

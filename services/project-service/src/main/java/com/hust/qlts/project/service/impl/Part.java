@@ -1,6 +1,7 @@
 package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.entity.PartEntity;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.repository.jparepository.PartRepository;
 import com.hust.qlts.project.service.PartService;
 import com.hust.qlts.project.service.mapper.PartnerMapper;
@@ -31,6 +32,8 @@ public class Part implements PartService {
     @Autowired
     PartnerMapper partnerMapper;
 
+    @Autowired
+    private HistoryRepository historyRepository;
 
     private Logger log = LogManager.getLogger(Part.class);
 
@@ -41,7 +44,6 @@ public class Part implements PartService {
         DataPage<PartnerDTO> data = new DataPage<>();
         dto.setPage(null != dto.getPage() ? dto.getPage().intValue() : 1);
         dto.setSize(null != dto.getSize() ? dto.getSize().intValue() : 10);
-
 
 
         List<PartnerDTO> listProject = new ArrayList<>();
@@ -74,11 +76,11 @@ public class Part implements PartService {
             return convertEntitytoDTO(partEntity);
         } else {
             Optional<PartEntity> partEntity1 = partRepository.findById(partnerDTO.getPartnerID());
-            if(!partEntity1.isPresent()){
+            if (!partEntity1.isPresent()) {
                 throw new CustomExceptionHandler(ErrorCode.CREATED_HR_FALSE.getCode(), HttpStatus.BAD_REQUEST);
             } else {
                 //TODO: Update  nha cung cấp
-                PartEntity partEntity=partEntity1.get();
+                PartEntity partEntity = partEntity1.get();
                 partEntity.setId(partnerDTO.getPartnerID());
                 partEntity.setCode(partnerDTO.getCode());
                 partEntity.setName(partnerDTO.getPartName());
@@ -101,7 +103,7 @@ public class Part implements PartService {
     @Override
     public Boolean delete(Long id) {
         ///check dieu kien xoa
-        if(true){
+        if (true) {
             partRepository.deleteById(id);
             return true;
         }
@@ -113,7 +115,7 @@ public class Part implements PartService {
         if (!partRepository.findById(Id).isPresent()) {
             throw new CustomExceptionHandler(ErrorCode.USERNAME_NOT_FOUND.getCode(), HttpStatus.BAD_REQUEST);
         }
-        PartnerDTO partnerDTO=convertEntitytoDTO(partRepository.findById(Id).get());
+        PartnerDTO partnerDTO = convertEntitytoDTO(partRepository.findById(Id).get());
         partnerDTO.setPartnerID(partRepository.findById(Id).get().getId());
         return partnerDTO;
     }

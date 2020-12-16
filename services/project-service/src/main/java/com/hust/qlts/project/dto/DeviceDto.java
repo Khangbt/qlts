@@ -37,4 +37,6 @@ public class DeviceDto {
     private boolean check;
     private Long totalRecord;
     private String tyleDto;
+    private Long price;
+    private String seri;
 }

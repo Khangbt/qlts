@@ -75,5 +75,8 @@ public class HumanResourcesDTO {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
+
+    private String phone;
+    private Date dateOfBirth;
     private Integer roleId;
 }

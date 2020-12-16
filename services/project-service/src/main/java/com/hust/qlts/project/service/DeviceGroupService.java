@@ -30,7 +30,7 @@ public interface DeviceGroupService {
 
     List<DeviceGroupEntity> saveList(List<DeviceGroupEntity> list);
 
-
+    DeviceGroupFindDto getFindByCodeCustom(String code);
 
 
 }

@@ -90,7 +90,7 @@ public class DeviceGroupCustomRepository {
             sql.append(" and upper(dg.SPECIFICATIONS) like upper(:supplierId1)");
         }
         sql.append("    group by dg.ID ");
-
+        sql.append( "order by dg.LAST_MODIFIED_DATE desc ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (null != dto.getPartId()) {
@@ -179,7 +179,24 @@ public class DeviceGroupCustomRepository {
 
 
     }
+    public DeviceGroupFindDto findByCodeCustom(String id) {
+        StringBuffer sql = new StringBuffer();
+        sql.append(" SELECT dg.ID,  ");
+        sql.append(" dg.CODE, dg.NAME, dg.SIZE_ID, dg.NOTE, dg.SPECIFICATIONS,  ");
+        sql.append(" dg.TYLE ");
+        sql.append(" from device_group as dg ");
+        sql.append(" where dg.CODE=:id");
+        Query query = em.createNativeQuery(sql.toString());
+        query.setParameter("id", id);
+        List<Object[]> objectList = query.getResultList();
+        if (objectList.size() == 0) {
+            return null;
+        }
 
+        return conventDtoFind(objectList.get(0));
+
+
+    }
     private DeviceGroupFindDto conventDtoFind(Object[] o) {
         DeviceGroupFindDto dto = new DeviceGroupFindDto();
         dto.setId(Long.valueOf(String.valueOf((o[0]))));

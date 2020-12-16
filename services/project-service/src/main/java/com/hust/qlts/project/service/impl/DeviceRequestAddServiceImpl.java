@@ -1,12 +1,15 @@
 package com.hust.qlts.project.service.impl;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.dto.custom.ListDeviceAddDto;
 import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestAddRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestAddRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.service.DeviceGroupService;
 import com.hust.qlts.project.service.DeviceRequestAddService;
 import com.hust.qlts.project.service.DeviceService;
@@ -34,6 +37,9 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
     private RequestService requestService;
     @Autowired
     private DeviceGroupService deviceGroupService;
+
+    @Autowired
+    private HistoryRepository historyRepository;
 
     @Override
     public DataPage<DeviceRequestAddDto> searList(DeviceRequestAddDto dto) {
@@ -225,7 +231,9 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
                     entity.setCode(creatCode(groupEntity.get().getSizeId() + i, groupEntity.get().getCode()));
                     entity.setStatus(Constants.TRONGKHO);
                     entity.setWarehouseId(device.getWarehouseId());
+                    entity.setPrice(device.getPrice());
                     deviceEntities.add(entity);
+
 
                 }
                 groupEntity.get().setSizeId(tomDto.get().getSizeId() + Integer.parseInt(String.valueOf(device.getSize())));
@@ -283,5 +291,48 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
             }
         }
     return null;
+    }
+
+    private void saveHisory(Object oldValue,Object newValus,Long id,Long idHummer){
+        HistoryEntity historyEntity=new HistoryEntity();
+        historyEntity.setTypeScreen(Constants.REQUESTADD);
+        historyEntity.setUserCreate(idHummer);
+        ObjectMapper objectMapper=new ObjectMapper();
+        if(oldValue==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.TAOMOI);
+
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else if(newValus==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.XOA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(oldValue));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else {
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.SUA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+                historyEntity.setValueOld(objectMapper.writeValueAsString(oldValue));
+
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+                historyEntity.setValueOld(null);
+            }
+        }
+        historyRepository.save(historyEntity);
     }
 }

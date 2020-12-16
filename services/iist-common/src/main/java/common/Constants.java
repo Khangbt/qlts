@@ -155,4 +155,16 @@ public class Constants {
 
     public static final Integer CHUAMUON = 1;
     public static final Integer DANGMUON = 2;
+
+    public static final Integer TAOMOI = 1;
+    public static final Integer SUA = 2;
+    public static final Integer XOA = 3;
+
+
+    public static final Integer DEVICE = 1;
+    public static final Integer DEVICEGROUP = 2;
+    public static final Integer REQUEST=3;
+    public static final Integer REQUESTRETU=4;
+    public static final Integer REQUESTADD=5;
+
 }

@@ -2,6 +2,7 @@ package com.hust.qlts.project.service.impl;
 
 import com.hust.qlts.project.controller.ImageController;
 import com.hust.qlts.project.entity.ImageEntity;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.repository.jparepository.ImageRepository;
 import com.hust.qlts.project.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class ImageServiceImpl implements ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
+    @Autowired
+    private HistoryRepository historyRepository;
     @Override
     public ImageEntity creat(ImageEntity imageEntity) {
         return imageRepository.save(imageEntity);

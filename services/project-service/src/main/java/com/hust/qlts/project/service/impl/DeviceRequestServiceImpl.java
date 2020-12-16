@@ -1,17 +1,17 @@
 package com.hust.qlts.project.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.DataPage;
 import com.hust.qlts.project.dto.DeviceRequestDTO;
 import com.hust.qlts.project.dto.IListDeviceToReDto;
 import com.hust.qlts.project.dto.IRequestDto;
 import com.hust.qlts.project.dto.custom.ListDeviceDto;
-import com.hust.qlts.project.entity.DeviceEntity;
-import com.hust.qlts.project.entity.DeviceRequestEntity;
-import com.hust.qlts.project.entity.DeviceToRequestEntity;
-import com.hust.qlts.project.entity.RequestEntity;
+import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.service.DeviceRequestService;
 import com.hust.qlts.project.service.DeviceService;
 import com.hust.qlts.project.service.RequestService;
@@ -37,6 +37,8 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private HistoryRepository historyRepository;
     @Override
     public DataPage<DeviceRequestDTO> searList(DeviceRequestDTO dto) {
         return null;
@@ -245,5 +247,46 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
     public IRequestDto getIdList(Long id) {
         return null;
     }
+    private void saveHisory(Object oldValue,Object newValus,Long id,Long idHummer){
+        HistoryEntity historyEntity=new HistoryEntity();
+        historyEntity.setTypeScreen(Constants.REQUEST);
+        historyEntity.setUserCreate(idHummer);
+        ObjectMapper objectMapper=new ObjectMapper();
+        if(oldValue==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.TAOMOI);
 
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else if(newValus==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.XOA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(oldValue));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else {
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.SUA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+                historyEntity.setValueOld(objectMapper.writeValueAsString(oldValue));
+
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+                historyEntity.setValueOld(null);
+            }
+        }
+        historyRepository.save(historyEntity);
+    }
 }

@@ -3,8 +3,10 @@ package com.hust.qlts.project.controller;
 import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.DeviceDto;
 import com.hust.qlts.project.dto.DeviceFindDto;
+import com.hust.qlts.project.service.AuthenService;
 import com.hust.qlts.project.service.DeviceService;
 import common.CommonUtils;
+import lombok.Data;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -15,12 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/device")
@@ -29,9 +29,15 @@ public class DeviceController {
     @Autowired
     private DeviceService deviceService;
 
-    @PostMapping("/search")
-    public ResponseEntity<?> searchDevice(@RequestBody DeviceDto reqDto) {
+    @Autowired
+    private AuthenService authenService;
 
+
+    @PostMapping("/search")
+    public ResponseEntity<?> searchDevice(@RequestBody DeviceDto reqDto, HttpServletRequest request) {
+        String username = authenService.getEmailCurrentlyLogged(request);
+        Long id=authenService.getIdHummer(request);
+        Map<String,Object> map=authenService.getRole(request);
         return new ResponseEntity<>(deviceService.searList(reqDto), HttpStatus.OK);
     }
 
@@ -54,10 +60,11 @@ public class DeviceController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteDevice(@PathVariable("id") Integer id) {
-
+    public ResponseEntity<?> deleteDevice(@PathVariable("id") Long id) {
+        DeviceDto deviceDto=new DeviceDto();
         if (deviceService.deleteDevice(id)) {
-            return new ResponseEntity<>("OK", HttpStatus.OK);
+            deviceDto.setId(id);
+            return new ResponseEntity<>(deviceDto, HttpStatus.OK);
         }
         return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
     }
@@ -158,4 +165,5 @@ public class DeviceController {
             return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
         }
     }
+
 }

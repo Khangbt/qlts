@@ -62,6 +62,13 @@ public class DeviceEntity extends Auditable implements Serializable  {
     @Column(name = "EXIST")
     private boolean exist;
 
+
+    @Column(name = "PRICE")
+    private Long price;
+
+    @Column(name = "SERI")
+    private String seri;
+
     @Column(name = "USE_HUMMER_ID")
     private Long useHummerId;
 

@@ -79,6 +79,7 @@ public class DeviceCustomRepository {
             sql.append("    and dr.CODE=:reQ   ");
         }
         sql.append("    group by d.DEVICE_ID    ");
+        sql.append( "order by d.LAST_MODIFIED_DATE desc ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (null != dto.getNameOrCode()) {
@@ -177,13 +178,13 @@ public class DeviceCustomRepository {
         sql.append("    from device as d    ");
         sql.append("         left join device_group as dg on d.EQUIPMENT_GROUP_ID = dg.ID   ");
         sql.append("        left join part as p on d.PART_ID=p.ID  ");
-        sql.append("    where d.CODE=:code  ");
+        sql.append("    where d.CODE=:code  and d.EXIST = true");
 
         Query query = em.createNativeQuery(sql.toString());
         query.setParameter("code", code);
 
         List<Object[]> objectList = query.getResultList();
-        if (objectList == null) {
+        if (objectList.size() == 0) {
             return null;
         }
         return conventDtoFind(objectList.get(0));

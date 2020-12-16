@@ -5,6 +5,7 @@ import com.hust.qlts.project.dto.DeviceDto;
 import com.hust.qlts.project.dto.RequestDto;
 import com.hust.qlts.project.entity.RequestEntity;
 import com.hust.qlts.project.repository.customreporsitory.RequestCustomRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.repository.jparepository.RequestRepository;
 import com.hust.qlts.project.service.DeviceRequestAddService;
 import com.hust.qlts.project.service.DeviceRequestRetuService;
@@ -30,6 +31,8 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private RequestCustomRepository requestCustomRepository;
 
+    @Autowired
+    private HistoryRepository historyRepository;
     @Override
     public RequestEntity creat(RequestEntity requestEntity) {
         return requestRepository.save(requestEntity);

@@ -233,6 +233,9 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             humanResourcesEntity.setDateGraduate(humanResourcesDTO.getDateGraduate());
 //            humanResourcesEntity.setDateMajor(humanResourcesDTO.getDateMajor());
             humanResourcesEntity.setNote(humanResourcesDTO.getNote());
+            humanResourcesEntity.setDateOfBirth(humanResourcesDTO.getDateOfBirth());
+            humanResourcesEntity.setPhone(humanResourcesDTO.getPhone());
+
             switch (humanResourcesDTO.getRoleId()){
                 case 1:
                     humanResourcesEntity.setRole("ROLE_USER");
@@ -246,7 +249,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
                 default:
                     humanResourcesEntity.setRole("ROLE_USER");
             }
-
+            humanResourcesEntity.setLastModifiedDate(new Date());
             humanResourcesEntity.setIsNew(1);
 
             /*check email changed*/
@@ -291,7 +294,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, models);
 
             helper.setTo(humanResourcesDTO.getEmail());
-            helper.setSubject("Thông báo thay đổi email đăng nhập hệ thống Quản lý dự án");
+            helper.setSubject("Thông báo thay đổi email đăng nhập hệ thống Quản lý tài sản");
             helper.setText(html, true);
             javaMailSender.send(message);
             log.info("<------------------Send mail auto success-------------->");
@@ -338,7 +341,16 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
         if (!repository.findById(Id).isPresent()) {
             throw new CustomExceptionHandler(ErrorCode.USERNAME_NOT_FOUND.getCode(), HttpStatus.BAD_REQUEST);
         }
-        return humanResourcesMapper.toDto(repository.findById(Id).get());
+        HumanResourcesDTO dto=humanResourcesMapper.toDto(repository.findById(Id).get());
+        if(dto.getRole().equals("ROLE_USER")){
+            dto.setRoleId(1);
+        }else if(dto.getRole().equals("ROLE_ADMINPART")){
+            dto.setRoleId(2);
+        }else if(dto.getRole().equals("ROLE_ALL")){
+            dto.setRoleId(3);
+        }
+
+        return dto;
     }
 
     @Override
@@ -425,9 +437,9 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(humanResource.getEmail()));
-            message.setSubject("THÔNG TIN TÀI KHOẢN HỆ THỐNG QUẢN LÝ DỰ ÁN", "UTF-8");
+            message.setSubject("THÔNG TIN TÀI KHOẢN HỆ THỐNG QUẢN LÝ TÀI SẢN", "UTF-8");
             String subject = "Kính gửi anh/chị,\n\n" +
-                    "Hệ thống Quản lý dự án của CÔNG TY TNHH GIẢI PHÁP VÀ CÔNG NGHỆ TÍCH HỢP ĐÔNG DƯƠNG gửi đến anh chị thông tin như sau:\n" +
+                    "Hệ thống Quản lý dự án của ***** gửi đến anh chị thông tin như sau:\n" +
                     "Anh/chị đã được reset mậu khẩu:\n" +
                     "Link truy cập hệ thống:" + Constants.URL_WEBAPP + "\n" +
                     "Họ và tên: " + humanResource.getFullName() + "\n" +
@@ -715,6 +727,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
         try {
             in = new FileInputStream(new File(getFileFromURL("/templates/import/saveout.xlsx")));
         } catch (FileNotFoundException e) {
+
             return null;
         }
         for (HumanResourcesImportDTO dto : list) {

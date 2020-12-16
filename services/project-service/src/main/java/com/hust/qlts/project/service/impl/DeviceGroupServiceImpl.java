@@ -1,10 +1,14 @@
 package com.hust.qlts.project.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hust.qlts.project.dto.*;
 import com.hust.qlts.project.entity.DeviceEntity;
 import com.hust.qlts.project.entity.DeviceGroupEntity;
+import com.hust.qlts.project.entity.HistoryEntity;
 import com.hust.qlts.project.repository.customreporsitory.DeviceGroupCustomRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceGroupRepository;
+import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.service.DeviceGroupService;
 import com.hust.qlts.project.service.DeviceService;
 import common.Constants;
@@ -24,6 +28,10 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     @Autowired
     private DeviceGroupRepository deviceGroupRepository;
 
+
+    @Autowired
+    private HistoryRepository historyRepository;
+
     @Autowired
     private DeviceService deviceService;
     @Autowired
@@ -33,9 +41,9 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     @Transactional(rollbackFor = Exception.class)
     public Object creatDeviceGoup(DeviceGroupDto dto) {
         DeviceGroupEntity entity = (DeviceGroupEntity) ConvetSetData.xetData(new DeviceGroupEntity(), dto);
+        assert entity != null;
         entity.setLastModifiedDate(new Date());
         entity.setCreatedDate(new Date());
-        assert entity != null;
         DeviceGroupEntity entity1 = deviceGroupRepository.save(entity);
         List<DeviceEntity> list = new ArrayList<>();
         for (int i = 0; i < dto.getSizeId(); i++) {
@@ -140,7 +148,10 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     public DeviceGroupFindDto getFindByCode(Long code) {
         return deviceGroupCustomRepository.findByCode(code);
     }
-
+    @Override
+    public DeviceGroupFindDto getFindByCodeCustom(String code) {
+        return deviceGroupCustomRepository.findByCodeCustom(code);
+    }
     @Override
     public List<DeviceGroupMaxCodeDto> getMaxCode(String code) {
         if (null == code || code.equals("")) {
@@ -201,5 +212,48 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     @Override
     public List<DeviceGroupEntity> saveList(List<DeviceGroupEntity> list) {
         return deviceGroupRepository.saveAll(list);
+    }
+
+    private void saveHisory(Object oldValue,Object newValus,Long id,Long idHummer){
+        HistoryEntity historyEntity=new HistoryEntity();
+        historyEntity.setTypeScreen(Constants.DEVICEGROUP);
+        historyEntity.setUserCreate(idHummer);
+        ObjectMapper objectMapper=new ObjectMapper();
+        if(oldValue==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.TAOMOI);
+
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else if(newValus==null){
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.XOA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(oldValue));
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+            }
+        }else {
+            historyEntity.setDate(new Date());
+            historyEntity.setValueId(id);
+            historyEntity.setAction(Constants.SUA);
+            try {
+                historyEntity.setValueNew(objectMapper.writeValueAsString(newValus));
+                historyEntity.setValueOld(objectMapper.writeValueAsString(oldValue));
+
+
+            } catch (JsonProcessingException e) {
+                historyEntity.setValueNew(null);
+                historyEntity.setValueOld(null);
+            }
+        }
+        historyRepository.save(historyEntity);
     }
 }
