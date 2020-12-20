@@ -18,7 +18,6 @@ import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -45,6 +44,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
     private HistoryRepository historyRepository;
+
+
     private ObjectMapper objectMapper=new ObjectMapper();
     @Override
     public boolean saveList(List<DeviceEntity> list) {
@@ -307,6 +308,11 @@ public class DeviceServiceImpl implements DeviceService {
         }
 
         return null;
+    }
+
+    @Override
+    public List<DeviceEntity> getListyCode(Long id) {
+        return deviceRepository.listDeviceByCode(id);
     }
 
     private String creatCode(int id, String code) {

@@ -29,4 +29,6 @@ public interface DeviceService {
      List<ICusTomDto> getIdHummeRetiByReque(Long idHummer,Long partId,Long idReque);
      List<ICusTomDto> getIdHummeRetiByIdStaue(Long idReque);
      byte[] exportXel(DeviceDto dto);
+
+     List<DeviceEntity> getListyCode(Long id);
 }

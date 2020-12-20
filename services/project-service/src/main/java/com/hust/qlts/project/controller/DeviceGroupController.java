@@ -43,7 +43,11 @@ public class DeviceGroupController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteDeviceGroup(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteDeviceGroup(@PathVariable("id") Long id) {
+        if(deviceGroupService.deleteDeviceGroup(id)==null){
+            return new ResponseEntity<>("Lỗi", HttpStatus.BAD_REQUEST);
+
+        }
         return new ResponseEntity<>("", HttpStatus.OK);
 
     }

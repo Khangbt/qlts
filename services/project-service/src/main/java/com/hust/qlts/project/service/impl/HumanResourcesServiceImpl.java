@@ -250,7 +250,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
                     humanResourcesEntity.setRole("ROLE_USER");
             }
             humanResourcesEntity.setLastModifiedDate(new Date());
-            humanResourcesEntity.setIsNew(1);
+
 
             /*check email changed*/
             if (!oldEntity.getEmail().equals(humanResourcesEntity.getEmail())) {

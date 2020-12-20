@@ -103,9 +103,10 @@ public class DeviceGroupServiceImpl implements DeviceGroupService {
     }
 
     @Override
-    public Object deleteDeviceGroup(Integer id) {
-        ////////check dieu kien
-        if (true) {
+    public Object deleteDeviceGroup(Long id) {
+        ///
+        List<DeviceEntity> entityList=deviceService.getListyCode(id);
+        if (entityList.size()==0) {
             deviceGroupRepository.deleteById(Long.valueOf(id));
             return "ok";
         }

@@ -156,7 +156,7 @@ public class RequestCustomRepository {
         if (dto.getTyle() != null) {
             sql.append("    and r.TYLE=:tyle  ");
         }
-        if (dto.getCode() != null) {
+        if (StringUtils.isNotBlank(dto.getCode())) {
             sql.append("    and r.CODE like  upper(:code)  ");
         }
         if(dto.getPartId()!=null){
@@ -169,6 +169,18 @@ public class RequestCustomRepository {
                     "                  from device_request_retu as dra  " +
                     "                  where dra.ID = r.ID_REQUEST) end) =:partId   ");
         }
+        sql.append("order by (case " +
+                "              when r.TYLE = \"YCM\" then (select dra.LAST_MODIFIED_DATE " +
+                "                                        from device_request_add as dra " +
+                "                                        where dra.ID = r.ID_REQUEST) " +
+                "              when r.TYLE = \"PYCM\" then (select dra.LAST_MODIFIED_DATE " +
+                "                                         from device_request as dra " +
+                "                                         where dra.ID = r.ID_REQUEST) " +
+                "              ELSE (select dra.LAST_MODIFIED_DATE " +
+                "                    from device_request_retu as dra " +
+                "                    where dra.ID = r.ID_REQUEST) end) desc ");
+        
+        
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (dto.getStatus() != null) {

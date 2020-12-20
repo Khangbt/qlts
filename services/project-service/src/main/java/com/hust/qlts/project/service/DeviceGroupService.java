@@ -10,7 +10,7 @@ public interface DeviceGroupService {
 
     Object updateDeviceGroup(DeviceGroupDto dto, Integer id);
 
-    Object deleteDeviceGroup(Integer id);
+    Object deleteDeviceGroup(Long id);
 
     boolean checkCode(String code);
 

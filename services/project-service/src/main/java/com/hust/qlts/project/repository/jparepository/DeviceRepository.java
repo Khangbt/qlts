@@ -104,18 +104,19 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
             "              and d.EXIST = true and d.STATUS = 2  " +
             "                and (drr.ID=:idRequest or drr.ID IS NULL)";
     
-    String sql10Custom="select d.DEVICE_ID as id,d.SIZE_UNIT as sizeUnit,  " +
-            "                   d.UNIT as unit,d.LOST_DEVICE as lostDevice,  " +
-            "                   d.CODE as code,d.LOCATION as location,d.STATUS  " +
-            "            from device as d   left join device_to_request_retu as dtrr on d.DEVICE_ID=dtrr.DEVICE_ID  " +
-            "                                left join device_request_retu as drr on dtrr.DEVICE_REQUEST_ID_RETU=drr.ID  " +
-            "            where d.USE_HUMMER_ID = :idHummer and d.PART_ID=:partId  " +
-            "              and d.EXIST = true and d.STATUS = 2  " +
-            "                and (drr.ID=:idRequest or drr.ID IS NULL) or  " +
-            "            (select SUM(dtrr1.STATUS) from device as d1  left join device_to_request_retu as dtrr1 on d1.DEVICE_ID=dtrr1.DEVICE_ID  " +
-            "            where d1.DEVICE_ID=d.DEVICE_ID and d1.STATUS=2  " +
-            "            group by d1.DEVICE_ID  " +
-            "                )%2=0";
+    String sql10Custom=" select d.DEVICE_ID as id,d.SIZE_UNIT as sizeUnit,       " +
+            "                                d.UNIT as unit,d.LOST_DEVICE as lostDevice,       " +
+            "                                d.CODE as code,d.LOCATION as location,d.STATUS       " +
+            "                         from device as d   left join device_to_request_retu as dtrr on d.DEVICE_ID=dtrr.DEVICE_ID       " +
+            "                                             left join device_request_retu as drr on dtrr.DEVICE_REQUEST_ID_RETU=drr.ID       " +
+            "                         where d.USE_HUMMER_ID = :idHummer and d.PART_ID=:partId       " +
+            "                           and d.EXIST = true and d.STATUS = 2       " +
+            "                             and ( (drr.ID=:idRequest or drr.ID IS NULL) or       " +
+            "                         (select SUM(dtrr1.STATUS) from device as d1  left join device_to_request_retu as dtrr1 on d1.DEVICE_ID=dtrr1.DEVICE_ID       " +
+            "                         where d1.DEVICE_ID=d.DEVICE_ID and d1.STATUS=2       " +
+            "                         group by d1.DEVICE_ID  " +
+            "                             )%2=0)  " +
+            "group by d.CODE  ";
     @Query(value = sql10Custom, nativeQuery = true)
     List<ICusTomDto> listDeviceRetuById(Long idHummer, Long partId,Long  idRequest);
 
@@ -132,4 +133,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
     List<ICusTomDto> listDeviceRetuGetStaus(Long  idRequest);
 
 
+    String sql12="select * from device  as d where d.EXIST=true and d.EQUIPMENT_GROUP_ID=:id";
+    @Query(value = sql12,nativeQuery = true)
+    List<DeviceEntity> listDeviceByCode(Long  id);
 }
