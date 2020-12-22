@@ -12,6 +12,7 @@ import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestRepository;
 import com.hust.qlts.project.repository.jparepository.HistoryRepository;
+import com.hust.qlts.project.repository.jparepository.NotificetionRepository;
 import com.hust.qlts.project.service.DeviceRequestService;
 import com.hust.qlts.project.service.DeviceService;
 import com.hust.qlts.project.service.RequestService;
@@ -36,9 +37,12 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
     private DeviceToRequestRepository deviceToRequestRepository;
     @Autowired
     private DeviceService deviceService;
+    @Autowired
+    private NotificetionRepository notificetionRepository;
 
     @Autowired
     private HistoryRepository historyRepository;
+
     @Override
     public DataPage<DeviceRequestDTO> searList(DeviceRequestDTO dto) {
         return null;
@@ -95,11 +99,11 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
             dto1.setIdGroup(entity1.getGroupId());
             dto1.setQuantity(entity1.getSize());
             dto1.setUnit(entity1.getUnit());
-            String s=entity1.getListLongId();
-            if(s!=null){
-                String[] strings=s.split(",");
-                List<Long> longList=new ArrayList<>();
-                for (String a1:strings){
+            String s = entity1.getListLongId();
+            if (s != null) {
+                String[] strings = s.split(",");
+                List<Long> longList = new ArrayList<>();
+                for (String a1 : strings) {
                     longList.add(Long.valueOf(a1));
                 }
                 dto1.setListCode(longList);
@@ -118,7 +122,7 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         RequestEntity requestEntity = new RequestEntity();
         DeviceRequestEntity deviceRequestEntity = new DeviceRequestEntity();
         deviceRequestEntity.setCreatDate(new Date());
-        String code = "PYCM" + CoreUtils.castDateToStringByPattern(new Date(), "MMdd")+CoreUtils.castDateToStringByPattern(new Date(), "hhmmss");
+        String code = "PYCM" + CoreUtils.castDateToStringByPattern(new Date(), "MMdd") + CoreUtils.castDateToStringByPattern(new Date(), "hhmmss");
         deviceRequestEntity.setCode(code);
         deviceRequestEntity.setCreatHummerId(dto.getCreatHummerId());
         deviceRequestEntity.setEndDateBorrow(dto.getEndDateBorrow());
@@ -149,6 +153,16 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         deviceToRequestRepository.saveAll(list);
 
         requestService.creat(requestEntity);
+
+
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã tạo phiếu cầu mượng thiết bị " + entity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setTyle(Constants.PHIEUMUON);
+        notificationEntity.setPartId(dto.getPartId());
+        notificetionRepository.save(notificationEntity);
+
+
         return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), entity);
     }
 
@@ -183,6 +197,14 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
 
         }
         deviceToRequestRepository.saveAll(deviceToRequestEntities);
+
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã cập nhập phiếu cầu mượng thiết bị  " + deviceRequestEntity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setPartId(dto.getPartId());
+        notificationEntity.setTyle(Constants.PHIEUMUON);
+        notificetionRepository.save(notificationEntity);
+
         return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), requestEntity);
     }
 
@@ -223,6 +245,18 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         deviceToRequestRepository.saveAll(listAll);
         deviceRequestRepository.save(requestEntity);
         deviceService.saveList(deviceEntities);
+
+
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã xác nhận yêu cầu  phiếu cầu mượn thiết bị mã phiếu " + requestEntity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setIdHummerShow(dto.getCreatHummerId());
+        notificationEntity.setNote2(dto.getHandlerHummerId());
+        notificationEntity.setTyle(Constants.PHIEUMUON);
+        notificetionRepository.save(notificationEntity);
+
+
+
         return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRepository.save(requestEntity));
 //        return null;
     }
@@ -240,6 +274,15 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
 
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã hủy phiếu cầu mượng thiết bị trong mã phiếu" + deviceRequestEntity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setIdHummerShow(dto.getCreatHummerId());
+        notificationEntity.setNote2(dto.getHandlerHummerId());
+        notificationEntity.setTyle(Constants.PHIEUMUON);
+        notificetionRepository.save(notificationEntity);
+
+
         return (DeviceRequestDTO) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRepository.save(deviceRequestEntity));
     }
 
@@ -247,12 +290,13 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
     public IRequestDto getIdList(Long id) {
         return null;
     }
-    private void saveHisory(Object oldValue,Object newValus,Long id,Long idHummer){
-        HistoryEntity historyEntity=new HistoryEntity();
+
+    private void saveHisory(Object oldValue, Object newValus, Long id, Long idHummer) {
+        HistoryEntity historyEntity = new HistoryEntity();
         historyEntity.setTypeScreen(Constants.REQUEST);
         historyEntity.setUserCreate(idHummer);
-        ObjectMapper objectMapper=new ObjectMapper();
-        if(oldValue==null){
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (oldValue == null) {
             historyEntity.setDate(new Date());
             historyEntity.setValueId(id);
             historyEntity.setAction(Constants.TAOMOI);
@@ -263,7 +307,7 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
             } catch (JsonProcessingException e) {
                 historyEntity.setValueNew(null);
             }
-        }else if(newValus==null){
+        } else if (newValus == null) {
             historyEntity.setDate(new Date());
             historyEntity.setValueId(id);
             historyEntity.setAction(Constants.XOA);
@@ -273,7 +317,7 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
             } catch (JsonProcessingException e) {
                 historyEntity.setValueNew(null);
             }
-        }else {
+        } else {
             historyEntity.setDate(new Date());
             historyEntity.setValueId(id);
             historyEntity.setAction(Constants.SUA);

@@ -10,6 +10,7 @@ import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestAddRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestAddRepository;
 import com.hust.qlts.project.repository.jparepository.HistoryRepository;
+import com.hust.qlts.project.repository.jparepository.NotificetionRepository;
 import com.hust.qlts.project.service.DeviceGroupService;
 import com.hust.qlts.project.service.DeviceRequestAddService;
 import com.hust.qlts.project.service.DeviceService;
@@ -37,6 +38,9 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
     private RequestService requestService;
     @Autowired
     private DeviceGroupService deviceGroupService;
+
+    @Autowired
+    private NotificetionRepository notificetionRepository;
 
     @Autowired
     private HistoryRepository historyRepository;
@@ -155,6 +159,16 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
             device.setWarehouseId(addDto.getWarehouseId());
             addEntityList.add(device);
         }
+
+
+        NotificetionEntity notificationEntity=new NotificetionEntity();
+        notificationEntity.setConten(" đã yêu cầu nhâp thêm thiết bị  mã phiếu" +entity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setPartId(-1L);
+        notificationEntity.setTyle(Constants.PHIEUNHAPKHO);
+        notificetionRepository.save(notificationEntity);
+
+
         deviceToRequestAddRepository.saveAll(addEntityList);
         return (DeviceRequestAddDto) ConvetSetData.xetData(new DeviceRequestAddDto(), entity);
     }
@@ -189,6 +203,16 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
             device.setWarehouseId(addDto.getWarehouseId());
             addEntityList.add(device);
         }
+
+        NotificetionEntity notificationEntity=new NotificetionEntity();
+        notificationEntity.setConten(" đã cập nhập phiếu yêu cầu nhâp thêm thiết bị  mã phiếu" +deviceRequestEntity.getCode() );
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setPartId(-1L);
+        notificationEntity.setTyle(Constants.PHIEUNHAPKHO);
+
+        notificetionRepository.save(notificationEntity);
+
+
         deviceToRequestAddRepository.saveAll(addEntityList);
         return (DeviceRequestAddDto) ConvetSetData.xetData(new DeviceRequestAddDto(), addEntity);
     }
@@ -252,6 +276,17 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         deviceRequestAddRepository.save(requestEntity);
         deviceService.saveList(deviceEntities);
         deviceGroupService.saveList(deviceGroupEntities);
+
+
+
+        NotificetionEntity notificationEntity=new NotificetionEntity();
+        notificationEntity.setConten(" đã xác nhận yêu cầu  phiếu yêu cầu nhâp thêm thiết bị mã phiếu" +requestEntity.getCode());
+        notificationEntity.setTyle(Constants.PHIEUNHAPKHO);
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setPartId(dto.getPartId());
+        notificationEntity.setNote2(dto.getHandlerHummerId());
+        notificetionRepository.save(notificationEntity);
+
         return (DeviceRequestAddDto) ConvetSetData.xetData(new DeviceRequestAddDto(), deviceRequestAddRepository.save(requestEntity));
 
 //        return null;
@@ -271,6 +306,16 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         deviceRequestEntity.setProcessingDate(new Date());
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
+
+        NotificetionEntity notificationEntity=new NotificetionEntity();
+        notificationEntity.setConten(" đã hủy yêu cầu  phiếu yêu cầu nhâp thêm thiết bị mã phiếu" +deviceRequestEntity.getCode());
+        notificationEntity.setTyle(Constants.PHIEUNHAPKHO);
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setPartId(dto.getPartId());
+        notificationEntity.setNote2(dto.getHandlerHummerId());
+        notificetionRepository.save(notificationEntity);
+
+
         return (DeviceRequestAddDto) ConvetSetData.xetData(new DeviceRequestAddDto(), deviceRequestAddRepository.save(deviceRequestEntity));
     }
 
