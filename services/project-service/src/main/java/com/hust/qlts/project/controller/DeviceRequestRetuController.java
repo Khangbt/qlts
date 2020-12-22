@@ -3,8 +3,11 @@ import com.hust.qlts.project.service.DeviceRequestRetuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import com.hust.qlts.project.dto.DeviceRequestRetuDto;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/deviceRequestRetu")
@@ -12,7 +15,8 @@ import com.hust.qlts.project.dto.DeviceRequestRetuDto;
 public class DeviceRequestRetuController {
     @Autowired
     private DeviceRequestRetuService deviceRequestRetuService;
-
+    @Autowired
+    private SimpMessagingTemplate template;
     @PostMapping("/search")
     public ResponseEntity<?> searchDevice(@RequestBody DeviceRequestRetuDto dto) {
 
@@ -25,6 +29,9 @@ public class DeviceRequestRetuController {
         if (deviceDto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }
+        String c= UUID.randomUUID().toString();
+        // Push notifications to front-end
+        template.convertAndSend("/topic/notification", c);
         return new ResponseEntity<>(deviceDto, HttpStatus.OK);
     }
 
@@ -34,6 +41,9 @@ public class DeviceRequestRetuController {
         if (deviceDto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }
+        String c= UUID.randomUUID().toString();
+        // Push notifications to front-end
+        template.convertAndSend("/topic/notification", c);
         return new ResponseEntity<>(deviceDto, HttpStatus.OK);
     }
 
@@ -62,6 +72,9 @@ public class DeviceRequestRetuController {
             if (dto == null) {
                 return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
             }
+            String c= UUID.randomUUID().toString();
+            // Push notifications to front-end
+            template.convertAndSend("/topic/notification", c);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Lôi hệ thông", HttpStatus.BAD_REQUEST);
@@ -76,6 +89,9 @@ public class DeviceRequestRetuController {
         if (dto == null) {
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
         }
+        String c= UUID.randomUUID().toString();
+        // Push notifications to front-end
+        template.convertAndSend("/topic/notification", c);
         return new ResponseEntity<>(dto, HttpStatus.OK);
 //        } catch (Exception e) {
 //            return new ResponseEntity<>("Lôi hệ thông", HttpStatus.BAD_REQUEST);

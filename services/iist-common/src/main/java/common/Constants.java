@@ -167,4 +167,9 @@ public class Constants {
     public static final Integer REQUESTRETU=4;
     public static final Integer REQUESTADD=5;
 
+
+    public static final  String PHIEUMUON="PYCM";
+    public static final  String PHIEUTRA="PT";
+    public static final  String PHIEUNHAPKHO="YCM";
+
 }
