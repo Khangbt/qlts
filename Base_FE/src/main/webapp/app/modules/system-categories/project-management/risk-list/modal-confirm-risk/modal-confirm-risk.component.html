@@ -1,0 +1,31 @@
+<div class="ps">
+  <div class="custom-modal-large" jhiModalDrag>
+    <div class="modal-header" #handle>
+      <h5 *ngIf="status===2" class="modal-title mt-0">Từ chối Xác nhận khắc phục rủi ro</h5>
+      <h5 *ngIf="status===1" class="modal-title mt-0">Xác nhận khắc phục rủi ro</h5>
+      <button type="button" class="close" aria-label="Close" (click)="onClose()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="modal-body" style = "width: 95%; margin: 0px auto">
+    <div class="row">
+      <div *ngIf="status===2" style="font-weight: normal">Lý do<span style="color: red"> (*)</span></div>
+      <div *ngIf="status===1" style="font-weight: normal">Lý do</div>
+      <input type="text" class="form-control" maxlength="255"  [(ngModel)]="reason">
+    </div>
+  </div>
+  <div class="d-flex justify-content-end table-footer">
+    <div style="margin: 0 auto 20px">
+      <button #cancelBtn type="button" class="btn btn-light alight" (click)="onClose()">
+        <i class="fa fa-times mr-2" aria-hidden="true"></i><span> Hủy bỏ</span>
+      </button>
+      <button *ngIf="status===2" type="button" class="btn btn-danger btn-view-column" (click)="confirm()" >
+        <i class="fa fa-remove mr-2 center-icon" aria-hidden="true"> Từ chối </i>
+      </button>
+      <button *ngIf="status===1" type="button" class="btn btn-success btn-view-column" (click)="confirm()">
+        <i class="fa fa-check mr-2 center-icon" aria-hidden="true"> Xác nhận</i><span></span>
+      </button>
+    </div>
+  </div>
+</div>

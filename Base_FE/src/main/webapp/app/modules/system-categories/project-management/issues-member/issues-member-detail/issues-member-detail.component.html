@@ -1,0 +1,165 @@
+<div class="custom-modal-large" jhiModalDrag [handle]="handle">
+  <div class="modal-header" #handle>
+    <h5 class="modal-title mt-0">Xem chi tiết vấn đề thành viên dự án</h5>
+    <button type="button" class="close" aria-label="Close" (click)="onCancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+    <div class="modal-body">
+      <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Vấn đề số</label>
+              <input type="text" formControlName="issuesNo" class="form-control" disabled/>
+            </div>
+          </div>
+          <div class="col-md-6"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Mã dự án</label>
+              <input type="text" formControlName="codeProject" class="form-control" disabled/>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">PM/Team Lead</label>
+              <input type="text" formControlName="pm" class="form-control" disabled/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Người tạo</label>
+              <input type="text" formControlName="author" class="form-control" disabled/>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Người xử lý</label>
+              <input type="text" formControlName="assignee" class="form-control" disabled/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Thời gian tạo</label>
+              <jhi-date-picker formControlName="createdOn" isDisabled></jhi-date-picker>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Thời gian xử lý</label>
+              <jhi-date-picker formControlName="dueDate" isDisabled></jhi-date-picker>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Mức độ ưu tiên</label>
+              <ng-select class="cursor-text scroll-ng-select"
+                         formControlName="priority"
+                         notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                         placeholder="{{ 'common.select.option.default' | translate }}"
+                         clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                         [items]="listPriority"
+                         [multiple]="false"
+                         readonly>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Thời gian xử lý thực tế</label>
+              <jhi-date-picker formControlName="actualProcessingTime" isDisabled></jhi-date-picker>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Mức độ nghiêm trọng</label>
+              <ng-select class="cursor-text scroll-ng-select"
+                         formControlName="severity"
+                         notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                         placeholder="{{ 'common.select.option.default' | translate }}"
+                         clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                         [items]="listSeverity"
+                         [multiple]="false"
+                         readonly>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Trạng thái khắc phục</label>
+              <ng-select class="cursor-text scroll-ng-select"
+                         formControlName="status"
+                         notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                         placeholder="{{ 'common.select.option.default' | translate }}"
+                         clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                         [items]="statusList"
+                         [multiple]="false"
+                         readonly>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label">Vấn đề</label>
+              <input type="textarea" formControlName="problem" class="form-control" disabled/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label">Mô tả</label>
+              <textarea type="textarea" formControlName="description" class="form-control" disabled></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label">Nguyên nhân</label>
+              <textarea formControlName="reason" class="form-control" disabled></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label">Giải pháp</label>
+              <textarea formControlName="solution" class="form-control" disabled></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label">Bài học rút ra</label>
+              <textarea formControlName="lessonsLearn" class="form-control" disabled></textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </perfect-scrollbar>
+  <div class="modal-footer">
+    <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+      <i class="fa fa-times mr-2" aria-hidden="true"></i><span>Đóng</span>
+    </button>
+  </div>
+</div>
+
+

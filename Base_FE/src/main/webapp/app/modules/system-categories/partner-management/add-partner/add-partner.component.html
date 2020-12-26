@@ -1,0 +1,223 @@
+<jhi-spinner></jhi-spinner>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <button routerLink="" class="btn btn-link btn-custom-bg" ngbTooltip="{{'common.tooltip.home' | translate}}">
+      <i class="fa fa-home icon-breadcrumb" aria-hidden="true"></i>
+    </button>
+  </li>
+  <li class="breadcrumb-item"><a>Quản lý khách hàng</a></li>
+  <li class="breadcrumb-item active" *ngIf="type==='addCustomer'"><a>Thêm mới khách hàng</a></li>
+  <li class="breadcrumb-item active" *ngIf="type==='updateCustomer'"><a>Cập nhật khách hàng</a></li>
+</ol>
+<perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+  <div id="organizationCategories">
+    <div id="search" class="collapse show">
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <div class="form-group dropdown form-custom-select" [ngClass]="displayFieldHasError('code')">
+                <label class="col-sm-4 col-form-label">Mã khách hàng <span style="color:red">(*)</span></label>
+                <input type="text" class="form-control" #ngSelectCode
+                       [ngClass]="type === 'addPartner' || type === 'updatePartner' ? 'form-control' : ''"
+                       [readOnly]="type==='updateCustomer'" (blur)="onBlurUserCode()"
+                       style="padding: 5px" formControlName="code">
+                <jhi-error-messages *ngIf="formControl['code'].hasError('required')"
+                                    [displayError]="isFieldValid('code')"
+                                    errorMsg="{{ 'customer.validate.code.required' | translate }}">
+                </jhi-error-messages>
+                <jhi-error-messages *ngIf="formControl['code'].hasError('maxlength')"
+                                    [displayError]="isFieldValid('code')"
+                                    errorMsg="{{ 'customer.validate.code.maxlength' | translate }}">
+                </jhi-error-messages>
+                <jhi-error-messages *ngIf="isDuplicateUserCode" [displayError]="isDuplicateUserCode"
+                                    errorMsg="{{ 'customer.validate.customerCode.duplicate' | translate }}">
+                </jhi-error-messages>
+                <jhi-error-messages *ngIf="formControl['code'].hasError('pattern')"
+                                    [displayError]="isFieldValid('code')"
+                                    errorMsg="{{ 'customer.validate.code.invalid' | translate }}">
+                </jhi-error-messages>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group dropdown form-custom-select" [ngClass]="displayFieldHasError('name')">
+                <label class="col-sm-4 col-form-label">Tên khách hàng <span style="color:red">(*)</span></label>
+                <input type="text" class="form-control" style="padding: 5px" #ngSelectName
+                       [ngClass]="type === 'addPartner' || type === 'updatePartner' ? 'form-control' : ''"
+                       formControlName="name">
+                <jhi-error-messages *ngIf="formControl['name'].hasError('required')"
+                                    [displayError]="isFieldValid('name')"
+                                    errorMsg="{{ 'customer.validate.nameCustomer.required' | translate }}">
+                </jhi-error-messages>
+                <jhi-error-messages *ngIf="formControl['name'].hasError('maxlength')"
+                                    [displayError]="isFieldValid('name')"
+                                    errorMsg="{{ 'customer.validate.nameCustomer.maxlength' | translate }}">
+                </jhi-error-messages>
+              </div>
+            </div>
+          </div>
+
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <div class="form-group dropdown form-custom-select">
+                <label class="col-sm-4 col-form-label">Trạng thái hợp tác</label>
+                <div class="form-custom-select">
+                  <ng-select [items]="listStatus"
+                             [multiple]="false"
+                             bindLabel="value"
+                             bindValue="id"
+                             formControlName="status"
+                             (change)="onChangePosition($event)"
+                             [clearable]="false">
+                  </ng-select>
+                  <ng-template ng-option-tmp let-item="item">
+                    {{item.value}} <br/>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group dropdown form-custom-select" [ngClass]="displayFieldHasError('address')">
+                <label class="col-sm-4 col-form-label">Địa chỉ <span style="color:red">(*)</span></label>
+                <input type="text" class="form-control" style="padding: 5px"
+                       [ngClass]="type === 'addPartner' || type === 'updatePartner' ? 'form-control' : ''"
+                       formControlName="address">
+                <jhi-error-messages *ngIf="formControl['address'].hasError('required')"
+                                    [displayError]="isFieldValid('address')"
+                                    errorMsg="{{ 'customer.validate.addCustomer.required' | translate }}">
+                </jhi-error-messages>
+                <jhi-error-messages *ngIf="formControl['address'].hasError('maxlength')"
+                                    [displayError]="isFieldValid('address')"
+                                    errorMsg="{{ 'customer.validate.addCustomer.maxlength' | translate }}">
+                </jhi-error-messages>
+              </div>
+            </div>
+          </div>
+
+          <div class="row col-md-12">
+            <div class="col-md-6">
+              <div class="form-group dropdown form-custom-select" [ngClass]="displayFieldHasError('phone')">
+                <label class="col-sm-4 col-form-label">Số điện thoại</label>
+                <input type="text" class="form-control" style="padding: 5px"
+                       [ngClass]="type === 'addPartner' || type === 'updatePartner' ? 'form-control' : ''"
+                       formControlName="phone">
+                <jhi-error-messages *ngIf="formControl['phone'].hasError('maxlength')"
+                                    [displayError]="isFieldValid('phone')"
+                                    errorMsg="{{ 'customer.validate.phone.maxlength' | translate }}">
+                </jhi-error-messages>
+                <jhi-error-messages *ngIf="formControl['phone'].hasError('pattern')"
+                                    [displayError]="isFieldValid('phone')"
+                                    errorMsg="{{ 'customer.validate.phone.pattern' | translate }}">
+                </jhi-error-messages>
+              </div>
+            </div>
+            <div class="col-md-6" style="padding-top: 0.8%">
+              <div class="form-group row dropdown form-custom-select">
+                <label class="col-sm-4 col-form-label"></label>
+              </div>
+              <div class="form-group row dropdown form-custom-select"
+                   *ngIf="type == 'addCustomer' || (type=='updateCustomer'&& CustomerDetail)">
+                <div><input type="checkbox" (change)="check($event)"
+                            [checked]="type === 'updateCustomer' ? loadCheckBox(CustomerDetail) : ''"
+                            formControlName="isCooperated"> <span style="color: red">Khách hàng đã hợp tác với
+                  IIST chưa?</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row col-md-12" [ngClass]="displayFieldHasError('note')">
+            <label class="col-sm-4 col-form-label">Ghi chú</label>
+            <textarea rows="4" type="text" class="form-control" formControlName="note" maxlength="1000"></textarea>
+            <jhi-error-messages *ngIf="formControl['note'].hasError('maxlength')"
+                                [displayError]="isFieldValid('note')"
+                                errorMsg="{{ 'customer.validate.note.maxlength' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div class="row pr-1" style="width: 50%; margin: 0px auto; padding-left: 10%;">
+      <button #cancelBtn type="button" class="btn btn-light" (click)="onCancel()" style="margin: 5px">
+        <i class="fa fa-times mr-2" aria-hidden="true"></i><span
+        jhiTranslate="{{(type !== 'detail'? 'common.button.confirm.cancel' :  'common.button.close') }}"> Hủy
+        bỏ</span>
+      </button>
+      <button *ngIf="type !== 'detail'" type="submit" class="btn btn-primary"
+              (click)="checkDirty(); (this.type === 'addCustomer' || (this.type === 'updateCustomer' && this.formChange === true))?onSubmit():''"
+              style="margin: 5px">
+        <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span
+        jhiTranslate="common.button.confirm.save">Ghi lại</span>
+      </button>
+    </div>
+    <br><br>
+  </div>
+  <div *ngIf="type==='updateCustomer' && CustomerDetail" class="card">
+    <div class="card-header mb-2">
+      <a><span>Lịch sử khách hàng</span></a>
+    </div>
+    <!--<perfect-scrollbar [style.max-height.px]="200">
+      <div>
+        <div *ngFor="let history of listHistory" style="margin-left: 10px">
+          <td *ngIf="checkHistory(history)">
+            <span> Ngày {{convertDate(history.date)}}: {{history.rolePermission}} - {{history.role}}</span>
+            &lt;!&ndash; <span *ngIf="history.action===3" style="color: #00cea0"> đã thêm mới</span>&ndash;&gt;
+            <span style="color: #cfae45"> đã chỉnh sửa</span>
+            &lt;!&ndash;<span *ngIf="history.action===5" style="color: red"> đã xóa</span>&ndash;&gt;
+            <span
+              *ngIf=" convertJson(history.valueOld).name !== convertJson(history.valueNew).name "> Tên khách hàng từ [{{convertJson(history.valueOld).name}}
+              ]
+              thành [{{convertJson(history.valueNew).name}}];
+            </span>
+            <span
+              *ngIf=" convertJson(history.valueOld).status !== convertJson(history.valueNew).status "> Trạng thái từ [{{loadStatus(convertJson(history.valueOld).status, 1)}}
+              ]
+              thành [{{loadStatus(convertJson(history.valueNew).status, 1)}}];
+            </span>
+            <span
+              *ngIf=" convertJson(history.valueOld).address !== convertJson(history.valueNew).address "> Địa chỉ từ [{{convertJson(history.valueOld).address}}
+              ]
+              thành [{{convertJson(history.valueNew).address}}];
+            </span>
+            <span
+              *ngIf=" convertJson(history.valueOld).phone !== convertJson(history.valueNew).phone "> Số điện thoại từ [{{convertJson(history.valueOld).phone}}
+              ]
+              thành [{{convertJson(history.valueNew).phone}}];
+            </span>
+            <span
+              *ngIf="convertJson(history.valueOld).isCooperated !== convertJson(history.valueNew).isCooperated "> Đã hợp tác với IIST chưa? từ [{{loadStatus(convertJson(history.valueOld).isCooperated, 2)}}
+              ]
+              thành [{{loadStatus(convertJson(history.valueNew).isCooperated, 2)}}];
+            </span>
+            <span
+              *ngIf=" convertJson(history.valueOld).note !== convertJson(history.valueNew).note "> Ghi chú từ [{{convertJson(history.valueOld).note}}
+              ]
+              thành [{{convertJson(history.valueNew).note}}];
+            </span>
+          </td>
+        </div>
+      </div>
+    </perfect-scrollbar>-->
+    <perfect-scrollbar [style.max-height.px]="200">
+      <div>
+        <div *ngFor="let history of listHistory" style="margin-left: 10px">
+          <td *ngIf="checkHistory(history)">
+
+            <span> Ngày </span>{{convertDate(history.date)}}<span>: </span>{{history.rolePermission}} - {{history.role}}
+            <span style="color: #cfae45"> đã chỉnh sửa</span>:
+            <span> {{viewChangeStr(history)}}</span>
+          </td>
+        </div>
+      </div>
+    </perfect-scrollbar>
+    <!--<perfect-scrollbar [style.max-height.px]="200">
+      <div *ngFor="let history of listHistory" style="margin-left: 10px">
+        <td>
+          <span> Ngày </span>{{convertDate(history.date)}}<span>: </span>{{history.rolePermission}} - {{history.role}}
+          <span *ngIf="history.action===4">: {{viewChangeStr(history)}}</span>
+        </td>
+      </div>
+    </perfect-scrollbar>-->
+  </div>
+</perfect-scrollbar>

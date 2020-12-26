@@ -1,0 +1,125 @@
+<div class="custom-modal-large" jhiModalDrag [handle]="handle">
+    <div class="modal-header" #handle>
+        <h5 class="modal-title mt-0">Xem chi tiết nguồn lực các dự án</h5>
+        <button type="button" class="close" aria-label="Close" (click)="onCancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <!-- <perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()"
+        style="padding-right: 15px; padding-left: 10px;"> -->
+    <div style="padding-right: 15px; padding-left: 10px;">
+        <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off" style="margin-top: 15px;">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label custom-label-left">Nhân sự</label>
+                        <div class="col-sm-9 form-custom-select">
+                            <input type="text" class="form-control" formControlName="fullName" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table style="width: 100%; border-collapse: collapse; background-color: #dae8ef;">
+            <tr>
+                <td
+                    style="width: 100%; border-top: 1px solid rgba(214, 214, 214, 0.7); border-left: 1px solid rgba(214, 214, 214, 0.7); border-right: 1px solid rgba(214, 214, 214, 0.7); text-align: center;">
+                    <div class="row">
+                        <!-- <div class="col-md-4" style="height: 100%; text-align: center;">
+                        previeus
+                      </div>
+                      <div class="col-md-4" style="height: 100%;">
+                        Tháng {{monthRef}}
+                      </div>
+                      <div class="col-md-4" style="height: 100%; text-align: center;">
+                        next
+                      </div> -->
+                        <div style="display: block; width: 100%; height: 100%; justify-content: center;">
+                            <!-- <button class="btn btn-link" style="margin-top: 5px; margin-bottom: 5px; "
+                                ngbTooltip="Tháng trước">
+                                <i class="fa fa-chevron-left" aria-hidden="true" style="color: #0273d4;"></i>
+                            </button> -->
+                            <button class="btn btn-link" style="margin-top: 5px; margin-bottom: 5px; "
+                                ngbTooltip="Tháng trước" (click)="previousMonth()">
+                                <i class="fa fa-chevron-left" aria-hidden="true" style="color: #0273d4;"></i>
+                            </button>
+                            <label
+                                style="padding-right: 15px; padding-left: 15px; font-family: 'Open+Sans', sans-serif; color: #555; font-size: 13px; font-weight: 600; text-transform: inherit; line-height: 20px; letter-spacing: 0;">
+                                Tháng {{month}} / {{year}}
+                            </label>
+                            <!-- <button class="btn btn-link" style="margin-top: 5px; margin-bottom: 5px;"
+                                ngbTooltip="Tháng sau">
+                                <i class="fa fa-chevron-right" aria-hidden="true" style="color: #0273d4;"></i>
+                            </button> -->
+                            <button class="btn btn-link" style="margin-top: 5px; margin-bottom: 5px;"
+                                ngbTooltip="Tháng sau" (click)="nextMonth()">
+                                <i class="fa fa-chevron-right" aria-hidden="true" style="color: #0273d4;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%; border-collapse: collapse; background-color: #dae8ef;">
+            <tr>
+                <td
+                    style="width: 50px; border-top: 1px solid rgba(214, 214, 214, 0.7); border-left: 1px solid rgba(214, 214, 214, 0.7); border-right: 1px solid rgba(214, 214, 214, 0.7); text-align: center;">
+
+                    <label
+                        style="font-family: 'Open+Sans', sans-serif; color: #555; font-size: 13px; font-weight: 600; text-transform: inherit; line-height: 20px; letter-spacing: 0;">
+                        STT
+                    </label>
+                </td>
+                <td
+                    style="width: 150px; border-top: 1px solid rgba(214, 214, 214, 0.7); border-left: 1px solid rgba(214, 214, 214, 0.7); border-right: 1px solid rgba(214, 214, 214, 0.7); text-align: center;">
+
+                    <label
+                        style="font-family: 'Open+Sans', sans-serif; color: #555; font-size: 13px; font-weight: 600; text-transform: inherit; line-height: 20px; letter-spacing: 0;">
+                        Dự án
+                    </label>
+                </td>
+                <td [innerHtml]="headerHtml"
+                    style="border-top: 1px solid rgba(214, 214, 214, 0.7); border-left: 1px solid rgba(214, 214, 214, 0.7); border-right: 1px solid rgba(214, 214, 214, 0.7); padding: 0px;">
+
+                </td>
+            </tr>
+        </table>
+        <table style="border-collapse: collapse; width: 100%;" class="table-resource">
+            <tr *ngFor="let item of resourceData; let i = index">
+                <td style="width: 50px; border: 1px solid rgba(214, 214, 214, 0.7); text-align: center;">
+                    {{itemsPerPage * (page - 1) + i + 1}}
+                </td>
+                <td style="width: 150px; border: 1px solid rgba(214, 214, 214, 0.7); text-align: left;">
+                    <div style=" padding-left: 10px; text-overflow: ellipsis; height: 35px; padding-top: 8px; max-height: 35px; width: 100%; white-space: nowrap; overflow: hidden;"
+                        ngbTooltip="{{item.projectCode}}">
+                        {{item.projectCode}}
+                    </div>
+                </td>
+
+                <td style="border: 1px solid rgba(214, 214, 214, 0.7);" [innerHtml]="duringHtml[i]">
+
+                </td>
+            </tr>
+        </table>
+        <div class="d-flex justify-content-end table-footer" [hidden]="totalItems === 0" style="margin-right: 14px;">
+            <div class="row justify-content-center">
+                <p class="item-count">{{'common.table.totalItems'| translate}} {{totalItems}}</p>
+                <ngb-pagination *ngIf="totalItems" [collectionSize]="totalItems" [(page)]="page"
+                    [pageSize]="itemsPerPage" [maxSize]="maxSizePage" [rotate]="true" [boundaryLinks]="true"
+                    (pageChange)="loadPage(page)">
+                </ngb-pagination>
+                <jhi-page-size (onChangePageSize)="changePageSize($event)"></jhi-page-size>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-footer justify-content-center">
+        <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+            <i class="fa fa-times mr-2" aria-hidden="true"></i><span>Đóng</span>
+        </button>
+    </div>
+
+</div>

@@ -1,0 +1,120 @@
+<div class="modal-import" jhiModalDrag [handle]="handle">
+  <div class="modal-header" #handle>
+    <h5 class="modal-title mt-0">{{title}}</h5>
+    <button #closeBtn type="button" class="close" aria-label="Close" (click)="onCancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('code')">
+            <label class="form-control-label required"
+            >Mã kho</label>
+            <input type="text" formControlName="code" class="form-control"
+                   [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                   [readOnly]="type === 'detail'||type==='update'" maxlength="255"
+                   (blur)="onBlurUserCode()"/>
+            <jhi-error-messages *ngIf="formControl['code'].hasError('required')" [displayError]="isFieldValid('code')"
+                                errorMsg="{{ 'user.validate.code.required' | translate }}">
+            </jhi-error-messages>
+            <jhi-error-messages *ngIf="formControl['code'].hasError('maxlength')" [displayError]="isFieldValid('code')"
+                                errorMsg="{{ 'user.validate.code.maxlength' | translate }}">
+            </jhi-error-messages>
+            <jhi-error-messages *ngIf="isDuplicateUserCode" [displayError]="isDuplicateUserCode"
+                                errorMsg="Mã kho đã tồn tại">
+            </jhi-error-messages>
+            <jhi-error-messages *ngIf="formControl['code'].hasError('pattern')" [displayError]="isFieldValid('code')"
+                                errorMsg="{{ 'user.validate.code.invalid' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('fullName')">
+            <label class="form-control-label required"
+            >Tên Kho</label>
+            <input type="text" formControlName="fullName" class="form-control"
+                   [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                   [readOnly]="type === 'detail'" maxlength="255" (blur)="trimSpace('fullName')"/>
+            <jhi-error-messages *ngIf="formControl['fullName'].hasError('required')"
+                                [displayError]="isFieldValid('fullName')"
+                                errorMsg="{{ 'user.validate.fullName.required' | translate }}">
+            </jhi-error-messages>
+            <jhi-error-messages *ngIf="formControl['fullName'].hasError('maxlength')"
+                                [displayError]="isFieldValid('fullName')"
+                                errorMsg="{{ 'user.validate.fullName.maxlength' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('partId')">
+            <label class="form-control-label required" >Bộ phận quản lý</label>
+              <ng-select class="cursor-text scroll-ng-select"
+                         bindLabel="name" formControlName="partId" bindValue="id"
+                         notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                         clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                         placeholder="--Tất cả--"
+                         [items]="partList"
+                         [multiple]="false"
+                         [readonly]="type === 'detail'||checkBoll">
+              </ng-select>
+            <jhi-error-messages *ngIf="formControl['partId'].hasError('required')"
+                                [displayError]="isFieldValid('partId')"
+                                errorMsg="{{ 'user.validate.fullName.required' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('address')">
+            <label class="form-control-label required"
+            >Địa chỉ</label>
+            <input type="text" formControlName="address" class="form-control"
+                   [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                   [readOnly]="type === 'detail'" maxlength="255" />
+            <jhi-error-messages *ngIf="formControl['address'].hasError('required')"
+                                [displayError]="isFieldValid('address')"
+                                errorMsg="{{ 'user.validate.fullName.required' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+
+
+        <div class="row">
+          <div class="form-group" [ngClass]="displayFieldHasError('note')">
+            <label class="form-control-label" jhiTranslate="user.note">ghi chú</label>
+            <textarea rows="4" cols="400" formControlName="note" class="form-control"
+                      type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                      style="overflow: scroll"></textarea>
+            <jhi-error-messages *ngIf="formControl['note'].hasError('maxlength')" [displayError]="isFieldValid('note')"
+                                errorMsg="{{ 'user.validate.note.maxlength' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="action-btn">
+    <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+      <i class="fa fa-times mr-2" aria-hidden="true"></i><span
+      jhiTranslate="{{(type !== 'detail'? 'common.button.confirm.cancel' : 'common.button.close')}}">Hủy bỏ</span>
+    </button>
+    <button *ngIf="type !== 'detail'" type="submit" class="btn btn-primary" (click)="onSubmitData()">
+      <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span
+      jhiTranslate="common.button.confirm.save">Ghi lại</span>
+    </button>
+  </div>
+
+
+</div>
+
+
+

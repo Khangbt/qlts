@@ -1,0 +1,190 @@
+<jhi-spinner></jhi-spinner>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <button routerLink="" class="btn btn-link btn-custom-bg">
+      <i class="fa fa-home icon-breadcrumb" aria-hidden="true"></i>
+    </button>
+  </li>
+  <li class="breadcrumb-item active">Danh sách nhóm quyền</li>
+</ol>
+<perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+  <div id="organizationCategories" class="page-content">
+    <div class="card mb-1">
+      <div class="card-header">
+        <a data-toggle="" href="#search" aria-expanded="true"><span
+          jhiTranslate="common.card.title.search"></span></a>
+      </div>
+      <div id="search" class="show">
+        <div class="card-body">
+          <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row dropdown form-custom-select">
+                  <label class="col-sm-3 col-form-label custom-label-right">Bộ phận/Vai trò</label>
+                  <div class="col-sm-9 form-custom-select">
+                    <ng-select [items]="listRole" autofocus placeholder="Chọn bộ phận/vai trò"
+                               bindLabel="name" bindValue="name"
+                               clearAllText="Chọn phòng ban, chức vụ"
+                               notFoundText="Không tìm thấy phòng ban, chức vụ"
+                               formControlName="code"
+                               [clearable]="false"
+                               [searchable]="false"
+                    >
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right">Tên nhóm quyền</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" formControlName="name">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row dropdown form-custom-select">
+                  <label class="col-sm-3 col-form-label custom-label-right">Trạng thái</label>
+                  <div class="col-sm-9 form-custom-select">
+                    <ng-select [items]="listStatus" placeholder="Chọn trạng thái"
+                               bindLabel="name" bindValue="value"
+                               clearAllText="Chọn trạng thái"
+                               formControlName="status"
+                               [clearable]="false"
+                               [searchable]="false">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6"></div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-primary" (click)="onSearchData()">
+                <i class="fa fa-search mr-2" aria-hidden="true"></i><span
+                jhiTranslate="common.button.search">Tìm kiếm</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <a data-toggle="" href="#dataTable" aria-expanded="true"><span
+          jhiTranslate="organizationCategories.titleTable"></span></a>
+      </div>
+      <div id="dataTable" class="show">
+        <div class="card-body pt-2 pb-0 px-2">
+          <div class="row d-flex justify-content-end pr-1">
+            <button type="button" class="btn btn-primary" ngbTooltip="Thêm nhân sự vào nhóm quyền" placement="top-right"
+                    (click)="openModalSaveGroupPermissions('add', null)">
+              <i class="fa fa-plus mr-2" aria-hidden="true"></i><span>Thêm mới</span>
+            </button>
+          </div>
+          <div class="row">
+            <perfect-scrollbar id="scrollbarTable" class="ps">
+              <table id="permissionTable" class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr class="text-center" jhiSort [(predicate)]="predicate" [(ascending)]="reverse">
+                  <th scope="col" class="small-width-table">STT</th>
+                  <th scope="col" class="medium-width-table action-width-four-icon custom-width">Hành động</th>
+                  <th scope="col">Bộ phận/Vai trò</th>
+                  <th scope="col">Tên nhóm quyền</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Ghi chú</th>
+                </tr>
+                </thead>
+                <tr *ngFor="let item of groupPermissions; index as i">
+                  <td class="text-center">{{i + 1}}</td>
+                  <td class="text-center four-icon medium-width-table">
+                    <div class="group-action">
+
+                      <button class="btn btn-light" placement="top-left"
+                              *jhiHasPermission="['resource.pqht_ttqht']"
+                              (click)="openModalAddUser('add', item)"
+                              ngbTooltip="Thêm thành viên vào nhóm quyền"
+                              onclick="this.blur();"
+                      >
+                        <i class="fa fa-user-plus icon-update" aria-hidden="true"></i></button>
+
+                      <button class="btn btn-light" placement="top"
+                              *jhiHasPermission="['resource.pqht_sqht']"
+                              (click)="openModalSaveGroupPermissions('update',item)"
+                              ngbTooltip="Sửa thông tin nhóm quyền"
+                              onclick="this.blur();"
+                      >
+                        <i class="fa fa-pencil-square-o icon-update" aria-hidden="true"></i></button>
+                      <button class="btn btn-light" placement="top"
+                              *jhiHasPermission="['resource.pqht_xqht']"
+                              (click)="onDelete(item.id)"
+                              ngbTooltip="Xóa thông tin nhóm quyền"
+                              onclick="this.blur();"
+                      >
+                        <i class="fa fa-trash-o icon-delete" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td>{{item.code}}</td>
+                  <td>
+                    <div placement="top" ngbTooltip="{{item.name}}">
+                      {{item.name}}
+                    </div>
+                  </td>
+                  <td>{{item.status | convertStatus}}</td>
+                  <td>
+                    <div placement="top" ngbTooltip="{{item.note}}">
+                      {{item.note}}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <div class="row justify-content-start py-2 pl-1  table-footer no-data"
+                   *ngIf="!totalItems || totalItems === 0">
+                <p class="item-count" jhiTranslate="common.table.noData"></p>
+              </div>
+            </perfect-scrollbar>
+          </div>
+          <div class="d-flex justify-content-end table-footer" [hidden]="totalItems === 0">
+            <div class="row justify-content-center">
+              <p class="item-count">{{'common.table.totalItems'| translate}} {{totalItems}}</p>
+              <ngb-pagination *ngIf="totalItems" [collectionSize]="totalItems" [(page)]="page"
+                              [pageSize]="itemsPerPage"
+                              [maxSize]="maxSizePage" [rotate]="true" [boundaryLinks]="true"
+                              (pageChange)="loadPage(page)">
+              </ngb-pagination>
+              <jhi-page-size (onChangePageSize)="changePageSize($event)"></jhi-page-size>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header mb-2">
+        <a><span>Lịch sử dự án</span></a>
+      </div>
+      <perfect-scrollbar [style.max-height.px]="200">
+        <div>
+          <div *ngFor="let history of listHistory" style="margin-left: 10px">
+            <td>
+              <span> Ngày </span>{{convertDate(history.date)}}<span>: </span>{{history.role}}
+              <span> - </span>{{history.userCreate}}
+              <span *ngIf="history.action===3" style="color: #00cea0"> đã thêm mới</span>
+              <span *ngIf="history.action===4" style="color: #cfae45"> đã chỉnh sửa</span>
+              <span *ngIf="history.action===5" style="color: red"> đã xóa</span>
+              <span *ngIf="history.typeScreen === 8 && history.action === 3">{{history.groupPermissionUserName}}
+                vào {{history.groupPermissionName}} </span>
+              <span *ngIf="history.typeScreen === 8 && history.action === 5">{{history.groupPermissionUserName}}
+                khỏi {{history.groupPermissionName}} </span>
+              <span *ngIf="history.typeScreen === 6"> nhóm quyền {{history.groupPermissionName}}</span>
+            </td>
+            <p>
+              <span *ngIf="history.content !== null">     Lí do: {{history.content}}</span>
+            </p>
+          </div>
+        </div>
+      </perfect-scrollbar>
+    </div>
+  </div>
+</perfect-scrollbar>

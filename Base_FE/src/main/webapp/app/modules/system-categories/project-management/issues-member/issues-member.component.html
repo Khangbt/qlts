@@ -1,0 +1,212 @@
+<jhi-spinner></jhi-spinner>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <button routerLink="" class="btn btn-link btn-custom-bg" ngbTooltip="{{'common.tooltip.home' | translate}}">
+      <i class="fa fa-home icon-breadcrumb" aria-hidden="true"></i>
+    </button>
+  </li>
+  <li class="breadcrumb-item"><a >Quản lý dự án</a></li>
+  <li class="breadcrumb-item active" >Danh sách vấn đề thành viên dự án</li>
+</ol>
+<perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+  <div id="organizationCategories" class="page-content">
+    <div class="card mb-1">
+      <div class="card-header">
+        <a data-toggle="collapse" href="#search" aria-expanded="true"><span
+          jhiTranslate="common.card.title.search"></span></a>
+      </div>
+      <div id="search" class="collapse show">
+        <div class="card-body">
+          <form [formGroup]="form" novalidate autocomplete="off">
+            <div class="row">
+              <!--Dự án-->
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right">Dự án</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           formControlName="codeProject"
+                           jhiAutoFocusField
+                           placeholder="Nhập vào mã dự án">
+                  </div>
+                </div>
+              </div>
+              <!--Trạng thái khắc phục-->
+              <div class="col-md-6" >
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right " id = "status">Trạng thái khắc phục</label>
+                  <div class="col-sm-9">
+                    <ng-select class="cursor-text scroll-ng-select"
+                               bindLabel="name" formControlName="status" bindValue="id"
+                               notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                               clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                               placeholder="--Tất cả--"
+                               [items]="statusList"
+                               [multiple]="false">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!--Người tạo-->
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right">Người tạo</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           formControlName="author"
+                           jhiAutoFocusField
+                           placeholder="Nhập vào tên người tạo">
+                  </div>
+                </div>
+              </div>
+              <!--Người xử lý-->
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right">Người xử lý</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control"
+                           formControlName="assignee"
+                           jhiAutoFocusField
+                           placeholder="Nhập vào tên người xử lý">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-primary" (click)="onSearchData()">
+                <i class="fa fa-search mr-2" aria-hidden="true"></i><span jhiTranslate="common.button.search">Tìm kiếm</span>
+              </button>
+              <button type="button" class="btn btn-primary"
+                      style="background-color: #0dad9e; border-color:#0dad9e ;margin-left: 2%"
+                      (click)="synchronizeIssuesMember()">
+                <i class="fa fa-refresh mr-2" aria-hidden="true"></i><span>Đồng bộ</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Phần hiển thị danh sách -->
+    <div class="card">
+      <div class="card-header">
+        <a data-toggle="collapse" href="#dataTable" aria-expanded="true">
+          <span jhiTranslate="organizationCategories.titleTable"></span>
+        </a>
+      </div>
+      <div id="dataTable" class="collapse show">
+        <div class="card-body pt-2 pb-0 px-2">
+          <div class="row d-flex justify-content-end pr-1">
+            <div ngbDropdown class="d-inline-block choose-column" ngbTooltip="Ẩn/hiện cột">
+              <button type="button" id="dropdownBasic1" class="btn btn-primary btn-view-column ml-2" placement="top" ngbDropdownToggle>
+                <i class="fa fa-list" aria-hidden="true"></i>
+              </button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <perfect-scrollbar class="ps" [style.max-height.vh]="SHOW_HIDE_COL_HEIGHT">
+                  <ng-container *ngFor="let col of columns; let i = index">
+                    <div class="custom-control custom-checkbox ">
+                      <input class="custom-control-input" type="checkbox" [checked]="col.isShow" id="check{{ i }}" (click)="toggleColumns(col)" />
+                      <label class="custom-control-label cursor-pointer" for="check{{ i }}">
+                        {{ col.value }}
+                      </label>
+                    </div>
+                  </ng-container>
+                </perfect-scrollbar>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <perfect-scrollbar id="scrollbarTable" class="ps">
+              <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr class="text-center" jhiSort [(predicate)]="predicate" [(ascending)]="reverse">
+                  <th class="small-width-table" jhiTranslate="organizationCategories.orderNumber">STT</th>
+                  <th class="large-width-table" jhiTranslate="organizationCategories.action" style="width: 80px"></th>
+                  <th class="large-width-table" *ngIf="this.columns[0]?.isShow" style="width: 120px"><span>Mã dự án</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[1]?.isShow" style="width: 100px"><span>Vấn đề số</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[2]?.isShow" style="width: 150px"><span>PM/Team Lead</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[3]?.isShow" style="width: 150px"><span>Người tạo</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[4]?.isShow" style="width: 150px"><span>Người xử lý</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[5]?.isShow"><span>Thời gian tạo</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[6]?.isShow"  style="width: 100px"><span>Thời gian xử lý</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[7]?.isShow" style="width: 150px"><span  >Mức độ ưu tiên</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[8]?.isShow" style="width: 150px"><span  >Mức độ nghiêm trọng</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[9]?.isShow"  style="width: 150px"><span >Thời gian xử lý thực tế</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[10]?.isShow" style="width: 120px"><span >Trạng thái khắc phục</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[11]?.isShow"><span >Vấn đề</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[12]?.isShow"><span >Mô tả</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[13]?.isShow"><span >Nguyên nhân</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[14]?.isShow"><span >Giải pháp</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[15]?.isShow"  style="width: 150px"><span >Bài học rút ra</span>
+                  </th>
+                </tr>
+                </thead>
+                <tbody *ngFor="let item of issuesMemberModel; index as i">
+                <tr class="text-center">
+                  <td>{{itemsPerPage * (page - 1) + i + 1}}</td>
+                  <td>
+                    <div class="group-action">
+                      <button class="btn btn-light" placement="top"
+                              ngbTooltip="Xem chi tiết vấn đề"
+                              (click)="openModal(item,statusList)"
+                              onclick="this.blur();">
+                        <i class="fa fa fa-info  icon-update" aria-hidden="true"></i></button>
+                    </div>
+                  </td>
+                  <td *ngIf="this.columns[0]?.isShow" style="text-align: center">{{item.codeProject}}</td>
+                  <td *ngIf="this.columns[1]?.isShow" style="text-align: center">{{item.issuesNo}}</td>
+                  <td *ngIf="this.columns[2]?.isShow" style="text-align: left">{{item.pm}}</td>
+                  <td *ngIf="this.columns[3]?.isShow" style="text-align: left">{{item.author}}</td>
+                  <td *ngIf="this.columns[4]?.isShow" style="text-align: left">{{item.assignee}}</td>
+                  <td *ngIf="this.columns[5]?.isShow" style="text-align: left">{{item.createdOn}}</td>
+                  <td *ngIf="this.columns[6]?.isShow" style="text-align: left">{{item.dueDate}}</td>
+                  <td *ngIf="this.columns[7]?.isShow" style="text-align: left">{{item.priority}}</td>
+                  <td *ngIf="this.columns[8]?.isShow" style="text-align: left">{{item.severity}}</td>
+                  <td *ngIf="this.columns[9]?.isShow" style="text-align: left">{{item.actualProcessingTime}}</td>
+                  <td *ngIf="this.columns[10]?.isShow" style="text-align: center">{{item.status}}</td>
+                  <td *ngIf="this.columns[11]?.isShow" style="text-align: left">{{item.problem}}</td>
+                  <td *ngIf="this.columns[12]?.isShow" style="text-align: left">{{item.description}}</td>
+                  <td *ngIf="this.columns[13]?.isShow" style="text-align: left">{{item.reason}}</td>
+                  <td *ngIf="this.columns[14]?.isShow" style="text-align: left">{{item.solution}}</td>
+                  <td *ngIf="this.columns[15]?.isShow" style="text-align: left">{{item.lessonsLearn}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </perfect-scrollbar>
+          </div>
+          <div class="row justify-content-start py-2 pl-1  table-footer no-data"
+               *ngIf="!totalItems || totalItems === 0">
+            <p class="item-count" jhiTranslate="common.table.noData"></p>
+          </div>
+          <div class="d-flex justify-content-end table-footer" [hidden]="totalItems === 0">
+            <div class="row justify-content-center">
+              <p class="item-count">{{'common.table.totalItems'| translate}} {{totalItems}}</p>
+              <ngb-pagination *ngIf="totalItems" [collectionSize]="totalItems" [(page)]="page"
+                              [pageSize]="itemsPerPage"
+                              [maxSize]="maxSizePage" [rotate]="true" [boundaryLinks]="true"
+                              (pageChange)="loadPage(page)">
+              </ngb-pagination>
+              <jhi-page-size (onChangePageSize)="changePageSize($event)"></jhi-page-size>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</perfect-scrollbar>

@@ -1,0 +1,243 @@
+<jhi-spinner></jhi-spinner>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <button routerLink="" class="btn btn-link btn-custom-bg">
+      <i class="fa fa-home icon-breadcrumb" aria-hidden="true"></i>
+    </button>
+  </li>
+  <li class="breadcrumb-item"><a>Quản lý dự án</a></li>
+  <li class="breadcrumb-item active">Danh sách rủi ro/Vấn đề của dự án</li>
+</ol>
+
+<perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+  <div id="organizationCategories" class="page-content">
+    <div class="card mb-1">
+      <div class="card-header">
+        <a data-toggle="" href="#search" aria-expanded="true"><span
+          jhiTranslate="common.card.title.search"></span></a>
+      </div>
+      <div id="search" class="show">
+        <div class="card-body">
+          <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right">Dự án</label>
+                  <div class="col-sm-9">
+                    <input jhiAutoFocusField type="text" class="form-control" formControlName="project" placeholder="Nhập vào Mã dự án, Tên dự án">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row dropdown form-custom-select">
+                  <label class="col-sm-3 col-form-label custom-label-right">Trạng thái khắc phục</label>
+                  <div class="col-sm-9 form-custom-select">
+                    <ng-select [items]="listStatusFix" placeholder="Chọn bộ phận/vai trò"
+                               bindLabel="name" bindValue="name"
+                               clearAllText="Chọn trạng thái khắc phục"
+                               notFoundText="Không tìm thấy trạng thái khắc phục"
+                               formControlName="status"
+                               [clearable]="false"
+                               [searchable]="false"
+                    >
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right">PM/TeamLeader</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" formControlName="humanResources" placeholder="Nhập vào Mã số nhân sự, Tên nhân sự">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label custom-label-right">Người khắc phục</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" formControlName="fixedBy" placeholder="Nhập vào Mã số nhân sự, Tên nhân sự">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row dropdown form-custom-select">
+                  <label class="col-sm-3 col-form-label custom-label-right">Phân loại vấn đề</label>
+                  <div class="col-sm-9 form-custom-select">
+                    <ng-select [items]="listRiskType" placeholder="Chọn phân loại vấn đề"
+                               bindLabel="name" bindValue="name"
+                               clearAllText="Chọn phân loại vấn đề"
+                               notFoundText="Không tìm thấy phân loại vấn đề"
+                               formControlName="classify"
+                               [clearable]="false"
+                               [searchable]="false"
+                    >
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6"></div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-primary" (click)="onSearchData()">
+                <i class="fa fa-search mr-2" aria-hidden="true"></i><span
+                jhiTranslate="common.button.search">Tìm kiếm</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <a data-toggle="collapse" href="#dataTable" aria-expanded="true"><span
+          jhiTranslate="organizationCategories.titleTable"></span></a>
+      </div>
+      <div id="dataTable" class="collapse show">
+        <div class="card-body pt-2 pb-0 px-2">
+          <div class="row d-flex justify-content-end pr-1">
+            <button *jhiHasPermission="['resource.qlda_qlrr_trr']" type="button" class="btn btn-primary"
+                    (click)="openActionAddRiskList('add', null)">
+              <i class="fa fa-plus mr-2" aria-hidden="true"></i><span jhiTranslate="common.button.add" ngbTooltip="Thêm mới rủi ro">Thêm mới</span>
+            </button>
+            <div ngbDropdown class="d-inline-block choose-column" ngbTooltip="Ẩn/hiện cột">
+              <button type="button" id="dropdownBasic1" class="btn btn-primary btn-view-column ml-2" placement="top"
+                      ngbDropdownToggle>
+                <i class="fa fa-list" aria-hidden="true"></i>
+              </button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <perfect-scrollbar class="ps" [style.max-height.vh]="SHOW_HIDE_COL_HEIGHT">
+                  <ng-container *ngFor="let col of columns; let i = index">
+                    <div class="custom-control custom-checkbox ">
+                      <input class="custom-control-input" type="checkbox" [checked]="col.isShow" id="check{{ i }}"
+                             (click)="toggleColumns(col)" />
+                      <label class="custom-control-label cursor-pointer" for="check{{ i }}">
+                        {{ col.value }}
+                      </label>
+                    </div>
+                  </ng-container>
+                </perfect-scrollbar>
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <perfect-scrollbar id="scrollbarTable" class="ps">
+              <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr class="text-center" jhiSort [(predicate)]="predicate" [(ascending)]="reverse">
+                  <th class="small-width-table" *ngIf="this.columns[0]?.isShow" jhiTranslate="organizationCategories.orderNumber">STT</th>
+                  <th class="large-width-table" *ngIf="this.columns[1]?.isShow" jhiTranslate="organizationCategories.action" style="width: 150px"></th>
+                  <th class="large-width-table" *ngIf="this.columns[2]?.isShow" style="width: 100px"><span>Mã dự án</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[3]?.isShow" style="width: 150px"><span>Tên dự án</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[4]?.isShow" style="width: 150px"><span>Rủi ro số</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[5]?.isShow"  style="width: 150px"><span>PM/TeamLeader</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[6]?.isShow"  style="width: 150px"><span>Trạng thái tổng quan</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[7]?.isShow"  style="width: 250px"><span>Rủi ro/vấn đề</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[8]?.isShow"  style="width: 250px"><span>Hành động khắc phục</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[9]?.isShow"  style="width: 150px"><span>Người khắc phục</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[10]?.isShow" style="width: 150px"><span  >Trạng thái khắc phục</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[11]?.isShow"  style="width: 150px"><span >Phân loại vấn đề</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[12]?.isShow" style="width: 250px"><span >Lesson learn/Bài học kinh nghiệm</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[13]?.isShow" style="width: 250px"><span >Giải trình vấn đề/rủi ro</span>
+                  </th>
+                  <th class="large-width-table" *ngIf="this.columns[14]?.isShow" style="width: 250px"><span >Ghi chú</span>
+                  </th>
+                </tr>
+                </thead>
+                <tbody *ngFor="let item of risks; index as i">
+                <tr class="text-center">
+                  <td *ngIf="this.columns[0]?.isShow">{{itemsPerPage * (page - 1) + i + 1}}</td>
+                  <td *ngIf="this.columns[1]?.isShow">
+                    <div class="group-action">
+                      <button *jhiHasPermission="['resource.qlda_qlrr_xctrr']"
+                              class="btn btn-light" placement="top"
+                              ngbTooltip="Xem rủi ro/vấn đề" (click)="openActionAddRiskList('detail',item)"
+                              onclick="this.blur();">
+                        <i class="fa fa fa-info  icon-update" aria-hidden="true"></i></button>
+
+                      <button *jhiHasPermission="['resource.qlda_qlrr_srr']" class="btn btn-light" placement="top"
+                              ngbTooltip="Sửa rủi ro/vấn đề" (click)="openActionAddRiskList('update',item)"
+                              onclick="this.blur();" [disabled]="item.fixedStatus === 'Xác nhận đã được khắc phục'">
+                        <i class="fa fa-pencil-square-o icon-update" aria-hidden="true"></i></button>
+
+                      <button *jhiHasPermission="['resource.qlda_qlrr_xrr']" class="btn btn-light" placement="top"
+                              ngbTooltip="Xóa rủi ro/vấn đề" (click)="onDeleteRisk(item)" onclick="this.blur();">
+                        <i class="fa fa-trash-o icon-delete" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td *ngIf="this.columns[2]?.isShow" style="text-align: left">{{item.projectCode}}</td>
+                  <td *ngIf="this.columns[3]?.isShow" style="text-align: left">{{item.projectName}}</td>
+                  <td *ngIf="this.columns[4]?.isShow" style="text-align: left">{{item.riskNo}}</td>
+                  <td *ngIf="this.columns[5]?.isShow" style="text-align: left">{{item.leader}}</td>
+                  <td *ngIf="this.columns[6]?.isShow" style="text-align: left">{{item.overViewStatus}}</td>
+                  <td *ngIf="this.columns[7]?.isShow" style="text-align: left">{{item.riskContent}}</td>
+                  <td *ngIf="this.columns[8]?.isShow" style="text-align: left">{{item.noteAction}}</td>
+                  <td *ngIf="this.columns[9]?.isShow" style="text-align: left">{{item.fixer}}</td>
+                  <td *ngIf="this.columns[10]?.isShow" style="text-align: left">{{item.fixedStatus}}</td>
+                  <td *ngIf="this.columns[11]?.isShow" style="text-align: left">{{item.riskType}}</td>
+                  <td *ngIf="this.columns[12]?.isShow" style="text-align: left">{{item.lessonLearn}}</td>
+                  <td *ngIf="this.columns[13]?.isShow" style="text-align: left">{{item.riskExplain}}</td>
+                  <td *ngIf="this.columns[14]?.isShow" style="text-align: left">{{item.note}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </perfect-scrollbar>
+          </div>
+          <div class="row justify-content-start py-2 pl-1  table-footer no-data"
+               *ngIf="!totalItems || totalItems === 0">
+            <p class="item-count" jhiTranslate="common.table.noData"></p>
+          </div>
+          <div class="d-flex justify-content-end table-footer" [hidden]="totalItems === 0">
+            <div class="row justify-content-center">
+              <p class="item-count">{{'common.table.totalItems'| translate}} {{totalItems}}</p>
+              <ngb-pagination *ngIf="totalItems" [collectionSize]="totalItems" [(page)]="page"
+                              [pageSize]="itemsPerPage"
+                              [maxSize]="maxSizePage" [rotate]="true" [boundaryLinks]="true"
+                              (pageChange)="loadPage(page)">
+              </ngb-pagination>
+              <jhi-page-size (onChangePageSize)="changePageSize($event)"></jhi-page-size>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header mb-2">
+        <a><span>Lịch sử rủi ro dự án</span></a>
+      </div>
+      <perfect-scrollbar [style.max-height.px]="200">
+        <div>
+          <div *ngFor="let history of listHistory" style="margin-left: 10px">
+            <td>
+              <span> Ngày </span>{{history.date|date :'dd/MM/yyyy'}}<span>: </span>{{history.role}}
+              <span> - </span>{{history.userName}}
+              <span *ngIf="history.action===3" style="color: #00cea0"> đã thêm mới rủi ro <span>[{{convertJson(history.valueNew).riskNo}}]</span></span>
+              <span *ngIf="history.action===4" style="color: #cfae45"> đã chỉnh sửa rủi ro <span>[{{convertJson(history.valueNew).riskNo}}]</span></span>
+              <span *ngIf="history.action===5" style="color: red"> đã xóa rủi ro <span>[{{convertJson(history.valueOld).riskNo}}]</span></span>
+              <span *ngIf="history.action===10" style="color: #009966"> Xác nhận đã khắc phục rủi ro <span>[{{convertJson(history.valueOld).riskNo}}]</span></span>
+              <span *ngIf="history.action===11" style="color: #FF33FF"> Từ chối xác nhận khắc phục rủi ro <span>[{{convertJson(history.valueOld).riskNo}}]</span></span>
+            </td>
+          </div>
+        </div>
+      </perfect-scrollbar>
+    </div>
+  </div>
+</perfect-scrollbar>

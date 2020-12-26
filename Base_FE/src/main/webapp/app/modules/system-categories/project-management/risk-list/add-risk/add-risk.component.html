@@ -1,0 +1,309 @@
+<jhi-spinner></jhi-spinner>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <button routerLink="" class="btn btn-link btn-custom-bg">
+      <i class="fa fa-home icon-breadcrumb" aria-hidden="true"></i>
+    </button>
+  </li>
+  <li class="breadcrumb-item"><a>Quản lý dự án</a></li>
+  <li class="breadcrumb-item"><a>Danh sách rủi ro/Vấn đề của dự án</a></li>
+  <li *ngIf="type === 'add'" class="breadcrumb-item active">Thêm mới rủi ro/vấn đề của dự án</li>
+  <li *ngIf="type === 'update'" class="breadcrumb-item active">Sửa rủi ro/vấn đề của dự án</li>
+  <li *ngIf="type === 'detail'" class="breadcrumb-item active">Xem rủi ro/vấn đề của dự án</li>
+</ol>
+<perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+  <div id="organizationCategories" class="page-content">
+    <div class=" main-content">
+      <div class="page-content">
+        <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+          <div class="card mb-1">
+            <div id="info" class="collapse show">
+              <div class="card-body">
+                <div class="row" *ngIf="type !== 'add'">
+                  <div class="col-md-6">
+                    <div class="form-group" [ngClass]="displayFieldHasError('riskNo')">
+                      <label class="form-control-label"
+                      >Rủi ro số</label>
+                      <input type="text" formControlName="riskNo" class="form-control"
+                             [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                             [readOnly]="true" maxlength="255" (blur)="trimSpace('riskNo')"/>
+                    </div>
+                  </div>
+                  <div class="col-md-6"></div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group" [ngClass]="displayFieldHasError('projectId')">
+                      <label class="form-control-label required">Mã dự án</label>
+                      <ng-select class="cursor-text scroll-ng-select" #ngSelectID
+                                 bindLabel="sgtProject" formControlName="projectId" bindValue="projectId"
+                                 notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                                 placeholder="{{ 'common.select.option.default' | translate }}"
+                                 clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                                 [items]="listProject"
+                                 (change)="getDataOnSelectProject($event)"
+                                 [multiple]="false"
+                                 [readonly]="type !== 'add'" required>
+                      </ng-select>
+                      <jhi-error-messages *ngIf="formControl['projectId'].hasError('required')"
+                                          [displayError]="isFieldValid('projectId')"
+                                          errorMsg="{{ 'risk-list.validate.projectId.required' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-control-label">Trạng thái tổng quan</label>
+                      <ng-select class="cursor-text scroll-ng-select"
+                                 bindLabel="name" formControlName="overViewStatus" bindValue="name"
+                                 notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                                 placeholder="{{ 'common.select.option.default' | translate }}"
+                                 clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                                 [items]="listOverviewStatus"
+                                 [multiple]="false"
+                                 [readonly]="true">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-control-label"
+                      >PM/Teamleader</label>
+                      <input type="text" formControlName="leader" class="form-control"
+                             [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                             disabled="true" maxlength="255" (blur)="trimSpace('leader')"/>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group" [ngClass]="displayFieldHasError('fixedBy')">
+                      <label class="form-control-label required">Người khắc phục</label>
+                      <ng-select class="cursor-text scroll-ng-select" #ngSelectName
+                                 bindLabel="sgtFixedBy" formControlName="fixedBy" bindValue="humanResourceId"
+                                 notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                                 placeholder="{{ 'common.select.option.default' | translate }}"
+                                 clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                                 [items]="listHumanResources"
+                                 [multiple]="false"
+                                 [readonly]="type === 'detail'" required>
+                      </ng-select>
+                      <jhi-error-messages *ngIf="formControl['fixedBy'].hasError('required')"
+                                          [displayError]="isFieldValid('fixedBy')"
+                                          errorMsg="{{ 'risk-list.validate.fixedBy.required' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-control-label" [ngClass]="type === 'detail' ? '' : ''"
+                      >Thời gian phát hiện rủi ro</label>
+                      <jhi-date-picker formControlName="riskDate" [isDisabled]="type === 'detail'"
+                                       (ngModelChange)="onCheckValidDateTime()"></jhi-date-picker>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-control-label" [ngClass]="type === 'detail' ? '' : ''"
+                      >Thời hạn xử lý</label>
+                      <jhi-date-picker formControlName="deadline" [isDisabled]="type === 'detail'"
+                                       (ngModelChange)="onCheckValidDateTime()"></jhi-date-picker>
+                      <jhi-error-messages *ngIf="checkDeadlineRequired==false"
+                                          [displayError]="checkDeadlineRequired==false"
+                                          errorMsg="{{ 'risk-list.validate.deadline.invalid' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group" [ngClass]="displayFieldHasError('severity')">
+                      <label class="form-control-label required">Mức độ nghiêm trọng</label>
+                      <ng-select class="cursor-text scroll-ng-select"
+                                 bindLabel="name" formControlName="severity" bindValue="name"
+                                 notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                                 placeholder="{{ 'common.select.option.default' | translate }}"
+                                 clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                                 [items]="listSeverity"
+                                 [multiple]="false"
+                                 [readonly]="type === 'detail'" required>
+                      </ng-select>
+                      <jhi-error-messages *ngIf="formControl['severity'].hasError('required')"
+                                          [displayError]="isFieldValid('severity')"
+                                          errorMsg="{{ 'risk-list.validate.severity.required' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-control-label" [ngClass]="type === 'detail' ? '' : ''"
+                      >Thời hạn xử lý thực tế</label>
+                      <!--              <jhi-date-picker formControlName="actualDate" [isDisabled]="true"></jhi-date-picker>-->
+                      <input type="text" formControlName="actualDate" class="form-control"
+                             [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                             disabled="true" maxlength="255" (blur)="trimSpace('actualDate')"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group" [ngClass]="displayFieldHasError('riskType')">
+                      <label class="form-control-label required">Phân loại vấn đề</label>
+                      <ng-select class="cursor-text scroll-ng-select"
+                                 bindLabel="name" formControlName="riskType" bindValue="name"
+                                 notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                                 placeholder="{{ 'common.select.option.default' | translate }}"
+                                 clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                                 [items]="listRiskType"
+                                 [multiple]="false"
+                                 [readonly]="type === 'detail'" required>
+                      </ng-select>
+                      <jhi-error-messages *ngIf="formControl['riskType'].hasError('required')"
+                                          [displayError]="isFieldValid('riskType')"
+                                          errorMsg="{{ 'risk-list.validate.riskType.required' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group" [ngClass]="displayFieldHasError('fixedStatus')">
+                      <label class="form-control-label required">Trạng thái khắc phục</label>
+                      <ng-select class="cursor-text scroll-ng-select"
+                                 bindLabel="name" formControlName="fixedStatus" bindValue="name"
+                                 notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                                 placeholder="{{ 'common.select.option.default' | translate }}"
+                                 clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                                 [items]="listStatusFix"
+                                 [multiple]="false"
+                                 [readonly]="type === 'detail' || checkFixedStatus" required>
+                      </ng-select>
+                      <jhi-error-messages *ngIf="formControl['fixedStatus'].hasError('required')"
+                                          [displayError]="isFieldValid('fixedStatus')"
+                                          errorMsg="{{ 'risk-list.validate.fixedStatus.required' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group" [ngClass]="displayFieldHasError('riskContent')">
+                      <label class="form-control-label required">Rủi ro/Vấn đề</label>
+                      <textarea rows="4" cols="400" formControlName="riskContent" class="form-control"
+                                type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                                style="overflow: scroll"
+                                required maxlength="500"></textarea>
+                      <jhi-error-messages *ngIf="formControl['riskContent'].hasError('required')"
+                                          [displayError]="isFieldValid('riskContent')"
+                                          errorMsg="{{ 'risk-list.validate.riskContent.required' | translate }}">
+                      </jhi-error-messages>
+                      <jhi-error-messages *ngIf="formControl['riskContent'].hasError('maxlength')"
+                                          [displayError]="isFieldValid('riskContent')"
+                                          errorMsg="{{ 'user.validate.riskContent.maxlength' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group" [ngClass]="displayFieldHasError('riskExplain')">
+                      <label class="form-control-label required">Giải trình rủi ro/Vấn đề</label>
+                      <textarea rows="4" cols="400" formControlName="riskExplain" class="form-control"
+                                type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                                style="overflow: scroll"
+                                required maxlength="500"></textarea>
+                      <jhi-error-messages *ngIf="formControl['riskExplain'].hasError('required')"
+                                          [displayError]="isFieldValid('riskExplain')"
+                                          errorMsg="{{ 'risk-list.validate.riskExplain.required' | translate }}">
+                      </jhi-error-messages>
+                      <jhi-error-messages *ngIf="formControl['riskExplain'].hasError('maxlength')"
+                                          [displayError]="isFieldValid('riskExplain')"
+                                          errorMsg="{{ 'user.validate.riskExplain.maxlength' | translate }}">
+                      </jhi-error-messages>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="form-control-label">Hành động khắc phục</label>
+                      <textarea rows="4" cols="400" formControlName="noteAction" class="form-control"
+                                type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                                style="overflow: scroll"
+                                maxlength="500"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="form-control-label">Lesson learn/Bài học kinh nghiệm</label>
+                      <textarea rows="4" cols="400" formControlName="lessonLearn" class="form-control"
+                                type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                                style="overflow: scroll"
+                                maxlength="500"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="form-control-label">Ghi chú</label>
+                      <textarea rows="4" cols="400" formControlName="note" class="form-control"
+                                type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                                style="overflow: scroll"
+                                maxlength="500"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="text-align: center">
+        <div style="margin: 0 auto">
+          <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+            <i class="fa fa-times mr-2" aria-hidden="true"></i><span
+            jhiTranslate="{{(type !== 'detail'? 'common.button.confirm.cancel' : 'common.button.close')}}"></span>
+          </button>
+          <button *ngIf="type == 'detail' && data.fixedStatus !== 'Xác nhận đã được khắc phục'"
+                  type="button" class="btn btn-danger btn-view-column" (click)="confirm(2)">
+            <i class="fa fa-remove mr-2 center-icon" aria-hidden="true"> Từ chối </i>
+          </button>
+          <button *ngIf="type == 'detail' && data.fixedStatus !== 'Xác nhận đã được khắc phục'"
+                  type="button" class="btn btn-success btn-view-column" (click)="confirm(1)">
+            <i class="fa fa-check mr-2 center-icon" aria-hidden="true"> Xác nhận</i><span></span>
+          </button>
+          <button *ngIf="type !== 'detail'" type="submit" class="btn btn-primary" (click)="onSubmitForm()">
+            <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span jhiTranslate="common.button.confirm.save">Ghi
+          lại</span>
+          </button>
+        </div>
+      </div>
+      <div class="history-card">
+        <div class="card" *ngIf="listHistory&&listHistory.length>0">
+          <div class="card-header mb-2">
+            <a><span>Lịch sử rủi ro dự án</span></a>
+          </div>
+          <perfect-scrollbar [style.max-height.px]="200">
+            <div>
+              <div *ngFor="let history of listHistory" style="margin-left: 10px">
+                <td *ngIf="viewChangeStr(history)&&viewChangeStr(history).trim().length>0">
+                  <span> Ngày </span>{{history.date|date :'dd/MM/yyyy'}}<span>: </span>{{history.role}}
+                  <span> - </span>{{history.userName}}
+                  <span *ngIf="checkHistory == 3" style="color: #cfae45"> thay đổi </span>
+                  <span *ngIf="checkHistory == 1" style="color: #009966"> Xác nhận đã khắc phục rủi ro </span>
+                  <span *ngIf="checkHistory == 2" style="color: #FF33FF"> Từ chối xác nhận khắc phục rủi ro </span> {{viewChangeStr(history)}}
+                </td>
+              </div>
+            </div>
+          </perfect-scrollbar>
+        </div>
+      </div>
+    </div>
+  </div>
+</perfect-scrollbar>
+
+
+

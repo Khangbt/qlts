@@ -1,0 +1,179 @@
+<div class="modal-import" jhiModalDrag [handle]="handle">
+  <div class="modal-header" #handle>
+    <h5 class="modal-title mt-0">{{title}}</h5>
+    <button #closeBtn type="button" class="close" aria-label="Close" (click)="onCancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+    <div class="modal-body">
+      <form [formGroup]="formList" *ngIf="formList" novalidate autocomplete="off">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('code')">
+              <label class="form-control-label required">Mã code</label>
+              <input type="text" formControlName="code" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="type === 'detail'||type==='update'" maxlength="255"
+                     (blur)="onBlurUserCode()"/>
+              <jhi-error-messages *ngIf="formControl['code'].hasError('required')" [displayError]="isFieldValid('code')"
+                                  errorMsg="{{ 'user.validate.code.required' | translate }}">
+              </jhi-error-messages>
+              <jhi-error-messages *ngIf="formControl['code'].hasError('maxlength')"
+                                  [displayError]="isFieldValid('code')"
+                                  errorMsg="{{ 'user.validate.code.maxlength' | translate }}">
+              </jhi-error-messages>
+              <jhi-error-messages *ngIf="isDuplicateUserCode" [displayError]="isDuplicateUserCode"
+                                  errorMsg="Mã loại thiết bị đã có">
+              </jhi-error-messages>
+              <jhi-error-messages *ngIf="formControl['code'].hasError('pattern')" [displayError]="isFieldValid('code')"
+                                  errorMsg="{{ 'user.validate.code.invalid' | translate }}">
+              </jhi-error-messages>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('name')">
+              <label class="form-control-label required"
+              >Tên thiết bị</label>
+              <input type="text" formControlName="name" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="type === 'detail'" maxlength="255" (blur)="trimSpace('name')"/>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="type==='detail'">
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('size')">
+              <label *ngIf="type==='update'||type==='detail'" class="form-control-label ">Số lượng hiện tại</label>
+
+              <input type="text" formControlName="size" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="type === 'detail'||type==='update'" maxlength="255"
+                     onkeydown="return event.keyCode !== 69"/>
+            </div>
+          </div>
+          <div class="col-md-6">
+              <div class="form-group" [ngClass]="displayFieldHasError('sizeWareHouse')">
+                <label *ngIf="type==='update'||type==='detail'" class="form-control-label ">Số lượng còn trong kho</label>
+
+                <input type="text" formControlName="sizeWareHouse" class="form-control"
+                       [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                       [readOnly]="type === 'detail'||type==='update'" maxlength="255"
+                       onkeydown="return event.keyCode !== 69"/>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('unit')">
+              <label class="form-control-label">Đơn vị</label>
+              <ng-select class="cursor-text scroll-ng-select"
+                         bindLabel="name" formControlName="unit" bindValue="id"
+                         notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                         clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                         placeholder="{{ 'common.select.option.default' | translate }}"
+                         [items]="unitList"
+                         [clearable]="false"
+                         [multiple]="false"
+                         [readonly]="type === 'detail'||type==='update'">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="formList.controls['unit'].value===1">
+            <div class="form-group" [ngClass]="displayFieldHasError('sizeUnit')">
+              <label class="form-control-label ">Số lượng theo lô</label>
+              <input type="text" formControlName="sizeUnit" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="type === 'detail'||type==='update'" maxlength="255"/>
+            </div>
+          </div>
+
+        </div>
+        <div class="row" *ngIf="type!=='add'">
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('warehouseName')">
+              <label class="form-control-label ">Kho chứa</label>
+              <input type="text" formControlName="warehouseName" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="type === 'detail'||type==='update'" maxlength="255"/>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('supplierName')">
+              <label class="form-control-label ">Nhà cung cấp</label>
+              <input type="text" formControlName="supplierName" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="type === 'detail'||type==='update'" maxlength="255"/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group" [ngClass]="displayFieldHasError('specifications')">
+            <label class="form-control-label">Thông số kĩ thuật</label>
+            <textarea rows="3" cols="400" formControlName="specifications" class="form-control"
+                      type="text" [readonly]="type === 'detail'" (blur)="trimSpace('specifications')"
+                      style="overflow: scroll"></textarea>
+            <jhi-error-messages *ngIf="formControl['specifications'].hasError('maxlength')"
+                                [displayError]="isFieldValid('specifications')"
+                                errorMsg="{{ 'user.validate.note.maxlength' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group" [ngClass]="displayFieldHasError('note')">
+            <label class="form-control-label" jhiTranslate="user.note">ghi chú</label>
+            <textarea rows="4" cols="400" formControlName="note" class="form-control"
+                      type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                      style="overflow: scroll"></textarea>
+            <jhi-error-messages *ngIf="formControl['note'].hasError('maxlength')" [displayError]="isFieldValid('note')"
+                                errorMsg="{{ 'user.validate.note.maxlength' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div>
+      <div style="text-align:center">
+        <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-3">
+          <ngb-carousel *ngIf="listurl">
+            <div *ngFor="let user of listurl; index as i; first as isFirst">
+              <ng-template  ngbSlide>
+                <div class="picsum-img-wrapper">
+                  <img [src]="user.data" style="height: 200px;width: 200px;" (click)="deleteImgCustom(i)">
+                 </div>
+                 </ng-template>
+            
+              <!-- <button *ngIf="type==='update'||type==='add'" (click)="cleanAnh(i)">Xóa ảnh</button> -->
+            </div>
+           </ngb-carousel>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+        <!-- <div *ngFor="let user of listurl; index as i; first as isFirst">
+          <div>
+            <img  [src]="user.data" *ngIf="url" style="height: 200px;width: 200px;">
+            <button *ngIf="type==='update'||type==='add'" (click)="cleanAnh(i)">Xóa ảnh</button>
+          </div>
+
+        </div> -->
+        <div *ngIf="type==='update'||type==='add'">
+          <input type="file" multiple (change)="selectFile($event)">
+        </div>
+      </div>
+    </div>
+    <div class="action-btn">
+      <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+        <i class="fa fa-times mr-2" aria-hidden="true"></i><span
+        jhiTranslate="{{(type !== 'detail'? 'common.button.confirm.cancel' : 'common.button.close')}}">Hủy bỏ</span>
+      </button>
+      <button *ngIf="type !== 'detail'" type="submit" class="btn btn-primary" (click)="onSubmitData()">
+        <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span
+        jhiTranslate="common.button.confirm.save">Ghi lại</span>
+      </button>
+    </div>
+  </perfect-scrollbar>
+</div>

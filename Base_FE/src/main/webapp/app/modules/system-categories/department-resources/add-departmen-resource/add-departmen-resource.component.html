@@ -1,0 +1,118 @@
+<div class="modal-import" jhiModalDrag [handle]="handle">
+  <div class="modal-header" #handle>
+    <h5 class="modal-title mt-0">Thêm mới bộ phận</h5>
+    <button #closeBtn type="button" class="close" aria-label="Close" (click)="onCancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('code')">
+            <label class="form-control-label required"
+            >Mã bộ phận</label>
+            <input type="text" formControlName="code" class="form-control"
+                   placeholder="Nhập mã bộ phận"
+                   [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                   [readOnly]="type === 'detail'||type==='update'" maxlength="255"
+                   (blur)="onBlurUserCode()"/>
+            <jhi-error-messages *ngIf="formControl['code'].hasError('required')" [displayError]="isFieldValid('code')"
+                                errorMsg="{{ 'user.validate.code.required' | translate }}">
+            </jhi-error-messages>
+            <jhi-error-messages *ngIf="formControl['code'].hasError('maxlength')" [displayError]="isFieldValid('code')"
+                                errorMsg="{{ 'user.validate.code.maxlength' | translate }}">
+            </jhi-error-messages>
+            <jhi-error-messages *ngIf="isDuplicateUserCode" [displayError]="isDuplicateUserCode"
+                                errorMsg="Mã phòng ban đã tồn tại">
+            </jhi-error-messages>
+<!--            <jhi-error-messages *ngIf="formControl['code'].hasError('pattern')" [displayError]="isFieldValid('code')"-->
+<!--                                errorMsg="{{ 'user.validate.code.invalid' | translate }}">-->
+<!--            </jhi-error-messages>-->
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('partName')">
+            <label class="form-control-label required"
+            >Tên bộ phận</label>
+            <input type="text" formControlName="partName" class="form-control"
+                   placeholder="Nhập tên bộ phận"
+                   [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                   [readOnly]="type === 'detail'" maxlength="255" (blur)="trimSpace('partName')"/>
+            <jhi-error-messages *ngIf="formControl['partName'].hasError('required')"
+                                [displayError]="isFieldValid('partName')"
+                                errorMsg="{{ 'user.validate.fullName.required' | translate }}">
+            </jhi-error-messages>
+            <jhi-error-messages *ngIf="formControl['partName'].hasError('maxlength')"
+                                [displayError]="isFieldValid('partName')"
+                                errorMsg="{{ 'user.validate.fullName.maxlength' | translate }}">
+            </jhi-error-messages>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('status')">
+            <label class="form-control-label required">Trạng thái</label>
+              <ng-select [items]="listStatus" placeholder="Chọn trạng thái"
+                         bindLabel="name" bindValue="value"
+                         clearAllText="Chọn trạng thái"
+                         formControlName="status"
+                         [clearable]="false"
+                         [searchable]="false"
+                         [readonly]="type === 'detail'">
+              </ng-select>
+            </div>
+        </div>
+<!--        <div class="col-md-6">-->
+<!--          <div class="form-group" [ngClass]="displayFieldHasError('fullName')">-->
+<!--            <label class="form-control-label required">Tỉnh/Thành phố</label>-->
+<!--              <ng-select class="cursor-text scroll-ng-select"-->
+<!--                         bindLabel="name" formControlName="provinceID"  bindValue="provinceid"-->
+<!--                         notFoundText="{{ 'common.select.notFoundText' | translate }}"-->
+<!--                         placeholder="Chọn tỉnh thành phố"-->
+<!--                         clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"-->
+<!--                         [items]="listProvince"-->
+<!--                         [multiple]="false">-->
+<!--              </ng-select>-->
+<!--          </div>-->
+<!--        </div>-->
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="displayFieldHasError('note')">
+            <label class="form-control-label" jhiTranslate="user.note">ghi chú</label>
+            <textarea rows="4" cols="400" formControlName="note" class="form-control"
+                      type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                      placeholder="Ghi chú"
+                      style="overflow: scroll"></textarea>
+<!--            <jhi-error-messages *ngIf="formControl['note'].hasError('maxlength')" [displayError]="isFieldValid('note')"-->
+<!--                                errorMsg="{{ 'user.validate.note.maxlength' | translate }}">-->
+<!--            </jhi-error-messages>-->
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="action-btn">
+    <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+      <i class="fa fa-times mr-2" aria-hidden="true"></i><span
+      jhiTranslate="{{(type !== 'detail'? 'common.button.confirm.cancel' : 'common.button.close')}}">Hủy bỏ</span>
+    </button>
+    <button *ngIf="type !== 'detail'" type="submit" class="btn btn-primary" (click)="onSubmitData()">
+      <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span
+      jhiTranslate="common.button.confirm.save">Ghi lại</span>
+    </button>
+  </div>
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+</div>
+
+
+

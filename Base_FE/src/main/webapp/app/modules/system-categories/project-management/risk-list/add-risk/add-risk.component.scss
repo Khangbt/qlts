@@ -1,0 +1,25 @@
+.confirm{
+  margin-top:30% !important;
+}
+.history{
+  .history_title{
+    background-color: #0273d4;
+    padding-left: 10px;
+    h3{
+      color: #ffffff;
+      font-size: 18px;
+    }
+
+  }
+  .history_content{
+    max-height: 200px;
+    overflow: scroll;
+    padding-left: 30px;
+    p{
+      font-size: 16px;
+    }
+  }
+}
+.history-card{
+  padding: 0 0.5rem;
+}

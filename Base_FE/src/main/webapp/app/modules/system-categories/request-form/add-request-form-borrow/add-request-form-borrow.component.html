@@ -1,0 +1,211 @@
+<div class="modal-import" jhiModalDrag [handle]="handle">
+  <div class="modal-header" #handle>
+    <h5 class="modal-title mt-0">{{title}}</h5>
+    <button #closeBtn type="button" class="close" aria-label="Close" (click)="onCancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+
+    <div class="modal-body">
+      <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('nameHummer')">
+              <label class="form-control-label required"
+              >Người tạo</label>
+              <input type="text" formControlName="nameHummer" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="true" maxlength="255"/>
+              <jhi-error-messages *ngIf="formControl['nameHummer'].hasError('required')"
+                                  [displayError]="isFieldValid('tyle')"
+                                  errorMsg="trường ko dc để trống">
+              </jhi-error-messages>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('creatDate')">
+              <label class="form-control-label ">Ngày tạo</label>
+              <input type="text" formControlName="creatDate" class="form-control" placeholder="dd/mm/yyyy"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="true" maxlength="255" ngbDatepicker #d="ngbDatepicker"/>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('partId')">
+              <label class="form-control-label required">Bộ phận phân phát</label>
+              <ng-select class="cursor-text scroll-ng-select"
+                         bindLabel="name" formControlName="partId" bindValue="id"
+                         notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                         placeholder="{{ 'common.select.option.default' | translate }}"
+                         clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                         [items]="partList"
+                         [multiple]="false"
+                         [readonly]="type === 'detail'" (change)="xetDataPart()">
+              </ng-select>
+
+            </div>
+          </div>
+        </div>
+        <div *ngIf="status===2" class="row" >
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('nameHanlerHummer')">
+              <label class="form-control-label required"
+              >Người duyêt</label>
+              <input type="text" formControlName="nameHanlerHummer" class="form-control"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="true" maxlength="255"/>
+              <jhi-error-messages *ngIf="formControl['nameHummer'].hasError('required')"
+                                  [displayError]="isFieldValid('tyle')"
+                                  errorMsg="trường ko dc để trống">
+              </jhi-error-messages>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group" [ngClass]="displayFieldHasError('approvedDate')">
+              <label class="form-control-label ">Ngày duyệt</label>
+              <input type="text" formControlName="approvedDate" class="form-control" placeholder="dd/mm/yyyy"
+                     [ngClass]="type === 'add' || type === 'update' ? 'form-control' : ''"
+                     [readOnly]="true" maxlength="255" ngbDatepicker #d="ngbDatepicker"/>
+            </div>
+          </div>
+
+        </div>
+        <div class="row" formArrayName="listDeviceR">
+          <p class="sizeFont">Thiết bị phiếu yêu cầu</p>
+          <perfect-scrollbar id="scrollbarTable" class="ps">
+            <table class="table table-bordered table-hover table-striped" id="tableCustoms">
+              <thead>
+              <th *ngIf="type!=='detail'" class="large-width-table" style="width: 100px"><span>Hành động</span>
+              </th>
+              <th class="large-width-table" style="width: 150px"><span>Mã code</span>
+              </th>
+              <th class="large-width-table" style="width: 80px"><span>Tồn kho</span>
+              </th>
+              <th class="large-width-table" style="width: 80px"><span>Đơn vị</span>
+              </th>
+              <th class="large-width-table" style="width: 140px"><span>Số lượng yêu cầu</span>
+              </th>
+              <th class="large-width-table" *ngIf="type==='browser'||status===2">
+                <span>Thiết bị cấp cho phiếu</span>
+              </th>
+              </thead>
+
+              <tbody *ngFor="let person of listDevice; let i = index;" [formGroupName]="i">
+              <tr>
+                <td *ngIf="type!=='detail'" class="text-center four-icon medium-width-table">
+                  <div class="group-action" >
+                    <button class="btn btn-light" placement="top"
+                            ngbTooltip="Lưu"
+                            (click)="saveDevice(i)">
+                      <i class="fa fa-floppy-o icon-color-blue" aria-hidden="true"></i>
+                    </button>
+                    <button *ngIf="(type === 'update'||type ==='add')"
+                      class="btn btn-light" placement="top"
+                      ngbTooltip="{{'common.tooltip.action.delete' | translate}}"
+                      (click)="deleteDevice(i)">
+                      <i class="fa fa-trash icon-color-red" aria-hidden="true"></i></button>
+                  </div>
+                </td>
+                <td>
+                  <ng-select class="cursor-text scroll-ng-select"
+                             bindLabel="code" formControlName="idGroup" bindValue="id"
+                             notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                             placeholder="{{ 'common.select.option.default' | translate }}"
+                             clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                             [items]="listDeviceDefule"
+                             [multiple]="false"
+                             [readonly]="type === 'detail'||checkNul[i]||type === 'browser'"
+                             [disabled]="true"
+                             (change)="xetDataDefile($event,i)">
+                  </ng-select>
+
+
+                </td>
+                <td><input class="form-control" placeholder="Person {{ i + 1 }}"
+                           [attr.disabled]="true" type="text" formControlName="size"></td>
+                <td>
+                  <ng-select class="cursor-text scroll-ng-select"
+                             bindLabel="name" formControlName="unit" bindValue="id"
+                             [items]="unitList"
+                             [readonly]="true">
+                  </ng-select>
+                </td>
+    
+                <td><input class="form-control" placeholder="Person {{ i + 1 }}"
+                           [attr.disabled]="(checkNul[i] ? true : null)||(type==='browser' ? true:null)" type="number" formControlName="quantity"></td>
+                <td *ngIf="type==='browser'||status===2">
+                  <ng-select
+                             bindLabel="code" formControlName="listCode" bindValue="id"
+                             notFoundText="{{ 'common.select.notFoundText' | translate }}"
+                             placeholder="{{ 'common.select.option.default' | translate }}"
+                             clearAllText="{{ 'common.tooltip.action.clearNgSelect' | translate }}"
+                             [items]="dataIdListConvet[i]"
+                             [multiple]="true"
+                             [readonly]="type === 'detail'||status===2||checkNul[i]"
+                             [hideSelected]="true"
+                  >
+                  </ng-select>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <button  *ngIf="(type === 'update'||type ==='add')" class="btn btn-primary" (click)="addPerson(false)">Thêm</button>
+          </perfect-scrollbar>
+        </div>
+
+        <div class="row">
+
+            <div class="form-group" [ngClass]="displayFieldHasError('note')">
+              <label class="form-control-label" jhiTranslate="user.note">ghi chú</label>
+              <textarea rows="4" cols="400" formControlName="note" class="form-control"
+                        type="text" [readonly]="type === 'detail'" (blur)="trimSpace('note')"
+                        placeholder="Ghi chú"
+                        style="overflow: scroll"></textarea>
+              <!--            <jhi-error-messages *ngIf="formControl['note'].hasError('maxlength')" [displayError]="isFieldValid('note')"-->
+              <!--                                errorMsg="{{ 'user.validate.note.maxlength' | translate }}">-->
+              <!--            </jhi-error-messages>-->
+
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </perfect-scrollbar>
+
+  <div class="action-btn">
+    <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+      <i class="fa fa-times mr-2" aria-hidden="true"></i><span
+      jhiTranslate="{{(type !== 'detail'? 'common.button.confirm.cancel' : 'common.button.close')}}">Hủy bỏ</span>
+    </button>
+    <button *ngIf="(type === 'update'||type ==='add')&&(this.form.get('status').value===1)" type="submit" class="btn btn-primary" (click)="onSubmitData()">
+      <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span
+      jhiTranslate="common.button.confirm.save">Ghi lại</span>
+    </button>
+    <button *ngIf="type === 'browser'&&this.form.get('status').value===1" type="submit" class="btn btn-primary" (click)="onGood()">
+      <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span
+    >Duyệt</span>
+    </button>
+    <button *ngIf="type === 'browser'&&this.form.get('status').value===1" type="submit" class="btn btn-primary" (click)="onCancelModal(mymodal)">
+      <i class="fa fa-floppy-o mr-2" aria-hidden="true"></i><span
+    >Hủy</span>
+    </button>
+  </div>
+</div>
+<ng-template #mymodal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    This is example from ItSolutionStuff.com
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+  </div>
+</ng-template>

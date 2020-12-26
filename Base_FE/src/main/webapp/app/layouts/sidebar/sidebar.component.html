@@ -1,0 +1,126 @@
+<nav class="page-sidebar" data-pages="sidebar">
+  <!-- BEGIN SIDEBAR MENU TOP TRAY CONTENT-->
+  <div class="sidebar-overlay-slide from-top" id="appMenu">
+  </div>
+  <!-- END SIDEBAR MENU TOP TRAY CONTENT-->
+  <!-- BEGIN SIDEBAR MENU HEADER-->
+  <div class="sidebar-header">
+<!--    <img src="../../../assets/img/logo_white.png" alt="logo" class="brand" data-src="assets/img/logo_white.png"-->
+<!--      data-src-retina="assets/img/logo_white_2x.png" width="78">-->
+    <div class="sidebar-header-controls">
+      <button type="button" class="btn btn-xs sidebar-slide-toggle btn-link m-l-20 hidden-md-down"
+        data-pages-toggle="#appMenu"><i class="fa fa-angle-down fs-16"></i>
+      </button>
+      <button type="button" class="btn btn-link hidden-md-down" data-toggle-pin="sidebar"><i class="fa fs-12"></i>
+      </button>
+    </div>
+  </div>
+  <!-- END SIDEBAR MENU HEADER-->
+  <!-- START SIDEBAR MENU -->
+  <div class="sidebar-menu">
+    <!-- BEGIN SIDEBAR MENU ITEMS-->
+    <ul class="menu-items">
+
+<!--      <li *jhiHasPermission="['resource.qlda']">-->
+<!--        <a href="javascript:;" [routerLink]="projectManager.url" routerLinkActive="active-link, text-white">-->
+<!--          <span class="title">{{projectManager.name}}</span>-->
+<!--          <span class="arrow"></span>-->
+<!--        </a>-->
+<!--        <span class="icon-thumbnail"><i class="fa" [ngClass]="projectManager.class"></i></span>-->
+<!--        <ul class="sub-menu">-->
+<!--          <li *jhiHasPermission="['resource.qlda_qlrr']">-->
+<!--            <a [routerLink]="riskList.url" routerLinkActive="active-link, text-white">-->
+<!--              <span class="title">{{riskList.name}}</span>-->
+<!--            </a>-->
+<!--            <span class="icon-thumbnail"><i class="fa" [ngClass]="riskList.class"></i></span>-->
+<!--          </li>-->
+<!--          <li *jhiHasPermission="['resource.qlda_vdtv']">-->
+<!--            <a [routerLink]="issuesMember.url" routerLinkActive="active-link, text-white">-->
+<!--              <span class="title">{{issuesMember.name}}</span>-->
+<!--            </a>-->
+<!--            <span class="icon-thumbnail">-->
+<!--              <i class="fa" [ngClass]="issuesMember.class"></i>-->
+<!--            </span>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </li>-->
+<!--      -->
+      <li *jhiHasPermission="1">
+        <a [routerLink]="humanResources.url" routerLinkActive="active-link, text-white">
+          <span class="title">{{humanResources.name}}</span>
+        </a>
+        <span class="icon-thumbnail">
+          <i class="fa" [ngClass]="humanResources.class"></i>
+        </span>
+      </li>
+
+
+
+<!--      <li>-->
+<!--        <a [routerLink]="partnerManager.url" routerLinkActive="active-link, text-white">-->
+<!--          <span class="title">{{partnerManager.name}}</span>-->
+<!--        </a>-->
+<!--        <span class="icon-thumbnail">-->
+<!--          <i class="fa" [ngClass]="partnerManager.class"></i>-->
+<!--        </span>-->
+<!--      </li>-->
+
+
+
+      <li *jhiHasPermission="1">
+        <a [routerLink]="supplier.url" routerLinkActive="active-link, text-white">
+          <span class="title">{{supplier.name}}</span>
+        </a>
+        <span class="icon-thumbnail">
+          <i class="fa" [ngClass]="supplier.class"></i>
+        </span>
+      </li>
+
+      <li *jhiHasPermission="3">
+        <a [routerLink]="department.url" routerLinkActive="active-link, text-white">
+          <span class="title">{{department.name}}</span>
+        </a>
+        <span class="icon-thumbnail">
+          <i class="fa" [ngClass]="department.class"></i>
+        </span>
+      </li>
+
+      <li *jhiHasPermission="1" >
+        <a [routerLink]="asset.url" routerLinkActive="active-link, text-white">
+          <span class="title">{{asset.name}}</span>
+        </a>
+        <span class="icon-thumbnail">
+          <i class="fa" [ngClass]="asset.class"></i>
+        </span>
+      </li>
+      <li *jhiHasPermission="1" >
+        <a [routerLink]="warehouse.url" routerLinkActive="active-link, text-white">
+          <span class="title">{{warehouse.name}}</span>
+        </a>
+        <span class="icon-thumbnail">
+          <i class="fa" [ngClass]="warehouse.class"></i>
+        </span>
+      </li>
+
+      <li *jhiHasPermission="1">
+        <a [routerLink]="requestform.url" routerLinkActive="active-link, text-white">
+          <span class="title">{{requestform.name}}</span>
+        </a>
+        <span class="icon-thumbnail">
+          <i class="fa" [ngClass]="requestform.class"></i>
+        </span>
+      </li>
+      <li *jhiHasPermission="2">
+        <a [routerLink]="listDevice.url" routerLinkActive="active-link, text-white">
+          <span class="title">{{listDevice.name}}</span>
+        </a>
+        <span class="icon-thumbnail">
+          <i class="fa" [ngClass]="listDevice.class"></i>
+        </span>
+      </li>
+
+      <div class="clearfix"></div>
+    </ul>
+  </div>
+  <!--   END SIDEBAR MENU-->
+</nav>

@@ -1,0 +1,151 @@
+<jhi-spinner></jhi-spinner>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <button routerLink="" class="btn btn-link btn-custom-bg">
+      <i class="fa fa-home icon-breadcrumb" aria-hidden="true"></i>
+    </button>
+  </li>
+  <li class="breadcrumb-item active">Danh sách bộ phận</li>
+</ol>
+<perfect-scrollbar class="ps" [style.max-height.px]="height" (window:resize)="onResize()">
+  <div id="organizationCategories" class="page-content">
+    <div class="card mb-1">
+      <div class="card-header">
+        <a data-toggle="" href="#search" aria-expanded="true"><span
+          jhiTranslate="common.card.title.search"></span></a>
+      </div>
+      <div id="search" class="show">
+        <div class="card-body">
+          <form [formGroup]="form" *ngIf="form" novalidate autocomplete="off">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row dropdown form-custom-select">
+                  <label class="col-sm-3 col-form-label custom-label-right">Bộ phận</label>
+                  <div class="col-sm-9 form-custom-select">
+                    <input type="text" maxlength="255" class="form-control" formControlName="partName"
+                           placeholder="Nhặp mã/tên bộ phận">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row dropdown form-custom-select">
+                  <label class="col-sm-3 col-form-label custom-label-right">Trạng thái</label>
+                  <div class="col-sm-9 form-custom-select">
+                    <ng-select [items]="listStatus" placeholder="Chọn trạng thái"
+                               bindLabel="name" bindValue="value"
+                               clearAllText="Chọn trạng thái"
+                               formControlName="status"
+                               [clearable]="false"
+                               [searchable]="false">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-primary" (click)="onSearchData()">
+                <i class="fa fa-search mr-2" aria-hidden="true"></i><span
+                jhiTranslate="common.button.search">Tìm kiếm</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <a data-toggle="" href="#dataTable" aria-expanded="true"><span
+          jhiTranslate="organizationCategories.titleTable"></span></a>
+      </div>
+      <div id="dataTable" class="show">
+        <div class="card-body pt-2 pb-0 px-2">
+          <div class="row d-flex justify-content-end pr-1">
+            <button *jhiHasPermission="2" type="button" class="btn btn-primary" ngbTooltip="Thêm nhân sự vào bộ phận" placement="top-right"
+                    (click)="openModalSave('add', null)">
+              <i class="fa fa-plus mr-2" aria-hidden="true"></i><span>Thêm mới</span>
+            </button>
+          </div>
+          <div class="row">
+            <perfect-scrollbar id="scrollbarTable" class="ps">
+              <table id="permissionTable" class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr class="text-center" jhiSort [(predicate)]="predicate" [(ascending)]="reverse">
+                  <th scope="col" class="small-width-table">STT</th>
+                  <th scope="col" class="medium-width-table action-width-four-icon custom-width">Hành động</th>
+                  <th scope="col">Mã bộ phận</th>
+                  <th scope="col">Tên bộ phận</th>
+                  <th scope="col">Số lượng nhân sự</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Ghi chú</th>
+                </tr>
+                </thead>
+                <tr *ngFor="let item of groupPermissions; index as i">
+                  <td class="text-center">{{i + 1}}</td>
+                  <td class="text-center four-icon medium-width-table">
+                    <div class="group-action">
+                      <button  class="btn btn-light" placement="top"
+                               ngbTooltip="Xem thông tin  bộ phận"
+                               (click)="openModalSave('detail',item)">
+                        <i class="fa fa fa-info icon-color-blue" aria-hidden="true"></i>
+                      </button>
+                      <button class="btn btn-light" placement="top"
+
+                              (click)="openModalSave('update',item)"
+                              ngbTooltip="Sửa thông tin bộ phận"
+                              onclick="this.blur();"
+                      >
+                        <i class="fa fa-pencil-square-o icon-update" aria-hidden="true"></i></button>
+                      <button class="btn btn-light" placement="top"
+                              (click)="onDelete(item.id)"
+                              ngbTooltip="Xóa thông bộ phận"
+                              onclick="this.blur();"
+                      >
+                        <i class="fa fa-trash-o icon-delete" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td>{{item.code}}</td>
+                  <td>
+                    <div placement="top" ngbTooltip="{{item.partName}}">
+                      {{item.partName}}
+                    </div>
+                  </td>
+
+                  <td>
+                    <div placement="top" ngbTooltip="{{item.countHM}}">
+                      {{item.countHM}}
+                    </div>
+                  </td>
+                  <td>{{item.status | convertStatus}}</td>
+                  <td>
+                    <div placement="top" ngbTooltip="{{item.note}}">
+                      {{item.note}}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <div class="row justify-content-start py-2 pl-1  table-footer no-data"
+                   *ngIf="!totalItems || totalItems === 0">
+                <p class="item-count" jhiTranslate="common.table.noData"></p>
+              </div>
+            </perfect-scrollbar>
+          </div>
+          <div class="d-flex justify-content-end table-footer" [hidden]="totalItems === 0">
+            <div class="row justify-content-center">
+              <p class="item-count">{{'common.table.totalItems'| translate}} {{totalItems}}</p>
+              <ngb-pagination *ngIf="totalItems" [collectionSize]="totalItems" [(page)]="page"
+                              [pageSize]="itemsPerPage"
+                              [maxSize]="maxSizePage" [rotate]="true" [boundaryLinks]="true"
+                              (pageChange)="loadPage(page)">
+              </ngb-pagination>
+              <jhi-page-size (onChangePageSize)="changePageSize($event)"></jhi-page-size>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</perfect-scrollbar>

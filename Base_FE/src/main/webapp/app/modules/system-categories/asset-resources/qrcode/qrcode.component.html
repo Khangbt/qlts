@@ -1,0 +1,62 @@
+<div class="modal-import" jhiModalDrag [handle]="handle" >
+  <div class="modal-header" #handle>
+    <h5 class="modal-title mt-0">In mã QR </h5>
+    <button #closeBtn type="button" class="close" aria-label="Close" (click)="onCancel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <perfect-scrollbar [style.max-height.px]="500">
+      <table id="permissionTable" class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr class="text-center" jhiSort [(predicate)]="predicate" [(ascending)]="reverse">
+          <th scope="col" class="small-width-table">STT</th>
+          <th scope="col" style="width: 110px">Mã tài sản</th>
+          <th scope="col" style="width: 170px">Tên tài sản</th>
+          <th scope="col" style="width: 210px">Thông số</th>
+          <th scope="col">Mã QR</th>
+        </tr>
+        </thead>
+        <tr *ngFor="let item of listAsset1; index as i">
+          <td class="text-center">{{i + 1}}</td>
+          <td>
+            <div placement="top" ngbTooltip="{{item.code}}">
+              {{item.code}}
+            </div>
+          </td>
+          <td>
+            <div placement="top" ngbTooltip="{{item.name}}">
+              {{item.name}}
+            </div>
+          </td>
+          <td>
+            <div placement="top" ngbTooltip="{{item.information}}">
+              {{item.information}}
+            </div>
+          </td>
+          <td>
+            <ngx-qrcode
+              [value] = " codepc + item.code
+              + namepc + item.name
+              + inforpc + item.information"
+              cssClass = "aclass"
+              errorCorrectionLevel = "L">
+            </ngx-qrcode>
+          </td>
+
+        </tr>
+      </table>
+    </perfect-scrollbar>
+  </div>
+  <div class="modal-footer">
+    <button #cancelBtn type="button" class="btn btn-light alight" (click)="onCancel()">
+      <i class="fa fa-times mr-2" aria-hidden="true"></i>Đóng
+    </button>
+    <button type="print" class="btn btn-primary" (click)="print()" >
+      <span>In QR</span>
+    </button>
+  </div>
+</div>
+
+
+
