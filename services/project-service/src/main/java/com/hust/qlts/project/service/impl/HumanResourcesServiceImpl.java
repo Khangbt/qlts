@@ -80,20 +80,14 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
     @Autowired
     private HumanResourcesMapper humanResourcesMapper;
 
-
-
     @Autowired
     private PartRepository partRepository;
 
     @Autowired
     private PositionRepository positionRepository;
 
-
-
-
     @Autowired
     private HistoryCustomRepository historyCustomRepository;
-
 
     @Autowired
     private BCryptPasswordEncoder passwordEncode;
@@ -265,6 +259,19 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             String usernameFE = humanResourcesDTO.getUsername();
             if (humanResourcesRepository.findByUsername(usernameFE) != null) {
                 usernameFE = autoGenerateEmail(humanResourcesDTO.getUsername());
+            }
+            switch (humanResourcesDTO.getRoleId()){
+                case 1:
+                    humanResourcesEntity.setRole("ROLE_USER");
+                    break;
+                case 2:
+                    humanResourcesEntity.setRole("ROLE_ADMINPART");
+                    break;
+                case 3:
+                    humanResourcesEntity.setRole("ROLE_ALL");
+                    break;
+                default:
+                    humanResourcesEntity.setRole("ROLE_USER");
             }
             humanResourcesEntity.setIsNew(1);
             humanResourcesEntity.setUsername(usernameFE);

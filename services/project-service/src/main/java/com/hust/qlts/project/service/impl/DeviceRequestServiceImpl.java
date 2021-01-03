@@ -271,6 +271,8 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
             return null;
         }
+        deviceRequestEntity.setHandlerHummerId(dto.getHandlerHummerId());
+        deviceRequestEntity.setApprovedDate(new Date());
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
 

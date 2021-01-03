@@ -71,7 +71,10 @@ urlForgotPassword: http://localhost:9003/#/forgot-password/
 #urlForgotPassword: http://192.168.100.122:8069/qlda-phase2/forgot-password/
 
 #host cross
-#hostCross: http://192.168.100.122:8069
+#hostCross: http://192.168.1.194:8080
+#host tomcat
+#hostCross: http://localhost:8080
+
 hostCross: http://localhost:9003
 
 #folder-upload

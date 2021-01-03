@@ -261,9 +261,17 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
             return null;
         }
+        deviceRequestEntity.setHandlerHummerId(dto.getHandlerHummerId());
+        deviceRequestEntity.setApprovedDate(new Date());
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
         deviceRequestEntity.setLastModifiedDate(new Date());
+        List<DeviceToRequestRetuEntitty> device = deviceToRequestRetuRepository.getListbyid(deviceRequestEntity.getId());
+
+        for (DeviceToRequestRetuEntitty entitty:device){
+            entitty.setStatus(2);
+        }
+        deviceToRequestRetuRepository.saveAll(device);
 
         NotificetionEntity notificationEntity = new NotificetionEntity();
         notificationEntity.setConten(" đã hủy phiếu cầu trả thiết bị  " + deviceRequestEntity.getCode());
@@ -273,7 +281,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         notificationEntity.setNote2(dto.getHandlerHummerId());
         notificetionRepository.save(notificationEntity);
 
-        return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRetuRepository.save(deviceRequestEntity));
+        return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestRetuDto(), deviceRequestRetuRepository.save(deviceRequestEntity));
     }
 
 

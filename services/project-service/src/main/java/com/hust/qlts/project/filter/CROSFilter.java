@@ -19,6 +19,7 @@ import java.io.IOException;
 public class CROSFilter extends OncePerRequestFilter {
     @Value("${hostCross}")
     String hostCross;
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         HttpServletResponse response = (HttpServletResponse) httpServletResponse;

@@ -70,7 +70,8 @@ public class DeviceGroupCustomRepository {
         sql.append("      (CASE when d.UNIT IS NULL then dg.UNIT  " +
                 "           else d.UNIT end ) as unit,  " +
                 "       (CASE when d.SIZE_UNIT IS NULL then dg.SIZE_UNIT  " +
-                "               else d.SIZE_UNIT end)                          as sizUnit");
+                "               else d.SIZE_UNIT end)                          as sizUnit" +
+                " ");
         sql.append(" from device_group as dg ");
         sql.append("left join device as d on d.EQUIPMENT_GROUP_ID = dg.ID ");
         sql.append("    where 1=1 ");
@@ -152,7 +153,7 @@ public class DeviceGroupCustomRepository {
             dto.setWarehouseName((String) o[10]);
             dto.setSupperName((String) o[11]);
             dto.setUnit(Integer.parseInt(String.valueOf(o[12])) );
-            dto.setSizeUnit(Integer.parseInt(String.valueOf(o[12])));
+            dto.setSizeUnit(Integer.parseInt(String.valueOf(o[13])));
             dto.setTyleDto("DEVICE_GROUP");
             list.add(dto);
         }
