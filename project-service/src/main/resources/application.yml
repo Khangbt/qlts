@@ -20,9 +20,9 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: update
-  datasource.url: jdbc:mysql://127.0.0.1:3306/qlltscd?useUnicode=yes&characterEncoding=UTF-8
-  datasource.username: root
-  datasource.password: 240697
+  datasource.url: jdbc:mysql://remotemysql.com:3306/m4DRi9HeNN?useUnicode=yes&characterEncoding=UTF-8
+  datasource.username: m4DRi9HeNN
+  datasource.password: ajyZL4ndAv
   datasource.driver-class-name: com.mysql.cj.jdbc.Driver
   #      h2.console.enabled: true
   datasource:
