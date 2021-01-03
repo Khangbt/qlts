@@ -118,6 +118,8 @@ public class DeviceServiceImpl implements DeviceService {
             assert deviceEntity != null;
             deviceEntity.setExist(true);
             deviceEntity.setDateAdd(new Date());
+            deviceEntity.setCreatedDate(new Date());
+            deviceEntity.setLastModifiedDate(new Date());
             DeviceEntity deviceE=deviceRepository.save(deviceEntity);
             HistoryEntity historyEntity=new HistoryEntity();
             historyEntity.setDate(new Date());

@@ -9,6 +9,7 @@ import com.hust.qlts.project.entity.*;
 import com.hust.qlts.project.repository.jparepository.DeviceRequestRetuRepository;
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestRetuRepository;
 import com.hust.qlts.project.repository.jparepository.HistoryRepository;
+import com.hust.qlts.project.repository.jparepository.NotificetionRepository;
 import com.hust.qlts.project.service.DeviceRequestRetuService;
 import com.hust.qlts.project.service.DeviceService;
 import com.hust.qlts.project.service.RequestService;
@@ -25,7 +26,8 @@ import java.util.Optional;
 
 @Service
 public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
-
+    @Autowired
+    private NotificetionRepository notificetionRepository;
     @Autowired
     private DeviceRequestRetuRepository deviceRequestRetuRepository;
     @Autowired
@@ -132,6 +134,18 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         requestEntity.setTyle("PT");
         requestService.creat(requestEntity);
         deviceToRequestRetuRepository.saveAll(device);
+
+
+
+
+
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã tạo phiếu trả  thiết bị" + entitty.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setTyle(Constants.PHIEUTRA);
+        notificationEntity.setPartId(dto.getPartId());
+        notificetionRepository.save(notificationEntity);
+
         return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestRetuDto(), entitty1);
     }
 
@@ -169,6 +183,14 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         }
         deviceToRequestRetuRepository.saveAll(list);
 
+
+
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã sửa phiếu trả  thiết bị" + deviceRequestEntity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setTyle(Constants.PHIEUTRA);
+        notificationEntity.setPartId(dto.getPartId());
+        notificetionRepository.save(notificationEntity);
 
         return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestRetuDto(), a);
     }
@@ -216,6 +238,15 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         }
         deviceService.saveList(deviceEntities);
 
+
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã xác nhận phiếu cầu trả thiết bị  " + deviceRequestEntity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setIdHummerShow(dto.getCreatHummerId());
+        notificationEntity.setTyle(Constants.PHIEUTRA);
+        notificationEntity.setNote2(dto.getHandlerHummerId());
+        notificetionRepository.save(notificationEntity);
+
         return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestRetuDto(), deviceRequestEntity);
     }
 
@@ -230,10 +261,27 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         if (deviceRequestEntity.getStatus().equals(Constants.XACNHAN) || deviceRequestEntity.getStatus().equals(Constants.HUY)) {
             return null;
         }
+        deviceRequestEntity.setHandlerHummerId(dto.getHandlerHummerId());
+        deviceRequestEntity.setApprovedDate(new Date());
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
         deviceRequestEntity.setLastModifiedDate(new Date());
-        return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestDTO(), deviceRequestRetuRepository.save(deviceRequestEntity));
+        List<DeviceToRequestRetuEntitty> device = deviceToRequestRetuRepository.getListbyid(deviceRequestEntity.getId());
+
+        for (DeviceToRequestRetuEntitty entitty:device){
+            entitty.setStatus(2);
+        }
+        deviceToRequestRetuRepository.saveAll(device);
+
+        NotificetionEntity notificationEntity = new NotificetionEntity();
+        notificationEntity.setConten(" đã hủy phiếu cầu trả thiết bị  " + deviceRequestEntity.getCode());
+        notificationEntity.setNote1(dto.getCreatHummerId());
+        notificationEntity.setIdHummerShow(dto.getCreatHummerId());
+        notificationEntity.setTyle(Constants.PHIEUTRA);
+        notificationEntity.setNote2(dto.getHandlerHummerId());
+        notificetionRepository.save(notificationEntity);
+
+        return (DeviceRequestRetuDto) ConvetSetData.xetData(new DeviceRequestRetuDto(), deviceRequestRetuRepository.save(deviceRequestEntity));
     }
 
 
