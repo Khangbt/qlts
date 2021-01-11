@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "DEVICE_GROUP")
+@Table(name = "device_group")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceGroupEntity extends Auditable {

@@ -9,7 +9,9 @@ import javax.persistence.*;
 //kho chua
 @Data
 @Entity
+//@Table(name = "WAREHOUSE")
 @Table(name = "WAREHOUSE")
+
 @AllArgsConstructor
 @NoArgsConstructor
 //@EqualsAndHashCode(callSuper=false)

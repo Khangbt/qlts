@@ -12,7 +12,9 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "HUMAN_RESOURCES")
+//@Table(name = "HUMAN_RESOURCES")
+@Table(name = "human_resources")
+
 @NoArgsConstructor
 //@EqualsAndHashCode(callSuper=false)
 

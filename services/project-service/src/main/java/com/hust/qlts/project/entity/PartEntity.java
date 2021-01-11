@@ -9,7 +9,8 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name ="PART")
+//@Table(name ="PART")
+@Table(name ="part")
 @AllArgsConstructor
 @NoArgsConstructor
 public class PartEntity extends Auditable{

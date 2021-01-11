@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name ="APP_PARAMS")
+@Table(name ="app_params")
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppParamEntity {

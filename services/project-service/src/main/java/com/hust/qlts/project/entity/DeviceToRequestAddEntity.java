@@ -9,7 +9,9 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "DEVICE_TO_REQUEST_ADD")
+//@Table(name = "DEVICE_TO_REQUEST_ADD")
+@Table(name = "device_to_request_add")
+
 @AllArgsConstructor
 @NoArgsConstructor
 //@EqualsAndHashCode(callSuper=false)

@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ public class PartCustomRepository {
     @Autowired
     EntityManager em;
     private final Logger log = LogManager.getLogger(HumanResourcesCustomRepository.class);
-
+    @Value("${valueDB}")
+    private String valueDb;
     public List<PartnerDTO> getPartSearch(PartnerDTO dto) {
         StringBuilder sql = new StringBuilder();
         sql.append(" select   ");
@@ -31,8 +33,12 @@ public class PartCustomRepository {
         sql.append("  sp.STATUS, ");
         sql.append("(SELECT COUNT(*) AS NumberOfProducts FROM human_resources where PART_ID = sp.ID)  ");
 
-        sql.append(" from PART as sp              ");
+        if(valueDb=="1"){
+            sql.append(" from PART  sp ");
+        }else {
+            sql.append(" from part  sp ");
 
+        }
 
         sql.append("  where sp.STATUS != '' ");
 

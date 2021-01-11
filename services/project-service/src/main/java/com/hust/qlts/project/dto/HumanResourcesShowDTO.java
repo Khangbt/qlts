@@ -73,5 +73,6 @@ public class HumanResourcesShowDTO {
     private Long departmentId;
     private String password;
     private String tyleDto;
+    private Integer isNew;
 
 }

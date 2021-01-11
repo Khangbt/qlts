@@ -13,7 +13,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name ="HISTORY")
+//@Table(name ="HISTORY")
+@Table(name ="history")
+
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)

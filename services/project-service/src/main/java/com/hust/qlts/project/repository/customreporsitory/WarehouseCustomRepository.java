@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ public class WarehouseCustomRepository {
     @Autowired
     EntityManager em;
     private final Logger log = LogManager.getLogger(HumanResourcesCustomRepository.class);
-
+    @Value("${valueDB}")
+    private String valueDb;
     public List<WarehouseDTO> getWarehouseSearch(WarehouseDTO dto) {
         StringBuilder sql = new StringBuilder();
         sql.append(" select   ");
@@ -31,8 +33,13 @@ public class WarehouseCustomRepository {
         sql.append("  sp.ADDRESS, ");
         sql.append("(SELECT name FROM PART where ID  like sp.PAR_ID)  ");
         sql.append("        ,sp.PAR_ID  ");
-        sql.append(" from WAREHOUSE as sp              ");
 
+        if(valueDb=="1"){
+            sql.append(" from WAREHOUSE as sp              ");
+        }else {
+            sql.append(" from warehouse as sp              ");
+
+        }
 
         sql.append("  where sp.STATUS = 1 ");
 

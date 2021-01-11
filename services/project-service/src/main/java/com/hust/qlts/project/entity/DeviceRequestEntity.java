@@ -10,7 +10,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "DEVICE_REQUEST")
+//@Table(name = "DEVICE_REQUEST")
+@Table(name = "device_request")
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceRequestEntity  extends Auditable{

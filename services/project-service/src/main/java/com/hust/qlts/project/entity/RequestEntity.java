@@ -11,7 +11,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "REQUEST")
+//@Table(name = "REQUEST")
+@Table(name = "request")
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestEntity extends Auditable implements Serializable {

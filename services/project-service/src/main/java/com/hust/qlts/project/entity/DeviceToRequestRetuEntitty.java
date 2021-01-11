@@ -8,7 +8,9 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "DEVICE_TO_REQUEST_RETU")
+//@Table(name = "DEVICE_TO_REQUEST_RETU")
+@Table(name = "device_to_request_retu")
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceToRequestRetuEntitty extends Auditable{

@@ -10,7 +10,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name ="POSITION")
+//@Table(name ="POSITION")
+@Table(name ="position")
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class PositionEntity extends Auditable{

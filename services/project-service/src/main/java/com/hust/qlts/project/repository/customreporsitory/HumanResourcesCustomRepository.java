@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,7 +24,8 @@ import java.util.List;
 public class HumanResourcesCustomRepository {
     @Autowired
     EntityManager em;
-
+    @Value("${valueDB}")
+    private String valueDb;
     private final Logger log = LogManager.getLogger(HumanResourcesCustomRepository.class);
 
     //ANHTT_IIST api get danh sach nhan su theo ten hoac code
@@ -36,8 +38,19 @@ public class HumanResourcesCustomRepository {
         sql.append("    hr.FULLNAME as fullname ,                                                   ");
         sql.append("    hr.CODE as  code ,                                                   ");
         sql.append("    hr.EMAIL as email                                                   ");
-        sql.append("    FROM HUMAN_RESOURCES hr                                             ");
-        sql.append("    left join POSITION p on hr.POSITION_ID= p.ID        ");
+//        sql.append("    FROM HUMAN_RESOURCES hr                                             ");
+//        sql.append("    left join POSITION p on hr.POSITION_ID= p.ID        ");
+
+        if(valueDb=="1"){
+                    sql.append("    FROM HUMAN_RESOURCES hr                                             ");
+                     sql.append("    left join POSITION p on hr.POSITION_ID= p.ID        ");
+        }else {
+                    sql.append("    FROM human_resources hr                                             ");
+                    sql.append("    left join position p on hr.POSITION_ID= p.ID        ");
+
+        }
+
+
         sql.append("    where 1=1 and hr.STATUS=1      ");
 
 
@@ -149,7 +162,8 @@ public class HumanResourcesCustomRepository {
         sql.append(" hr.PASSWORD as password    ,     ");
         sql.append(" pr.ID as parId     ,");
         sql.append(" hr.PHONE as phone     , " +
-                "   hr.DATE_OF_BIRTH   as pppp ");
+                "   hr.DATE_OF_BIRTH   as pppp  , ");
+        sql.append(" hr.IS_NEW ");
         sql.append(" from HUMAN_RESOURCES as hr              ");
         sql.append(" LEFT JOIN POSITION as ps on hr.POSITION_ID = ps.ID                ");
         sql.append(" LEFT JOIN PART as pr on hr.PART_ID = pr.ID              ");
@@ -242,6 +256,7 @@ public class HumanResourcesCustomRepository {
                 if(obj[12]!=null){
                     humanResourcesDTO.setDateOfBirth((Date) obj[12]);
                 }
+                humanResourcesDTO.setIsNew((Integer) obj[13]);
                 humanResourcesDTO.setTyleDto("HUMMER");
                 listDto.add(humanResourcesDTO);
             }

@@ -20,10 +20,14 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: update
-  datasource.url: jdbc:mysql://127.0.0.1:3306/qlltscd?useUnicode=yes&characterEncoding=UTF-8
+  datasource.url: jdbc:mysql://127.0.0.1:3306/qlts3?useUnicode=yes&characterEncoding=UTF-8
   datasource.username: root
   datasource.password: 240697
   datasource.driver-class-name: com.mysql.cj.jdbc.Driver
+
+#  datasource.url: jdbc:mysql://remotemysql.com:3306/m4DRi9HeNN?useUnicode=yes&characterEncoding=UTF-8
+#  datasource.username: m4DRi9HeNN
+#  datasource.password: ajyZL4ndAv
   #      h2.console.enabled: true
   datasource:
     hikari:
@@ -57,7 +61,7 @@ spring:
 # url Redmine
 
 
-
+valueDB: 2
 #Lich dong bo
 autoSynchronized: 0 30 6,12,0 * * *
 #Lich send mail

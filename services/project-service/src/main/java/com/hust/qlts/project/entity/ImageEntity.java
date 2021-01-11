@@ -9,7 +9,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "IMAGE")
+//@Table(name = "IMAGE")
+@Table(name = "image")
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImageEntity extends Auditable{

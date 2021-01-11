@@ -10,11 +10,11 @@ import java.util.List;
 
 @Repository
 public interface PositionRepository extends JpaRepository<PositionEntity,Long> {
-    String sql="SELECT ps.ID as id ,ps.CODE as code,ps.NAME as name from POSITION as ps ORDER BY ps.CREATE_DATE DESC";
+    String sql="SELECT ps.ID as id ,ps.CODE as code,ps.NAME as name from position as ps ORDER BY ps.CREATE_DATE DESC";
     @Query(value = sql, nativeQuery = true, countQuery = sql)
     List<IPositionDTO> getPosition();
 
-    String sql1="SELECT ps.ID as id ,ps.CODE as code,ps.NAME as name from POSITION as ps WHERE ps.NAME = :toUpperCase ";
+    String sql1="SELECT ps.ID as id ,ps.CODE as code,ps.NAME as name from position as ps WHERE ps.NAME = :toUpperCase ";
     @Query(value = sql1,nativeQuery = true)
     List<IPositionDTO> getName(String toUpperCase);
 }

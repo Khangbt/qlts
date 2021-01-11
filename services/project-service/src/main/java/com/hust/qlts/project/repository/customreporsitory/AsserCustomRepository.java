@@ -6,6 +6,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,7 +18,8 @@ import java.util.List;
 @Repository
 public class AsserCustomRepository  {
     private final Logger log = LogManager.getLogger(AsserCustomRepository.class);
-
+    @Value("${valueDB}")
+    private String valueDb;
     @Autowired
     private EntityManager em;
 
@@ -37,8 +39,13 @@ public class AsserCustomRepository  {
         sql.append(" wa.ASSER_STATUS, ");
         sql.append(" w.NAME,  ");
         sql.append(" w.ADDRESS ");
+        if(valueDb=="1"){
+            sql.append(" from WAREHOUSE_ASSET  wa ");
+        }else {
+            sql.append(" from warehouse_asset  wa ");
 
-        sql.append(" from WAREHOUSE_ASSET  wa ");
+        }
+//        sql.append(" from WAREHOUSE_ASSET  wa ");
         Query query = em.createNativeQuery(sql.toString());
         Query queryCount = em.createNativeQuery(sql.toString());
         if (dto.getPage() != null && dto.getPageSize() != null) {

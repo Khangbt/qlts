@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import java.util.List;
 public class SupplierCustomRepository {
     @Autowired
     EntityManager em;
+    @Value("${valueDB}")
+    private String valueDb;
     private final Logger log = LogManager.getLogger(HumanResourcesCustomRepository.class);
 
     public List<SupplierDTO> getSupplierSearch(SupplierDTO dto) {
@@ -35,8 +38,15 @@ public class SupplierCustomRepository {
         sql.append("  sp.NOTE,  ");
         sql.append("  sp.WEBSITE,  ");
         sql.append("sp.FAX ");
-        sql.append(" from SUPPLIER as sp              ");
+//        sql.append(" from SUPPLIER as sp              ");
 
+
+        if(valueDb=="1"){
+        sql.append(" from SUPPLIER as sp              ");
+        }else {
+        sql.append(" from supplier as sp              ");
+
+        }
         sql.append("  where sp.STATUS != 0 ");
 
         if (StringUtils.isNotBlank(dto.getFullName())) {

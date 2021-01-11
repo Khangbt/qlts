@@ -9,7 +9,9 @@ import javax.persistence.*;
 //thieetss bi nâng cap
 @Data
 @Entity
-@Table(name = "DEVICE_UPGRADE")
+//@Table(name = "DEVICE_UPGRADE")
+@Table(name = "device_upgrade")
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceUpgradeEntity extends Auditable{

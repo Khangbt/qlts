@@ -9,7 +9,9 @@ import java.math.BigInteger;
 
 @Data
 @Entity
-@Table(name = "SUPPLIER")
+//@Table(name = "SUPPLIER")
+@Table(name = "supplier")
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class SupplierEntity extends Auditable{

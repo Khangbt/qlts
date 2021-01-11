@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "DEVICE")
+@Table(name = "device")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceEntity extends Auditable implements Serializable  {
