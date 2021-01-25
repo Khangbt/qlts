@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,9 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/warehouse")
-@CrossOrigin("*")
-//chu y may cai ten dat cho classs
-public class WareHouseConrtroller {
+@CrossOrigin("*") public class WareHouseConrtroller {
     private final Logger log = LogManager.getLogger(HumanResourcesController.class);
 
     @Autowired
@@ -39,6 +38,7 @@ public class WareHouseConrtroller {
             throw e;
         }
     }
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
 
     @PostMapping("/add")
     public ResultResp createHR(@RequestBody Map dto, HttpServletRequest request) {
@@ -85,6 +85,7 @@ public class WareHouseConrtroller {
             return ResultResp.badRequest(ErrorCode.CREATED_HR_EXIST);
         }
     }
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
 
     @DeleteMapping("/deletewarehouse/{id}")
     public ResultResp deleteProject(@PathVariable("id") Long id) {

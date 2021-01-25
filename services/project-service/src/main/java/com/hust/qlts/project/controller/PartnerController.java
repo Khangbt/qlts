@@ -38,8 +38,7 @@ public class PartnerController {
     @PostMapping("/add")
     public ResultResp createHR(@RequestBody PartnerDTO partnerDTO, HttpServletRequest request) {
         log.info("<--- api createNewHr: start,", partnerDTO);
-        //lấy ra username đang đăng nhập
-        // String username = authenService.getEmailCurrentlyLogged(request);
+
 
         try {
             return ResultResp.success(ErrorCode.CREATED_HR_OK, partService.create(partnerDTO));

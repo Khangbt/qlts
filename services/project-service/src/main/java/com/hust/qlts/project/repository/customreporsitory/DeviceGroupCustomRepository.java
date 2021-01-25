@@ -74,7 +74,7 @@ public class DeviceGroupCustomRepository {
                 " ");
         sql.append(" from device_group as dg ");
         sql.append("left join device as d on d.EQUIPMENT_GROUP_ID = dg.ID ");
-        sql.append("    where 1=1 ");
+        sql.append("    where 1=1  and d.EXIST=1  ");
         if (null != dto.getPartId()) {
             sql.append("  and d.PART_ID=:partId ");
         }
@@ -82,10 +82,10 @@ public class DeviceGroupCustomRepository {
             sql.append("   and (upper(dg.CODE) like upper(:codeOrName) or upper(dg.NAME) like upper(:codeOrName)) ");
         }
         if (null != dto.getWarehouseId()) {
-            sql.append(" and d.WAREHOUSE_ID=:warehoueId  ");
+            sql.append(" and d.WAREHOUSE_ID=:warehoueId and d.STATUS=1  ");
         }
         if (null != dto.getSupplierId()) {
-            sql.append(" and d.SUPPLIER_ID=:supplierId");
+            sql.append(" and d.SUPPLIER_ID=:supplierId ");
         }
         if (null != dto.getSpecifications()) {
             sql.append(" and upper(dg.SPECIFICATIONS) like upper(:supplierId1)");

@@ -121,6 +121,10 @@ public class SupplierServicelImpl implements SupplierService {
         log.info("-----------------Xoa nhà cung cấp---------------");
         if (id != null) {
             SupplierEntity supplierEntity = supplierRepository.findByID(id);
+            Integer interr=supplierRepository.getDelete(id);
+            if(interr>0){
+                return false;
+            }
             if (supplierEntity != null) {
                 supplierEntity.setStatus(0);
                 supplierRepository.save(supplierEntity);

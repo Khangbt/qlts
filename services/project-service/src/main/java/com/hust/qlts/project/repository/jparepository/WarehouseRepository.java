@@ -36,4 +36,13 @@ public interface WarehouseRepository  extends JpaRepository<WarehouseEntity,Long
             "where upper(w.CODE)=upper(:code)";
     @Query(value = sql4,nativeQuery = true)
     List<WarehouseEntity> getCodeCheck(String code);
+
+
+        String sql13="  select count(*)\n   " +
+            "   from warehouse as w\n   " +
+            "         left join device as d\n   " +
+            "   on w.WAREHOUSE_ID=d.WAREHOUSE_ID where w.WAREHOUSE_ID=:idhouse and d.EXIST=1    " ;
+
+    @Query(value = sql13,nativeQuery = true)
+    Integer getDelete(Long idhouse);
 }

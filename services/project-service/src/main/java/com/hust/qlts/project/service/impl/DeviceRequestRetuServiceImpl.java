@@ -13,6 +13,7 @@ import com.hust.qlts.project.repository.jparepository.NotificetionRepository;
 import com.hust.qlts.project.service.DeviceRequestRetuService;
 import com.hust.qlts.project.service.DeviceService;
 import com.hust.qlts.project.service.RequestService;
+import com.hust.qlts.project.service.SendMailService;
 import common.Constants;
 import common.ConvetSetData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private SendMailService sendMailService;
     @Autowired
     private HistoryRepository historyRepository;
     @Override
@@ -238,6 +241,7 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         }
         deviceService.saveList(deviceEntities);
 
+        sendMailService.sendMailCandRequestRetuGood(deviceRequestEntity);
 
         NotificetionEntity notificationEntity = new NotificetionEntity();
         notificationEntity.setConten(" đã xác nhận phiếu cầu trả thiết bị  " + deviceRequestEntity.getCode());
@@ -271,7 +275,10 @@ public class DeviceRequestRetuServiceImpl implements DeviceRequestRetuService {
         for (DeviceToRequestRetuEntitty entitty:device){
             entitty.setStatus(2);
         }
+
         deviceToRequestRetuRepository.saveAll(device);
+
+        sendMailService.sendMailCandRequestRetuError(deviceRequestEntity);
 
         NotificetionEntity notificationEntity = new NotificetionEntity();
         notificationEntity.setConten(" đã hủy phiếu cầu trả thiết bị  " + deviceRequestEntity.getCode());

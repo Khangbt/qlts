@@ -317,6 +317,17 @@ public class DeviceServiceImpl implements DeviceService {
         return deviceRepository.listDeviceByCode(id);
     }
 
+    @Override
+    public DeviceDto lock(Long dto) {
+        if(!deviceRepository.findById(dto).isPresent()){
+            return null;
+        }
+        DeviceEntity entity=deviceRepository.findById(dto).get();
+        entity.setStatus(3);
+        entity.setLastModifiedDate(new Date());
+        return (DeviceDto) ConvetSetData.xetData(new DeviceDto(), deviceRepository.save(entity));
+    }
+
     private String creatCode(int id, String code) {
         StringBuilder codeData = new StringBuilder();
         codeData.append(code);

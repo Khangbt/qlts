@@ -39,4 +39,5 @@ public class DeviceDto {
     private String tyleDto;
     private Long price;
     private String seri;
+    private String role;
 }

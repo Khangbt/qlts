@@ -55,4 +55,11 @@ public interface SupplierRepository extends JpaRepository<SupplierEntity, Long> 
     @Query(value = sql5, nativeQuery = true)
     List<SupplierEntity> getCheckCode(String code);
 
+
+    String sql14="  select count(*)\n   " +
+            "   from supplier as s\n    " +
+            "         left join device as d\n   " +
+            "                   on s.SUPPLIER_ID=d.WAREHOUSE_ID where s.SUPPLIER_ID=:idhouse and d.EXIST=1  ";
+    @Query(value = sql14, nativeQuery = true)
+    Integer getDelete(Long idhouse);
 }

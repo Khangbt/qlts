@@ -30,12 +30,4 @@ public class PositionEntity extends Auditable{
     @Column(name = "CREATE_DATE")
     private Date createDate;
 
-    @Column(name = "CREATE_BY")
-    private Long createBy;
-
-    @Column(name = "UPDATE_DATE")
-    private Date updateDate;
-
-    @Column(name = "UPDATE_BY")
-    private Long updateBy;
 }

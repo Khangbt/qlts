@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.hust.qlts.project.dto.DeviceRequestRetuDto;
 
@@ -64,6 +65,7 @@ public class DeviceRequestRetuController {
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+    @PreAuthorize("hasAnyRole( 'ROLE_ADMINPART')")
 
     @PostMapping("/browserRequest")
     public ResponseEntity<?> browserRequest(@RequestBody DeviceRequestRetuDto reqDto, @RequestParam Long id) {
@@ -81,7 +83,7 @@ public class DeviceRequestRetuController {
         }
 
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMINPART')")
     @PostMapping("/cancelRequest")
     public ResponseEntity<?> cancelRequest(@RequestBody DeviceRequestRetuDto reqDto, @RequestParam Long id) {
 //        try {

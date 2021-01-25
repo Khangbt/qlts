@@ -1,5 +1,6 @@
 package com.hust.qlts.project.repository.customreporsitory;
 
+import com.hust.qlts.project.common.CoreUtils;
 import com.hust.qlts.project.dto.DeviceDto;
 import com.hust.qlts.project.dto.DeviceFindDto;
 import com.hust.qlts.project.entity.excel.DeviceExcel;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -248,7 +250,7 @@ public class DeviceCustomRepository {
                 "          and dr5.STATUS = 2)                                                                           as reRresent,  " +
                 "       (select p6.NAME from part as p6 where p6.ID = d.PART_ID)                                         as partName,  " +
                 "       (select s6.NAME from supplier as s6 where s6.SUPPLIER_ID = d.SUPPLIER_ID)                        as supperName,  " +
-                "       d.EQUIPMENT_GROUP_ID  ");
+                "       d.EQUIPMENT_GROUP_ID  ,d.PRICE ,d.SERI ");
         sql.append("from device as d    " +
                 "         join device_group as dg on d.EQUIPMENT_GROUP_ID = dg.ID    " +
                 "         left join device_to_request as dtr on dtr.DEVICE_ID = d.DEVICE_ID    " +
@@ -322,8 +324,13 @@ public class DeviceCustomRepository {
             if(o[3]!=null){
                 if ((Integer) o[3]==1){
                     deviceExcel.setStatus("Đang trong Kho");
-                }else {
+                    deviceExcel.setWareHouseName((String) o[9]);
+                    deviceExcel.setWareHouseAdd((String) o[10]);
+                }else if((Integer) o[3]==2){
                     deviceExcel.setStatus("Đang sử dụng");
+                    deviceExcel.setNameHummerUse((String) o[15]);
+                }else {
+                    deviceExcel.setStatus("Đã thanh lý");
                 }
             }
             deviceExcel.setSpecifications((String) o[4]);
@@ -342,10 +349,13 @@ public class DeviceCustomRepository {
                }
             }
             deviceExcel.setLostDevice((Integer) o[7]);
-            deviceExcel.setDateAdd((Date) o[8]);
-            deviceExcel.setWareHouseName((String) o[9]);
-            deviceExcel.setWareHouseAdd((String) o[10]);
-
+            deviceExcel.setDateAdd(CoreUtils.castDateToStringByPattern(((Date) o[8]), "yyyy-MM-dd"));
+            if(o[22]!=null){
+                deviceExcel.setPrin((BigInteger) o[22]);
+            }
+            deviceExcel.setSeri((String) o[23]);
+            deviceExcel.setPartName((String) o[19]);
+            deviceExcel.setSupplierName( o[20].toString());
             i++;
             list.add(deviceExcel);
         }

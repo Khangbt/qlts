@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,7 @@ public class SupplierControler {
             return new ResponseEntity("Lõi", HttpStatus.BAD_GATEWAY);
         }
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @PostMapping("/add")
     public ResultResp createHR(@RequestBody SupplierDTO supplierDTO, HttpServletRequest request) {
         log.info("<--- api createNewHr: start,", supplierDTO);
@@ -54,7 +55,7 @@ public class SupplierControler {
         }
         return ResultResp.badRequest(ErrorCode.CREATED_HR_FALSE);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @PutMapping(value = "/update")
     public ResultResp updateHr(@RequestBody SupplierDTO supplierDTO) {
         log.info("<-- api update Nhà cung cấp: start, ", supplierDTO);
@@ -66,7 +67,7 @@ public class SupplierControler {
             return ResultResp.badRequest(ErrorCode.SERVER_ERROR);
         }
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @DeleteMapping("/deleteSupplier/{id}")
     public ResultResp deleteProject(@PathVariable("id") Long id) {
 

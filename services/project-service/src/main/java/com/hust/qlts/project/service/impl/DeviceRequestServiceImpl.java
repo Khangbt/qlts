@@ -16,6 +16,7 @@ import com.hust.qlts.project.repository.jparepository.NotificetionRepository;
 import com.hust.qlts.project.service.DeviceRequestService;
 import com.hust.qlts.project.service.DeviceService;
 import com.hust.qlts.project.service.RequestService;
+import com.hust.qlts.project.service.SendMailService;
 import common.Constants;
 import common.ConvetSetData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
     @Autowired
     private HistoryRepository historyRepository;
 
+
+    @Autowired
+    private SendMailService sendMailService;
     @Override
     public DataPage<DeviceRequestDTO> searList(DeviceRequestDTO dto) {
         return null;
@@ -243,9 +247,9 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         requestEntity.setHandlerHummerId(dto.getHandlerHummerId());
         requestEntity.setApprovedDate(new Date());
         deviceToRequestRepository.saveAll(listAll);
-        deviceRequestRepository.save(requestEntity);
         deviceService.saveList(deviceEntities);
 
+        sendMailService.sendMailCandRequestGood(requestEntity);
 
         NotificetionEntity notificationEntity = new NotificetionEntity();
         notificationEntity.setConten(" đã xác nhận yêu cầu  phiếu cầu mượn thiết bị mã phiếu " + requestEntity.getCode());
@@ -275,6 +279,10 @@ public class DeviceRequestServiceImpl implements DeviceRequestService {
         deviceRequestEntity.setApprovedDate(new Date());
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
+
+
+        sendMailService.sendMailCandRequestError(deviceRequestEntity);
+
 
         NotificetionEntity notificationEntity = new NotificetionEntity();
         notificationEntity.setConten(" đã hủy phiếu cầu mượng thiết bị trong mã phiếu" + deviceRequestEntity.getCode());

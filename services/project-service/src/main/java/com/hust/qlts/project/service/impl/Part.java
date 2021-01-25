@@ -103,7 +103,8 @@ public class Part implements PartService {
     @Override
     public Boolean delete(Long id) {
         ///check dieu kien xoa
-        if (true) {
+        Integer c=partRepository.getDateTeDe(id)+partRepository.getDateTeHu(id);
+        if (c==0) {
             partRepository.deleteById(id);
             return true;
         }

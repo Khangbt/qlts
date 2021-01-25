@@ -191,7 +191,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             throw new CustomExceptionHandler(ErrorCode.USERNAME_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED);
         }
         List<GrantedAuthority> roleList = new ArrayList<>();
-        roleList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        roleList.add(new SimpleGrantedAuthority(humanResourcesEntity.getRole()));
         humanResourcesEntity.setAuthorities(roleList);
         return new org.springframework.security.core.userdetails.User(humanResourcesEntity.getEmail(), humanResourcesEntity.getPassword(), humanResourcesEntity.getAuthorities());
     }
@@ -273,6 +273,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
                 default:
                     humanResourcesEntity.setRole("ROLE_USER");
             }
+            humanResourcesEntity.setStatus(humanResourcesDTO.getStatus());
             humanResourcesEntity.setIsNew(1);
             humanResourcesEntity.setUsername(usernameFE);
             humanResourcesEntity.setCreateDate(new Date());
@@ -446,7 +447,7 @@ public class HumanResourcesServiceImpl implements HumanResourcesService, UserDet
             message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(humanResource.getEmail()));
             message.setSubject("THÔNG TIN TÀI KHOẢN HỆ THỐNG QUẢN LÝ TÀI SẢN", "UTF-8");
             String subject = "Kính gửi anh/chị,\n\n" +
-                    "Hệ thống Quản lý dự án của ***** gửi đến anh chị thông tin như sau:\n" +
+                    "Hệ thống Quản lý tài sản của ***** gửi đến anh chị thông tin như sau:\n" +
                     "Anh/chị đã được reset mậu khẩu:\n" +
                     "Link truy cập hệ thống:" + Constants.URL_WEBAPP + "\n" +
                     "Họ và tên: " + humanResource.getFullName() + "\n" +

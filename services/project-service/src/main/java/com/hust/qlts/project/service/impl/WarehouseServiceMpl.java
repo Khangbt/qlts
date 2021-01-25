@@ -109,6 +109,10 @@ public class WarehouseServiceMpl implements WarehouseService {
     public Boolean delete(Long id) {
         if (null != id) {
             WarehouseEntity supplierEntity = warehouseRepository.findByID(id);
+            Integer c=warehouseRepository.getDelete(id);
+            if(c>0){
+                return false;
+            }
             if (supplierEntity != null) {
                 supplierEntity.setStatus(0);
                 warehouseRepository.save(supplierEntity);

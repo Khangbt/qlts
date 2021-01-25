@@ -11,10 +11,7 @@ import com.hust.qlts.project.repository.jparepository.DeviceRequestAddRepository
 import com.hust.qlts.project.repository.jparepository.DeviceToRequestAddRepository;
 import com.hust.qlts.project.repository.jparepository.HistoryRepository;
 import com.hust.qlts.project.repository.jparepository.NotificetionRepository;
-import com.hust.qlts.project.service.DeviceGroupService;
-import com.hust.qlts.project.service.DeviceRequestAddService;
-import com.hust.qlts.project.service.DeviceService;
-import com.hust.qlts.project.service.RequestService;
+import com.hust.qlts.project.service.*;
 import common.Constants;
 import common.ConvetSetData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,8 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
     @Autowired
     private HistoryRepository historyRepository;
 
+    @Autowired
+    private SendMailService sendMailService;
     @Override
     public DataPage<DeviceRequestAddDto> searList(DeviceRequestAddDto dto) {
         return null;
@@ -278,6 +277,7 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         deviceGroupService.saveList(deviceGroupEntities);
 
 
+        sendMailService.sendMailCandRequestAddGood(requestEntity);
 
         NotificetionEntity notificationEntity=new NotificetionEntity();
         notificationEntity.setConten(" đã xác nhận yêu cầu  phiếu yêu cầu nhâp thêm thiết bị mã phiếu" +requestEntity.getCode());
@@ -307,8 +307,10 @@ public class DeviceRequestAddServiceImpl implements DeviceRequestAddService {
         deviceRequestEntity.setStatus(Constants.HUY);
         deviceRequestEntity.setReason(dto.getReason());
 
+        sendMailService.sendMailCandRequestAddError(deviceRequestEntity);
+
         NotificetionEntity notificationEntity=new NotificetionEntity();
-        notificationEntity.setConten(" đã hủy yêu cầu  phiếu yêu cầu nhâp thêm thiết bị mã phiếu" +deviceRequestEntity.getCode());
+        notificationEntity.setConten(" đã hủy yêu cầu  phiếu yêu cầu nhâp thêm thiết bị mã phiếu " +deviceRequestEntity.getCode());
         notificationEntity.setTyle(Constants.PHIEUNHAPKHO);
         notificationEntity.setNote1(dto.getCreatHummerId());
         notificationEntity.setPartId(dto.getPartId());

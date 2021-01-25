@@ -5,9 +5,11 @@ import com.hust.qlts.project.dto.DeviceGroupDto;
 import com.hust.qlts.project.dto.DeviceGroupFindDto;
 import com.hust.qlts.project.dto.DeviceGroupListDto;
 import com.hust.qlts.project.service.DeviceGroupService;
+import com.hust.qlts.project.service.impl.DeviceGroupServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +18,11 @@ import java.util.List;
 @RequestMapping("/deviceGroup")
 @CrossOrigin("*")
 public class DeviceGroupController {
-    @Autowired
-    private DeviceGroupService deviceGroupService;
 
+    @Autowired
+    private DeviceGroupServiceImpl deviceGroupService;
+
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @PostMapping( "/create")
     public ResponseEntity<?> creatDeviceGroup(
                                               @RequestBody DeviceGroupDto dto) {
@@ -34,14 +38,14 @@ public class DeviceGroupController {
 
         return new ResponseEntity<>(o, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateDeviceGroup(@RequestBody DeviceGroupDto dto, @PathVariable("id") Integer id) {
         Object o = deviceGroupService.updateDeviceGroup(dto, id);
 
         return new ResponseEntity<>(o, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteDeviceGroup(@PathVariable("id") Long id) {
         if(deviceGroupService.deleteDeviceGroup(id)==null){
@@ -86,7 +90,7 @@ public class DeviceGroupController {
 
     }
     @GetMapping("/getListPart")
-    private ResponseEntity<?> getListPart(@RequestParam("id") Integer id){
+    public ResponseEntity<?> getListPart1(@RequestParam("id") Integer id){
         List<DeviceGroupListDto> list=deviceGroupService.getList(id);
         if(list.size()==0){
             return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
@@ -96,7 +100,7 @@ public class DeviceGroupController {
 
     }
     @GetMapping("/searhListAll")
-    private  ResponseEntity<?> getAllGroup(){
+    public   ResponseEntity<?> getAllGroup(){
         return new ResponseEntity<>(deviceGroupService.listAll(),HttpStatus.OK);
     }
 }

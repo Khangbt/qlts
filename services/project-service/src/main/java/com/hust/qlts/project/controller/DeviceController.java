@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +33,6 @@ public class DeviceController {
     @Autowired
     private AuthenService authenService;
 
-
     @PostMapping("/search")
     public ResponseEntity<?> searchDevice(@RequestBody DeviceDto reqDto, HttpServletRequest request) {
         String username = authenService.getEmailCurrentlyLogged(request);
@@ -49,7 +49,7 @@ public class DeviceController {
         }
         return new ResponseEntity<>(deviceDto, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @PostMapping("/creat")
     public ResponseEntity<?> CreatDevice(@RequestBody DeviceDto reqDto) {
         DeviceDto deviceDto = deviceService.craet(reqDto);
@@ -58,7 +58,7 @@ public class DeviceController {
         }
         return new ResponseEntity<>(deviceDto, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteDevice(@PathVariable("id") Long id) {
         DeviceDto deviceDto=new DeviceDto();
@@ -77,6 +77,16 @@ public class DeviceController {
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+
+    @DeleteMapping("/lock/{code}")
+    public ResponseEntity<?> Lock(@PathVariable("code") Long code) {
+        DeviceDto dto = deviceService.lock(code);
+        if (dto == null) {
+            return new ResponseEntity<>("Lôi", HttpStatus.BAD_GATEWAY);
+        }
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
 
     @PostMapping("/getListId")
     public ResponseEntity<?> getList(@RequestParam Long Request,@RequestParam Long partId) {
@@ -145,12 +155,15 @@ public class DeviceController {
 //
 //        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
+            if(reqDto.getRole().equals("ROLE_ALL")){
+                reqDto.setPartId(null);
+            }
             byte[] result = deviceService.exportXel(reqDto);
 
             HttpHeaders headers = new HttpHeaders();
 
 //            String fileName = CommonUtils.getFileNameReportUpdate("IMPORT_DanhSachNhanSu");
-            String fileNameExcel = "BÁO CÁI" +
+            String fileNameExcel = "BÁO CÁO" +
                     CoreUtils.castDateToStringByPattern(new Date(), "yyMMdd") + "_" +
                     CoreUtils.castDateToStringByPattern(new Date(), "hhmmss") + ".xlsx";
 //

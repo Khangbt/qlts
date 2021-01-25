@@ -49,7 +49,7 @@ public interface DeviceGroupRepository extends JpaRepository<DeviceGroupEntity,L
             "                    group by d1.EQUIPMENT_GROUP_ID)  " +
             "                       else dg.SIZE_UNIT end )as sizeUnit  " +
             "  " +
-            "                 ,  dg.SIZE_ID  as sizeId ,dg.SPECIFICATIONS as specifications  " +
+            "                 ,  dg.SIZE_ID  as sizeId ,dg.SPECIFICATIONS as specifications ,dg.TYLE as tyle " +
             "            from device_group as dg";
     @Query(value = sql3,nativeQuery = true)
     List<IDeviceGroupMaxCodeDto> getAllCode();

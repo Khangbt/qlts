@@ -31,4 +31,6 @@ public interface DeviceService {
      byte[] exportXel(DeviceDto dto);
 
      List<DeviceEntity> getListyCode(Long id);
+     DeviceDto lock(Long dto);
+
 }

@@ -22,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,6 +86,8 @@ public class HumanResourcesController {
     }
 
     /// khoa nhan su
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
+
     @DeleteMapping("/lockHumanResources/{id}")
     public ResultResp lockProject(@PathVariable("id") Long id ,HttpServletRequest request) {
 
@@ -112,6 +115,8 @@ public class HumanResourcesController {
     }
 
     // Xoa nhan su
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
+
     @DeleteMapping("/deleteHumanResources/{id}")
     public ResultResp deleteProject(@PathVariable("id") Long id,HttpServletRequest request) {
         String username = authenService.getEmailCurrentlyLogged(request);
@@ -140,6 +145,7 @@ public class HumanResourcesController {
     }
 
     // đoi mật khẩu
+    @PreAuthorize("hasAnyRole('ROLE_ALL', 'ROLE_ADMINPART')")
 
     @PutMapping("/reset-password/{id}")
     public ResultResp resetPassword(@PathVariable("id") Long humanResourceID, HttpServletRequest req) {

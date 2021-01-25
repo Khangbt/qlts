@@ -10,4 +10,6 @@ public interface IDeviceGroupMaxCodeDto {
     Integer getUnit();
     Integer getSizeId();
     String getSpecifications();
+    String getTyle();
+
 }
